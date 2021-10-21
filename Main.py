@@ -18,8 +18,6 @@ size = [int(infoObject.current_w*Display.w_init),int(infoObject.current_h*Displa
 screen = pygame.display.set_mode(size,pygame.RESIZABLE)
 ww, wh= pygame.display.get_surface().get_size()
 
-print("ww and wh" ,ww, wh)
-print(size[0], size[1])
 def show_mode():
     menu.clear()
     menu.add.button('Oasis',start_the_game_1)
