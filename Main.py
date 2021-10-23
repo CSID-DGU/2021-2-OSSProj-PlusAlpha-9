@@ -1,10 +1,14 @@
 import pygame
 import random
 import time
+import json
+from collections import OrderedDict
 from datetime import datetime
 import pygame_menu 
 from os import system
 from InfiniteGame import InfiniteGame
+from StageGame import StageGame
+from Stage import Stage
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -73,7 +77,24 @@ def startInfiniteGame():
     infi = InfiniteGame(1,1)
     infi.main()
 
-#스테이지 메뉴 함수
+def startStageGame(character,stage):
+    StageGame(character,stage).main()
+
+#스테이지 데이터 파일 읽어오기
+with open('stagedata.json') as f:
+    stageData = json.load(f,object_pairs_hook=OrderedDict)
+
+print(type(stageData))
+print(list(stageData["chapter"].keys()))
+for i in list(stageData["chapter"].keys()):
+    print(stageData["chapter"][i].keys())
+
+#스테이지 메뉴 관련 함수
+selectedChapter = [list(stageData["chapter"].keys())[0]]
+selectedStage = ["1"]
+def toTuple(str):
+    return (str,str)
+
 def change_background_color(selected_value, color, **kwargs):
     value_tuple, index = selected_value
     print('Change widget color to', value_tuple[0])  # selected_value ('Color', surface, color)
@@ -83,33 +104,53 @@ def change_background_color(selected_value, color, **kwargs):
     widget.update_font({'selected_color': color})
     widget.get_selection_effect().color = color
 
+def changeChapter(selected_value, chapterName, **kwargs):
+    value_tuple, index = selected_value
+    selectedChapter[0] = value_tuple[0]
+    print(value_tuple)
+    print(selectedChapter[0])
+def changeStage(selected_value, stageNumber, **kwargs):
+    value_tuple, index = selected_value
+    selectedStage[0] = value_tuple[0]
+    print(value_tuple)
+    print(selectedStage[0])
+
+def startGame(selectedCh:list,selectedSt:list):
+    selectedChapter = selectedCh[0]
+    selectedStage = selectedSt[0]
+    if(stageData["chapter"][selectedChapter][selectedStage][4]): #스테이지가 unlocked되어 있다면 실행
+        print("start")
+        startStageGame(0,Stage(stageData["chapter"][selectedChapter][selectedStage]))
+    else:
+        print("locked")
+
 
 #스테이지 메뉴 구성
-chapters = [('Oasis', (255, 255, 255)),
-         ('Ice', (0, 0, 0))]
-selector = stageMenu.add.selector(
+chapters = list(map(toTuple,list(stageData["chapter"].keys())))
+chapterSelector = stageMenu.add.selector(
     title='Chapter :\t',
     items=chapters,
-    onreturn=change_background_color,  # User press "Return" button
-    onchange=change_background_color  # User changes value with left/right keys
+    # onreturn=change_background_color,  # User press "Return" button
+    onchange=changeChapter  # User changes value with left/right keys
 )
-selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
+chapterSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
 
-
-stages = [('1', (255, 255, 255)),
-         ('2', (0, 0, 0)),
-         ('Boss', (255, 255, 255))]
-selector = stageMenu.add.selector(
+stages = [('1', (0)),
+         ('2', (0)),
+         ('Boss', (0))]
+stageSelector = stageMenu.add.selector(
     title='Stage :\t',
     items=stages,
-    onreturn=change_background_color,  # User press "Return" button
-    onchange=change_background_color  # User changes value with left/right keys
+    # onreturn=change_background_color,  # User press "Return" button
+    onchange=changeStage  # User changes value with left/right keys
 )
-selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
+stageSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
 
-stageMenu.add.button("PLAY",pygame_menu.events.BACK)
+stageMenu.add.button("PLAY",startGame,selectedChapter,selectedStage)
 stageMenu.add.button("BACK",pygame_menu.events.BACK)
 
+
+#메인 메뉴 구성
 menu.add.button('Select mode', show_mode)
 menu.add.button('Help',show_help)
 menu.add.button('Quit',pygame_menu.events.EXIT)
