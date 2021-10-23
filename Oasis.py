@@ -8,7 +8,6 @@ from math import ceil
 # x, y => 비행기의 가로길이, 세로길이
 # 1. 게임초기화
 pygame.init()
-print(id(pygame))
 # 2. 게임창 옵션 설정
 
 # 2-1 고정된 화면 크기

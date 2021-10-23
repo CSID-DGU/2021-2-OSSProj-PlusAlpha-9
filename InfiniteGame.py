@@ -5,6 +5,7 @@
 #로직 : 게임 종료 후 기록한 점수 서버에 저장 필요
 import time
 import pygame
+import pygame_menu
 class InfiniteGame:
 
     def __init__(self,character,stage):
@@ -15,8 +16,8 @@ class InfiniteGame:
         infoObject = pygame.display.Info()
         title = "My game"
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
-        size = [infoObject.current_w,infoObject.current_h]
-        self.screen = pygame.display.set_mode(size,pygame.RESIZABLE)
+        self.size = [infoObject.current_w,infoObject.current_h]
+        self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
         
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
@@ -72,5 +73,6 @@ class InfiniteGame:
      
     def showScoreRegisterScreen(self): #랭킹화면표시
         print("랭킹 등록화면 구현 하기")
+
     
 
