@@ -365,6 +365,8 @@ ss.move = Speed.s_speed
 background_image_desert = pygame.image.load("./Image/DESERT.jpeg")
 background_image_desert = pygame.transform.scale(background_image_desert,size) # 그림의 크기를 조정한다.
 
+background_height = background_image_desert.get_height()
+background1_y = 0
 
 
 # 4. 메인 이벤트
@@ -682,8 +684,25 @@ while not SB:
     #  마우스에의해 창크기가 바뀜에 따라 배경화면 크기가 바뀜
     background_image_desert = pygame.image.load("./Image/DESERT.jpeg")
     background_image_desert = pygame.transform.scale(background_image_desert, size)
-    screen.blit(background_image_desert, Util.start_loc)
+
+    background_width = background_image_desert.get_width()
+    background_height = background_image_desert.get_height()
     
+    # 배경 움직이도록 수정
+    background_image_desert_2 = background_image_desert.copy()
+
+    # background_height = background_image_desert.get_height()
+    # background1_y = 0
+    background1_y += 2
+
+    if background1_y > background_height:
+        background1_y = 0
+
+
+    #screen.blit(background_image_desert, Util.start_loc)
+    screen.blit(background_image_desert, (0, background1_y))
+    screen.blit(background_image_desert_2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
+
 
     # 비행체 보여주기
     ss.show()
