@@ -6,6 +6,7 @@
 
 import time
 import pygame
+import random
 class StageGame:
 
     def __init__(self,character,stage):
@@ -73,7 +74,11 @@ class StageGame:
                     elif event.key == pygame.K_DOWN:
                         pass
 
-            
+            #몹을 확률적으로 발생시키기
+            if(random.random()<self.mob_gen_rate):
+                print("몹 발생")
+                pass
+
 
             self.screen.fill((0,0,0))
 
