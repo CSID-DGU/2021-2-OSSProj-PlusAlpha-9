@@ -9,6 +9,8 @@ from os import system
 from InfiniteGame import InfiniteGame
 from StageGame import StageGame
 from Stage import Stage
+from Character import Character
+from Defs import *
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -109,6 +111,8 @@ def changeChapter(selected_value, chapterName, **kwargs):
     selectedChapter[0] = value_tuple[0]
     print(value_tuple)
     print(selectedChapter[0])
+
+
 def changeStage(selected_value, stageNumber, **kwargs):
     value_tuple, index = selected_value
     selectedStage[0] = value_tuple[0]
@@ -120,7 +124,7 @@ def startGame(selectedCh:list,selectedSt:list):
     selectedStage = selectedSt[0]
     if(stageData["chapter"][selectedChapter][selectedStage][4]): #스테이지가 unlocked되어 있다면 실행
         print("start")
-        startStageGame(0,Stage(stageData["chapter"][selectedChapter][selectedStage]))
+        startStageGame(Character(Images.character_car.value,(100,100),10,0),Stage(stageData["chapter"][selectedChapter][selectedStage]))
     else:
         print("locked")
 

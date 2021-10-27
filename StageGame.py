@@ -7,6 +7,8 @@
 import time
 import pygame
 import random
+from Mob import Mob
+from Defs import *
 class StageGame:
 
     def __init__(self,character,stage):
@@ -26,16 +28,22 @@ class StageGame:
         self.white=(255,255,255)
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
-        self.mob_list = []
-        self.missile_list = []
+        self.mobList = []
+        self.missileList = []
+        self.itemList = []
         self.character = character
         self.stage = stage
+        self.goalScore = stage.goalScore
         self.score = 0
         self.life = 3
-        self.start_time = time.time()
-        self.mob_gen_rate = 0.1
+        self.startTime = time.time()
+        self.mobGenRate = 0.1
+        self.mobImage = stage.mobImage
         self.k=0
         self.SB = 0
+
+        # 5. 캐릭터 위치 초기화
+        self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
 
     def main(self):
         # 메인 이벤트
@@ -52,61 +60,96 @@ class StageGame:
                     '''
                     각 키가 눌러지면 플레이어 캐릭터 객체의 값 수정 (현재는 종료를 위해 왼쪽키를 종료로 둠)
                     '''
-                    if event.key == pygame.K_LEFT:
-                        self.SB=1
-                    if event.key == pygame.K_RIGHT: 
-                        pass
-                    if event.key == pygame.K_SPACE: 
-                        pass
-                    if event.key == pygame.K_UP :
-                        pass
-                    if event.key == pygame.K_DOWN:
-                        pass
+                    if event.key == pygame.K_x:
+                        SB=1
                 elif event.type == pygame.KEYUP: # 키를 뗐을때
                     if event.key == pygame.K_LEFT:
                         pass
-                    elif event.key == pygame.K_RIGHT:
-                        pass
-                    elif event.key == pygame.K_SPACE:
-                        pass
-                    elif event.key == pygame.K_UP:
-                        pass
-                    elif event.key == pygame.K_DOWN:
-                        pass
 
             #몹을 확률적으로 발생시키기
-            if(random.random()<self.mob_gen_rate):
-                print("몹 발생")
-                pass
-
-
-            self.screen.fill((0,0,0))
+            if(random.random()<self.mobGenRate):
+                newMob = Mob(self.mobImage,(50,50),2,0)
+                newMob.set_XY((random.randrange(0,self.size[0]),0))
+                self.mobList.append(newMob)
+                
 
             #플레이어 객체 이동
-            #self.character.move() ??
+            key_pressed = pygame.key.get_pressed()
+            self.character.move(key_pressed, self.size)
 
             #몹 객체 이동
-            for mob in self.mob_list:
-                #mob.move() ??
+            for mob in self.mobList:
+                mob.move(self.size,self)
+                
+
+            #발사체 이동
+            for missile in self.missileList:
                 pass
 
+            #발사체와 몹 충돌 감지
+            for missile in self.missileList:
+                for mob in self.mobList:
+                    if(self.checkCrash(missile,mob)):
+                        score += 10
+                        pass
+
+            #몹과 플레이어 충돌 감지
+            for mob in self.mobList:
+                if(self.checkCrash(mob,self.character)):
+                    print("crash!")
+
+            #화면 그리기
+            self.screen.fill((255,255,255))
+
+            #플레이어 그리기
+            self.character.show(self.screen)
+
+            #몹 그리기
+            for mob in self.mobList:
+                mob.show(self.screen)
+            
             #점수와 목숨 표시
-            font = pygame.font.Font("./Font/DXHanlgrumStd-Regular.otf", sum(self.size)//85)
+            font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
             score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
-            playTime = (time.time() - self.start_time)
+            playTime = (time.time() - self.startTime)
             time_text = font.render("Time : {:.2f}".format(playTime), True, (255,255,0))
             self.screen.blit(time_text,(300,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
 
+            #점수가 목표점수 이상이면 스테이지 클리어 화면
+            if(self.score>=self.goalScore):
+                self.showStageClearScreen()
+
+            #목숨이 0 이하면 게임 오버 화면
+            if(self.life<1):
+                self.showGameOverScreen()
+
+
         # While 빠져나오면 게임오버 스크린 실행
         self.showGameOverScreen()
 
-     
+    #충돌 감지 함수
+    def checkCrash(self,o1,o2):
+        o1_mask = pygame.mask.from_surface(o1.img)
+        o2_mask = pygame.mask.from_surface(o2.img)
+
+        offset = (int(o2.x - o1.x), int(o2.y - o1.y))
+        collision = o1_mask.overlap(o2_mask, offset)
+        
+        if collision:
+            return True
+        else:
+            return False
+    
+    def showStageClearScreen():
+
+        return
+
     def showGameOverScreen(self):
         return
 
