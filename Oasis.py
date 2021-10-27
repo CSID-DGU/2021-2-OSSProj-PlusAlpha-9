@@ -4,6 +4,11 @@ import time
 from datetime import datetime
 from pygame.constants import VIDEORESIZE
 from math import ceil
+from Object import Object
+from Character import Character
+from Defs import Images
+from Defs import Sounds
+from Defs import Fonts
 # sx, sy => 피사체의 x위치 y 위치
 # x, y => 비행기의 가로길이, 세로길이
 # 1. 게임초기화
@@ -178,60 +183,28 @@ class Resizing:
     len_for_time = 6
 
 
-
-    
-
-
-class obj:
-    def __init__(self):
-        self.x =0
-        self.y=0
-        self.move =0
-
-    def put_img(self,address):
-        # png파일 일때
-        # convert해줘야하는 문제가 있기때문에
-        if address[-3:] == "png":
-            self.img = pygame.image.load(address).convert_alpha()    
-        else: 
-            self.img = pygame.image.load(address)
-        self.sx, self.sy = self.img.get_size()
-
-    # 피사체의 그림 조정
-    def change_size(self,sx,sy):
-        self.img = pygame.transform.scale(self.img,(sx,sy)) # 그림의 크기를 조정한다.
-        self.sx, self.sy = self.img.get_size()
-
-    def show(self):
-        screen.blit(self.img,(self.x,self.y))
-
-
-
-
-
-
 title = "My Game"
 pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
 # 3. 게임 내 필요한 설정
 clock = pygame.time.Clock()
 #파이게임 배경음악
 pygame.mixer.init()
-pygame.mixer.music.load("./Sound/ariant.mp3")
+pygame.mixer.music.load(Sounds.bgm_desert.value)
 # 미사일 효과음
-missile1 = pygame.mixer.Sound("./Sound/weapon-sound8.ogg")
+missile1 = pygame.mixer.Sound(Sounds.sfx_weapon2.value)
 missile1.set_volume(Sound.m_sound)
-missile2 = pygame.mixer.Sound("./Sound/weapon-sound9 .ogg")
+missile2 = pygame.mixer.Sound(Sounds.sfx_weapon3.value)
 missile2.set_volume(Sound.m_sound)
-missile3 = pygame.mixer.Sound("./Sound/weapon-sound16.ogg")
+missile3 = pygame.mixer.Sound(Sounds.sfx_weapon4.value)
 missile3.set_volume(Sound.m_sound)
 # 피사체 파괴시 효과음
-monster1 = pygame.mixer.Sound("./Sound/monster-sound7.ogg")
+monster1 = pygame.mixer.Sound(Sounds.sfx_monster1.value)
 monster1.set_volume(Sound.crash1_sound)
 # 피사체와 비행체 충돌시 효과음
-boom1 = pygame.mixer.Sound("./Sound/weapon-sound9 .ogg")
+boom1 = pygame.mixer.Sound(Sounds.sfx_weapon3.value)
 boom1.set_volume(Sound.crash2_sound)
 # 게임오버 효과음
-game_over = pygame.mixer.Sound("./Sound/gameover.wav")
+game_over = pygame.mixer.Sound(Sounds.sfx_gameover.value)
 game_over.set_volume(Sound.game_over_sound)
 
 
@@ -290,7 +263,7 @@ def change_size_rate(size):
     #     ss.y = size[1] - ss.sy
     # 비행체 객체의 사이즈 변경
     try:
-        ss.put_img("./Image/DesrtCar.png")
+        ss.put_img(Images.character_car.value)
         ss.change_size(Size.a_xsize, Size.a_ysize)
         ss.x*=Size.x_resize_rate
         ss.y*=Size.y_resize_rate
@@ -348,21 +321,18 @@ def change_size_rate(size):
 #     pygame.display.flip() # 그려왔던게 화면에 업데이트가 됨
 
 # 객체 생성
-ss = obj()
-# 우리들이 움직여야할 물체
-ss.put_img("./Image/DesrtCar.png")
+missile = Object(Images.missile_missile2.value, (size[0]//30, size[1]//20), 30)
+ss = Character(Images.character_car.value, (size[0]//9, size[1]//8), 10, missile)
 # 그림(비행체)의 크기를 조정
-ss.change_size(Size.a_xsize,Size.a_ysize)
 # 비행체의 위치를 하단의 중앙으로 바꾸기위해!
 # x값의 절반에서 피사체의 길이의 절반만큼 왼쪽으로 이동해야 정확히 가운데임
 ss.x = round(size[Size.x]/Size.half_split_num - ss.sx/Size.half_split_num)
 # 맨 밑에서 피사체의 y길이만큼 위로 올라와야함
 ss.y = size[Size.y] - ss.sy
 # 비행체가 움직이는 속도를 결정함
-ss.move = Speed.s_speed
 
 # 게임의 배경화면 설정
-background_image_desert = pygame.image.load("./Image/DESERT.jpeg")
+background_image_desert = pygame.image.load(Images.background_desert.value)
 background_image_desert = pygame.transform.scale(background_image_desert,size) # 그림의 크기를 조정한다.
 
 
@@ -384,33 +354,11 @@ while not SB:
         if event.type == pygame.QUIT: # x버튼을 눌렀을때!
             SB = True # SB 가 1이되면 while문을 빠져나오게 된다!
         if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
-            # 키를 누르고있는 상태 : True
-            # 키를 떼고있는 상태 : False
-            if event.key == pygame.K_LEFT:  # 만약 누른 키가 왼쪽 방향키 라면?
-                Move.left_go = True
-            if event.key == pygame.K_RIGHT:  # 만약 누른 키가 오른쪽 방향키 라면?
-                Move.right_go = True
             if event.key == pygame.K_SPACE:  # 만약 누른키가 space키 라면?
                 Move.space_go = True
-                # 속도를 1/6으로 낮췄는데 누를때마다도 한번씩 발사하고싶어서 누르면 k=0으로 초기화시킴 -> while문 조건 통과하기위해
-                # k=0
-            if event.key == pygame.K_UP :
-                Move.up_go = True
-            if event.key == pygame.K_DOWN:
-                Move.down_go = True
-            
         elif event.type == pygame.KEYUP: # 키를 누르는것을 뗐을때!
-            if event.key == pygame.K_LEFT: # 키를 뗐다면 그 키가 왼쪽 방향키 인가?
-                Move.left_go = False
-            elif event.key == pygame.K_RIGHT: # 키를 뗐다면 그 키가 오른쪽 방향키 인가?
-                Move.right_go = False
-            elif event.key == pygame.K_SPACE: # 키를 뗐다면 그 키가 스페이스 키인가?
+            if event.key == pygame.K_SPACE: # 키를 뗐다면 그 키가 스페이스 키인가?
                 Move.space_go = False
-            elif event.key == pygame.K_UP:
-                Move.up_go = False
-            elif event.key == pygame.K_DOWN:
-                Move.down_go = False
-        
         elif event.type == pygame.VIDEORESIZE:
             width, height = event.w, event.h
             Size.x_resize_rate = width / size[Size.x]
@@ -418,53 +366,17 @@ while not SB:
             size =[width,height]
             window = pygame.display.set_mode(size, pygame.RESIZABLE)
             Move.position = True
-            
+    key_pressed = pygame.key.get_pressed()
+    ss.move(key_pressed, size)
 
     # 마우스로 인해 화면이 작아지면 다른 객체들의 사이즈도 전부 변경
     if Move.position is True:
         change_size_rate(size)
     
-    
-    
         # 4-3. 입력과 시간에 따른 변화 
     now_time = datetime.now()
         # 코드실행 시점에서 현재시간과릐 차이를 초로 바꿈
     delta_time = (now_time - start_time).total_seconds()
-
-
-    # 버튼을 꾹 길게 눌렀을때 움직이게 하기
-    # 왼쪽 방향키를 눌렀을 때
-    if Move.left_go == True:
-        ss.x -= ss.move
-        # 물체가 왼쪽 끝 경계값으로 이동하면 더이상 나가지 않게끔 만듬!
-        # 배경이 뭐냐에 따라 달라질 듯 !
-        if ss.x < Move.boundary:
-            # 더 이상 나가지 못하도록 0 으로 막아줌
-            ss.x = Move.boundary 
-    # 오른쪽 방향키를 눌렀을 때
-    elif Move.right_go == True:
-        ss.x += ss.move
-        # 오른쪽 끝에서 비행선의 가로크기만큼 빼줘야한다
-        if ss.x >= size[Size.x] - ss.sx:
-            # 더 이상 오른쪽 바깥으로 못나가게 오른쪽 끝값으로 초기화
-            ss.x = size[Size.x] - ss.sx
-    # 윗 방향키를 눌렀을때
-    # 윗 방향키를 elif에서 if로 시작
-    # 좌우와 상하가 독립된 상태로 구분됨
-    if Move.up_go == True:
-        ss.y -= ss.move
-        # 게임화면 위쪽 화면으로 나가는 경우
-        if ss.y < Move.boundary:
-            # 더이상 나가지 못하게 위치값 고정
-            ss.y = Move.boundary
-    # 아래 방향키를 눌렀을때
-    elif Move.down_go == True:
-        ss.y += ss.move
-        # 게임화면 위쪽 화면으로 나가는 경우
-        if ss.y >= size[Size.y] - ss.sy:
-            # 더이상 나가지 못하게 위치값 고정
-            ss.y = size[Size.y] - ss.sy
-
 
     # 미사일의 속도 조정
     if Speed.m_initiate_speed_30-(Util.score // Util.score_10)>=Speed.m_max_speed:
@@ -478,9 +390,8 @@ while not SB:
     # k%6 이면 미사일의 발생 확률을 1/6으로  낮춤!
     if (Move.space_go == True) and Speed.k % m_speed == Speed.speed_end_point:
         # 미사일 객체 생성
-        mm = obj()
+        mm = Object(Images.missile_missile2.value, (size[0]//30,size[1]//20), 30)
         # 미사일의 사진
-        mm.put_img('./Image/MISSILE_2.png')
         # 미사일의 크기 조정
         # m_xsize = 5, m_ysize = 15
         mm.change_size(Size.m_xsize,Size.m_ysize)
@@ -499,9 +410,6 @@ while not SB:
             mm.x = round(ss.x + ss.sx / Size.half_split_num - mm.sx / Size.half_split_num)
             mm.y = ss.y - mm.sy - Util.m_loc_10
         
-        
-        # 미사일의 움직이는 속도를 결정함
-        mm.move = Speed.m_initiate_speed_15
         # 미사일의 객체를 리스트에 저장한다.
         Util.m_list.append(mm)
 
@@ -511,12 +419,10 @@ while not SB:
         # 두번째 미사일 객체 생성
         missile1.stop()
         missile2.play()
-        mm2 = obj()
-        mm2.put_img('./Image/MISSILE_2.png')
+        mm2 = Object(Images.missile_missile2.value, (size[0]//30,size[1]//20), 15)
         mm2.change_size(Size.m_xsize, Size.m_ysize)
         mm2.x = round(ss.x +(ss.sx * Size.half_split_num) / Size.third_split_num - mm.sx / Size.half_split_num)
         mm2.y = ss.y - mm2.sy - Util.m_loc_10
-        mm2.move = Speed.m_initiate_speed_15
         Util.m_list.append(mm2)
 
 
@@ -530,7 +436,7 @@ while not SB:
         # i 번째 미사일
         m = Util.m_list[i]
         # 미사일 속도만큼 미사일이 y축방향으로 빠져나간다.
-        m.y -= m.move
+        m.y -= m.velocity
         if Util.score > Util.score_400:
             missile2.stop()
             missile3.play()
@@ -549,11 +455,11 @@ while not SB:
 
     # score 가 10점 증가함에따라 피사체 발생 개수 0.01확률 증가 
     if random.random() > Speed.create_rate_c - (Util.score//Util.score_200)/Util.score_100:
-        # 피사체 객체 생성
-        aa = obj()
-        aa.put_img("./Image/Scorphion.png")
         # 피사체의 그림 크기 조정
         random_size = random.randint(Size.min_size,Size.max_size)
+        # 피사체 객체 생성
+        aa = Object(Images.enemy_scrophion.value, (random_size,random_size), Speed.a_init_speed + (Util.score//Util.score_300))
+
         # print("Size.min_size : {} Size.max_size : {} ss.x : {} ss.y : {} ss.sx : {} ss.sy : {} size : {} aa.sx : {} aa.sy : {}".format(Size.min_size, Size.max_size,ss.x,ss.y,ss.sx,ss.sy,size,aa.sx,aa.sy))
         # 정사각형 모양의 피사체
         # 이미 사이즈가 한번 바뀌었으므로 다시 바뀔 필요가 없음 또 바꾸면 오류 발생
@@ -563,26 +469,22 @@ while not SB:
         # 0부터 오른쪽 끝까지의 랜덤변수인데 비행기크기보다 작으므로 미사일을 안맞는 외계인도 고려해야함(비행선크기/2 를 뺴줘야함)
         aa.x = random.randrange(Size.rand_min_size, size[Size.x] - aa.sx - round(ss.sx/Size.half_split_num))
         aa.y = Util.a_loc_10
-        aa.move = Speed.a_init_speed + (Util.score//Util.score_300)
         Util.a_list.append(aa)
     
     # 장애물 등장
     if random.random() > Speed.create_rate_r:
         # 장애물 객체 생성
-        block = obj()
-        block.put_img('./Image/Catus.png')
         random_size = random.randint(Size.min_size,Size.block_max_size)
+        block = Object(Images.enemy_cactus.value,  (random_size,random_size), Speed.b_init_speed + (Util.score//Util.score_100))
         block.change_size(random_size, random_size)
-        # block.change_size(Size.block_size, Size.block_size)
         block.x = Util.start_loc[Size.x] - block.sx
         block.y = random.randint(Size.rand_min_size, size[Size.x] - block.sx - round(ss.sx/Size.half_split_num))
-        block.move = Speed.b_init_speed + (Util.score//Util.score_100)
         Util.block_list.append(block)
 
     d2_list=[]
     for i in range(len(Util.block_list)):
         b = Util.block_list[i]
-        b.x += b.move
+        b.x += b.velocity
         if b.x >= size[Size.x]:
             d2_list.append(i)
 
@@ -595,7 +497,7 @@ while not SB:
     d_list = []
     for i in range(len(Util.a_list)):
         a = Util.a_list[i]
-        a.y += a.move
+        a.y += a.velocity
         # 외계인이 화면 밖으로 나갔다면 지워준다.
         if a.y >= size[Size.y]:
             d_list.append(i)
@@ -680,32 +582,32 @@ while not SB:
 
     # 4-4. 그리기 
     #  마우스에의해 창크기가 바뀜에 따라 배경화면 크기가 바뀜
-    background_image_desert = pygame.image.load("./Image/DESERT.jpeg")
+    background_image_desert = pygame.image.load(Images.background_desert.value)
     background_image_desert = pygame.transform.scale(background_image_desert, size)
     screen.blit(background_image_desert, Util.start_loc)
     
 
     # 비행체 보여주기
-    ss.show()
+    ss.show(screen)
     # 미사일 보여주기
     for m in Util.m_list:
-        m.show()
+        m.show(screen)
     # 피사체 보여주기
     for a in Util.a_list:
         # print(a.sx,a.sy)
         if (a.sx > Size.err_x) or (a.sy > Size.err_y):
-            a.put_img("./Image/Scorphion.png")
+            a.put_img(Images.enemy_scrophion.value)
             a.change_size(Size.standard_size,Size.standard_size)
-        a.show()
+        a.show(screen)
     # 선인장 장애물 보여주기
     for d in Util.block_list:
-        d.show()
+        d.show(screen)
     # 점수 산정
     # Util.score = (Util.kill*5 - Util.loss*8)
     # 점수산정을 메소드화 하였음
     cal_score(Util.kill, Util.loss)
     
-    font = pygame.font.Font("./Font/DXHanlgrumStd-Regular.otf", FontSize.size_kill_loss)
+    font = pygame.font.Font(Fonts.font_default.value, FontSize.size_kill_loss)
     text_kill = font.render("Killed : {} Loss : {}  Score : {}".format(Util.kill, Util.loss, Util.score), True, Color.yellow) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
     screen.blit(text_kill,FontSize.loc_kill_loss) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
     
@@ -744,7 +646,7 @@ while Util.GO:
     screen.blit(background_image_desert, Util.start_loc)
 
     FontSize.size_gameover = sum(size) // Resizing.size_gameover
-    font = pygame.font.Font("./Font/DXHanlgrumStd-Regular.otf", FontSize.size_gameover)
+    font = pygame.font.Font(Fonts.font_default.value, FontSize.size_gameover)
     text_kill = font.render("GAME OVER", True, Color.red) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
     # screen.blit(text_kill,(size[0] // Size.half_split_num - (size[0] // Size.half_split_num) // Size.half_split_num + FontSize.lensize_gameover, round((size[1] / Size.half_split_num) - FontSize.lensize_gameover))) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
     screen.blit(text_kill, (size[Size.x] * Size.three_five - FontSize.size_gameover, size[Size.y]//Size.half_split_num ))
