@@ -19,6 +19,10 @@ class Object:
             self.img = pygame.image.load(address)
         self.sx, self.sy = self.img.get_size()
 
+    def set_XY(self,loc):
+        self.x = loc[0]
+        self.y = loc[1]
+
     # 피사체의 그림 조정
     def change_size(self,sx,sy):
         self.img = pygame.transform.scale(self.img,(sx,sy)) # 그림의 크기를 조정한다.

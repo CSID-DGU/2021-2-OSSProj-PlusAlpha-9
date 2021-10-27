@@ -1,9 +1,9 @@
 {
     "chapter":{
         "Oasis":{
-            "1":[300,".Image/oasis_stage_1","/Sound/oasis_bgm",0,1],
-            "2":[450,".Image/oasis_stage_2","/Sound/oasis_bgm",0,0],
-            "Boss":[450,".Image/oasis_stage_2","/Sound/oasis_bgm",1,0]
+            "1":["Oasis",1,300,".Image/oasis_stage_1","/Sound/oasis_bgm",0,1,"./Image/Scorphion.png"],
+            "2":["Oasis",2,450,".Image/oasis_stage_2","/Sound/oasis_bgm",0,0,"./Image/Scorphion.png"],
+            "Boss":["Oasis","Boss",450,".Image/oasis_stage_2","/Sound/oasis_bgm",1,0,"./Image/Scorphion.png"]
         },
         "Ice":{
             "1":[300,".Image/ice_stage_1","/Sound/ice_bgm",0,1],
