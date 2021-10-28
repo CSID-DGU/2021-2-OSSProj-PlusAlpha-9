@@ -11,6 +11,7 @@ from StageGame import StageGame
 from Stage import Stage
 from Character import Character
 from Defs import *
+from StageDataManager import *
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -81,15 +82,10 @@ def startInfiniteGame():
 
 def startStageGame(character,stage):
     StageGame(character,stage).main()
-
+    
 #스테이지 데이터 파일 읽어오기
-with open('stagedata.json') as f:
-    stageData = json.load(f,object_pairs_hook=OrderedDict)
+stageData = StageDataManager.loadStageData()
 
-print(type(stageData))
-print(list(stageData["chapter"].keys()))
-for i in list(stageData["chapter"].keys()):
-    print(stageData["chapter"][i].keys())
 
 #스테이지 메뉴 관련 함수
 selectedChapter = [list(stageData["chapter"].keys())[0]]
@@ -119,11 +115,11 @@ def changeStage(selected_value, stageNumber, **kwargs):
     print(value_tuple)
     print(selectedStage[0])
 
-def startGame(selectedCh:list,selectedSt:list):
+def checkStageUnlocked(selectedCh:list,selectedSt:list):
     selectedChapter = selectedCh[0]
     selectedStage = selectedSt[0]
-    if(stageData["chapter"][selectedChapter][selectedStage][4]): #스테이지가 unlocked되어 있다면 실행
-        print("start")
+    stageData = StageDataManager.loadStageData()
+    if(stageData["chapter"][selectedChapter][selectedStage][6]): #스테이지가 unlocked되어 있다면 실행
         startStageGame(Character(Images.character_car.value,(100,100),10,0),Stage(stageData["chapter"][selectedChapter][selectedStage]))
     else:
         print("locked")
@@ -141,7 +137,7 @@ chapterSelector.add_self_to_kwargs()  # Callbacks will receive widget as paramet
 
 stages = [('1', (0)),
          ('2', (0)),
-         ('Boss', (0))]
+         ('3', (0))]
 stageSelector = stageMenu.add.selector(
     title='Stage :\t',
     items=stages,
@@ -150,7 +146,7 @@ stageSelector = stageMenu.add.selector(
 )
 stageSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
 
-stageMenu.add.button("PLAY",startGame,selectedChapter,selectedStage)
+stageMenu.add.button("PLAY",checkStageUnlocked,selectedChapter,selectedStage)
 stageMenu.add.button("BACK",pygame_menu.events.BACK)
 
 

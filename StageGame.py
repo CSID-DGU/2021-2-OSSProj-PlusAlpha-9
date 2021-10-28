@@ -7,8 +7,12 @@
 import time
 import pygame
 import random
+import pygame_menu
+import json
+from collections import OrderedDict
 from Mob import Mob
 from Defs import *
+from StageDataManager import *
 class StageGame:
 
     def __init__(self,character,stage):
@@ -61,7 +65,9 @@ class StageGame:
                     각 키가 눌러지면 플레이어 캐릭터 객체의 값 수정 (현재는 종료를 위해 왼쪽키를 종료로 둠)
                     '''
                     if event.key == pygame.K_x:
-                        SB=1
+                        self.SB=1
+                    if event.key == pygame.K_z: #테스트용
+                        self.score += 30
                 elif event.type == pygame.KEYUP: # 키를 뗐을때
                     if event.key == pygame.K_LEFT:
                         pass
@@ -90,13 +96,13 @@ class StageGame:
             for missile in self.missileList:
                 for mob in self.mobList:
                     if(self.checkCrash(missile,mob)):
-                        score += 10
-                        pass
+                        self.score += 10
 
             #몹과 플레이어 충돌 감지
             for mob in self.mobList:
                 if(self.checkCrash(mob,self.character)):
                     print("crash!")
+                    self.life -= 1
 
             #화면 그리기
             self.screen.fill((255,255,255))
@@ -124,10 +130,12 @@ class StageGame:
             #점수가 목표점수 이상이면 스테이지 클리어 화면
             if(self.score>=self.goalScore):
                 self.showStageClearScreen()
+                return
 
             #목숨이 0 이하면 게임 오버 화면
             if(self.life<1):
                 self.showGameOverScreen()
+                return
 
 
         # While 빠져나오면 게임오버 스크린 실행
@@ -145,12 +153,32 @@ class StageGame:
             return True
         else:
             return False
-    
-    def showStageClearScreen():
 
-        return
+    def toMenu(self,menu):
+        menu.disable()
 
+    #클리어 화면
+    def showStageClearScreen(self):
+        #다음 스테이지 해제
+        StageDataManager.unlockNextStage(self.stage)
+        #화면 표시
+        menu = pygame_menu.Menu('Stage Clear!', self.size[0]*0.7, self.size[1]*0.8,
+                            theme=pygame_menu.themes.THEME_BLUE)
+
+        menu.add.label(f"{self.stage.chapter} - {self.stage.stage} clear!!")
+        menu.add.label("Congratulation!")
+        menu.add.label("")
+        menu.add.button('to Menu', self.toMenu,menu)
+        menu.mainloop(self.screen)
+
+    #실패 화면
     def showGameOverScreen(self):
-        return
+        menu = pygame_menu.Menu('Failed!!', self.size[0]*0.7, self.size[1]*0.8,
+                            theme=pygame_menu.themes.THEME_BLUE)
+        menu.add.label(":(",font_size=250)
+        menu.add.label("")
+        menu.add.button('to Menu', self.toMenu,menu)
+        menu.mainloop(self.screen)
+        
 
     
