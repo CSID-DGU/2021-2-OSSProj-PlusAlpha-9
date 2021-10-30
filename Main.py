@@ -74,20 +74,12 @@ score_db = pymysql.connect(
 
 def show_rank():
     menu.clear()
-    # self.mytheme.widget_margin=self.widget_margin_showpage
-    # menu.add_vertical_margin(self.margin_main)
     menu.add.label("   - RANKING -   ", selectable=False)
-    # menu.add_vertical_margin(self.margin_show)
     menu.add.button('     test ranking     ', test_rank)
-    # self.menu.add_button('     Easy mode ranking     ', self.easy_rank, font_size=self.font_main)
-    # self.menu.add_button('     Hard mode ranking    ', self.hard_rank, font_size=self.font_main)
-    # self.menu.add_button('     Level mode ranking    ', self.level_rank, font_size=self.font_main)
     menu.add.button('         back         ', back)
 
 def test_rank():                                                                                                            #easy 모드 랭킹
         menu.clear()
-        # self.mytheme.widget_margin=self.widget_margin_rank
-        # self.menu.add_vertical_margin(self.margin_main)
         menu.add.label("--Test Rank--",selectable=False,font_size=30)
         menu.add.label("ID      Score",selectable=False, font_size=20)
         easy_data = load_data()
@@ -108,12 +100,6 @@ def test_rank():                                                                
 def load_data():                                             #데이터 베이스에서 데이터 불러오기
         pass
         curs = score_db.cursor(pymysql.cursors.DictCursor)
-        # if game_mode == 'Easy':
-        #     sql = "select * from easymode_score order by score desc "
-        # elif game_mode == 'Hard':
-        #     sql = "select * from hardmode_score order by score desc"
-        # elif game_mode == 'Level':
-        #     sql = "select * from levelmode_score order by level desc"
         sql = "select * from test_score order by score desc"
         curs.execute(sql)
         data = curs.fetchall()
@@ -122,15 +108,6 @@ def load_data():                                             #데이터 베이�
 
 def add_data(self, ID, score):                                   #데이터 베이스에서 데이터 추가하기
     curs = self.score_db.cursor()
-    # if game_mode == 'Easy':
-    #     sql = "INSERT INTO easymode_score (ID, score) VALUES (%s, %s)"
-    #     curs.execute(sql, (ID, score))
-    # elif game_mode == 'Hard':
-    #     sql = "INSERT INTO hardmode_score (ID, score) VALUES (%s, %s)"
-    #     curs.execute(sql, (ID, score))
-    # elif game_mode == 'Level':
-    #     sql = "INSERT INTO levelmode_score (ID, level) VALUES (%s, %s)"
-    #     curs.execute(sql, (ID, score))
     sql = "INSERT INTO test_score (ID, score) VALUES (%s, %s)"
     curs.execute(sql, (ID, score))
     self.score_db.commit()
@@ -233,8 +210,6 @@ menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
 if __name__ == '__main__':
     while True:
-        # surface = pygame.display.set_mode((600, 800),
-        #                                           pygame.RESIZABLE) -> surface가 정의되지 않아서 추가함
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
