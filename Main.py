@@ -233,8 +233,8 @@ menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
 if __name__ == '__main__':
     while True:
-        surface = pygame.display.set_mode((600, 800),
-                                                  pygame.RESIZABLE)
+        # surface = pygame.display.set_mode((600, 800),
+        #                                           pygame.RESIZABLE) -> surface가 정의되지 않아서 추가함
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
