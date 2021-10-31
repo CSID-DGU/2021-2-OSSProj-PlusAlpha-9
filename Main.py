@@ -8,9 +8,10 @@ from datetime import datetime
 import pygame_menu 
 from os import system
 from InfiniteGame import InfiniteGame
+from Missile import Missile
 from StageGame import StageGame
 from Stage import Stage
-from Character import Character
+from Character import *
 from Defs import *
 from StageDataManager import *
 class Display:
@@ -37,6 +38,7 @@ mytheme.background_color = menu_image
 menu = pygame_menu.Menu('MUHIRRYO GOOD', ww,wh,theme=mytheme)
 #스테이지선택메뉴
 stageMenu = pygame_menu.Menu("Stage Select",ww,wh,theme=mytheme)
+character_menu = pygame_menu.Menu("Character Select",ww,wh,theme=mytheme)
 
 background = pygame.image.load("./Image/StartImage.png")
 
@@ -142,6 +144,8 @@ stageData = StageDataManager.loadStageData()
 #스테이지 메뉴 관련 함수
 selectedChapter = [list(stageData["chapter"].keys())[0]]
 selectedStage = ["1"]
+
+selectedCharacter = ["Battleship"]
 def toTuple(str):
     return (str,str)
 
@@ -167,12 +171,24 @@ def changeStage(selected_value, stageNumber, **kwargs):
     print(value_tuple)
     print(selectedStage[0])
 
-def checkStageUnlocked(selectedCh:list,selectedSt:list):
+def changeCharacter(selected_value, characterNumber, **kwargs):
+    value_tuple, index = selected_value
+    selectedCharacter[0] = value_tuple[0]
+    print(value_tuple)
+    print(selectedCharacter[0])
+
+def checkStageUnlocked(selectedCh:list,selectedSt:list,selectedChar:list):
     selectedChapter = selectedCh[0]
     selectedStage = selectedSt[0]
+    selectedCharacter = selectedChar[0]
     stageData = StageDataManager.loadStageData()
     if(stageData["chapter"][selectedChapter][selectedStage][6]): #스테이지가 unlocked되어 있다면 실행
-        startStageGame(Character(Images.character_car.value,(100,100),10,0),Stage(stageData["chapter"][selectedChapter][selectedStage]))
+        if(selectedCharacter == "Battleship"):
+            startStageGame(Battleship(size),Stage(stageData["chapter"][selectedChapter][selectedStage]))
+        elif(selectedCharacter == "Speedship"):
+            startStageGame(Speedship(size),Stage(stageData["chapter"][selectedChapter][selectedStage]))
+        elif(selectedCharacter == "Medship"):
+            startStageGame(Medship(size),Stage(stageData["chapter"][selectedChapter][selectedStage]))
     else:
         print("locked")
 
@@ -198,9 +214,20 @@ stageSelector = stageMenu.add.selector(
 )
 stageSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
 
-stageMenu.add.button("PLAY",checkStageUnlocked,selectedChapter,selectedStage)
+stageMenu.add.button("PLAY",character_menu)
 stageMenu.add.button("BACK",pygame_menu.events.BACK)
 
+
+characters = [('Battleship', (0)), ('Speedship', (1)), ('Medship', (2))]
+character_selector = character_menu.add.selector(
+    title='Character :\t',
+    items=characters,
+    # onreturn=change_background_color,  # User press "Return" button
+    onchange=changeCharacter  # User changes value with left/right keys
+)
+character_selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
+character_menu.add.button("PLAY",checkStageUnlocked,selectedChapter,selectedStage, selectedCharacter)
+character_menu.add.button("BACK",pygame_menu.events.BACK)
 
 #메인 메뉴 구성
 menu.add.button('Select mode', show_mode)

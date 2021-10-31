@@ -4,11 +4,10 @@ import time
 from datetime import datetime
 from pygame.constants import VIDEORESIZE
 from math import ceil
+from Missile import Missile
 from Object import Object
-from Character import Character
-from Defs import Images
-from Defs import Sounds
-from Defs import Fonts
+from Character import *
+from Defs import *
 # sx, sy => 피사체의 x위치 y 위치
 # x, y => 비행기의 가로길이, 세로길이
 # 1. 게임초기화
@@ -263,7 +262,7 @@ def change_size_rate(size):
     #     ss.y = size[1] - ss.sy
     # 비행체 객체의 사이즈 변경
     try:
-        ss.put_img(Images.character_car.value)
+        ss.put_img(ss.img_path)
         ss.change_size(Size.a_xsize, Size.a_ysize)
         ss.x*=Size.x_resize_rate
         ss.y*=Size.y_resize_rate
@@ -271,7 +270,7 @@ def change_size_rate(size):
         pass
     try:
         # 지금 현재 미사일을 발생시키지 않는 상태 일 수도 있기 때문에 try, except구문 사용
-        for i in Util.m_list:
+        for i in ss.get_missiles_fired():
             i.change_size(int(i.sx*Size.x_resize_rate),int(i.sy*Size.y_resize_rate))
     except :
         pass
@@ -321,14 +320,12 @@ def change_size_rate(size):
 #     pygame.display.flip() # 그려왔던게 화면에 업데이트가 됨
 
 # 객체 생성
-missile = Object(Images.missile_missile2.value, (size[0]//30, size[1]//20), 30)
-ss = Character(Images.character_car.value, (size[0]//9, size[1]//8), 10, missile)
-# 그림(비행체)의 크기를 조정
+ss = Battleship(size)
 # 비행체의 위치를 하단의 중앙으로 바꾸기위해!
 # x값의 절반에서 피사체의 길이의 절반만큼 왼쪽으로 이동해야 정확히 가운데임
-ss.x = round(size[Size.x]/Size.half_split_num - ss.sx/Size.half_split_num)
+ss.x = round(size[0]/2 - ss.sx/2)
 # 맨 밑에서 피사체의 y길이만큼 위로 올라와야함
-ss.y = size[Size.y] - ss.sy
+ss.y = size[1] - ss.sy
 # 비행체가 움직이는 속도를 결정함
 
 # 게임의 배경화면 설정
@@ -355,12 +352,6 @@ while not SB:
     for event in pygame.event.get():  # 어떤 동작을 했을때 그 동작을 받아옴
         if event.type == pygame.QUIT: # x버튼을 눌렀을때!
             SB = True # SB 가 1이되면 while문을 빠져나오게 된다!
-        if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
-            if event.key == pygame.K_SPACE:  # 만약 누른키가 space키 라면?
-                Move.space_go = True
-        elif event.type == pygame.KEYUP: # 키를 누르는것을 뗐을때!
-            if event.key == pygame.K_SPACE: # 키를 뗐다면 그 키가 스페이스 키인가?
-                Move.space_go = False
         elif event.type == pygame.VIDEORESIZE:
             width, height = event.w, event.h
             Size.x_resize_rate = width / size[Size.x]
@@ -368,8 +359,9 @@ while not SB:
             size =[width,height]
             window = pygame.display.set_mode(size, pygame.RESIZABLE)
             Move.position = True
-    key_pressed = pygame.key.get_pressed()
-    ss.move(key_pressed, size)
+            ss.set_boundary(size)
+
+    ss.update()
 
     # 마우스로 인해 화면이 작아지면 다른 객체들의 사이즈도 전부 변경
     if Move.position is True:
@@ -380,76 +372,22 @@ while not SB:
         # 코드실행 시점에서 현재시간과릐 차이를 초로 바꿈
     delta_time = (now_time - start_time).total_seconds()
 
-    # 미사일의 속도 조정
-    if Speed.m_initiate_speed_30-(Util.score // Util.score_10)>=Speed.m_max_speed:
-        m_speed = Speed.m_initiate_speed_30 - (Util.score // Util.score_10)
-    else:
-        m_speed = Speed.m_max_speed
-
-
-
-    # 점수와 관련해서 미사일의 속도를 바꾸면 좋을듯 !
-    # k%6 이면 미사일의 발생 확률을 1/6으로  낮춤!
-    if (Move.space_go == True) and Speed.k % m_speed == Speed.speed_end_point:
-        # 미사일 객체 생성
-        mm = Object(Images.missile_missile2.value, (size[0]//30,size[1]//20), 30)
-        # 미사일의 사진
-        # 미사일의 크기 조정
-        # m_xsize = 5, m_ysize = 15
-        mm.change_size(Size.m_xsize,Size.m_ysize)
-        # 미사일 생성시 효과음
-        missile1.play()
-        # 미사일의 x값 (위치)
-        if Util.score < Util.score_200:
-            mm.x = round(ss.x + ss.sx / Size.half_split_num - mm.sx / Size.half_split_num)
-            # 미사일의 위치 = 비행기의 위치 - 미사일의 y크기 
-            mm.y = ss.y - mm.sy - Util.m_loc_10
-        elif Util.score >= Util.score_200 and Util.score < Util.score_400:
-            mm.x = round(ss.x + ss.sx / Size.third_split_num - mm.sx / Size.half_split_num)
-            # 미사일의 위치 = 비행기의 위치 - 미사일의 y크기 
-            mm.y = ss.y - mm.sy - Util.m_loc_10
-        elif Util.score >= Util.score_400:
-            mm.x = round(ss.x + ss.sx / Size.half_split_num - mm.sx / Size.half_split_num)
-            mm.y = ss.y - mm.sy - Util.m_loc_10
-        
-        # 미사일의 객체를 리스트에 저장한다.
-        Util.m_list.append(mm)
-
-    # 점수가 200점 이상이라면 미사일이 한개 더 늘어남
-    # 점수가 400점 이상이라면 미사일의 발사 형태가 바뀜
-    if (Move.space_go == True) and (Speed.k%m_speed == Speed.speed_end_point) and Util.score >= Util.score_200:
-        # 두번째 미사일 객체 생성
-        missile1.stop()
-        missile2.play()
-        mm2 = Object(Images.missile_missile2.value, (size[0]//30,size[1]//20), 15)
-        mm2.change_size(Size.m_xsize, Size.m_ysize)
-        mm2.x = round(ss.x +(ss.sx * Size.half_split_num) / Size.third_split_num - mm.sx / Size.half_split_num)
-        mm2.y = ss.y - mm2.sy - Util.m_loc_10
-        Util.m_list.append(mm2)
-
-
     # 미사일의 발생 빈도 조절
     Speed.k += Util.missile_rate
 
     # 피사체의 리스트를 초기화함
     # delete list
     d_list = []
-    for i in range(len(Util.m_list)):
+    for i in range(len(ss.get_missiles_fired())):
         # i 번째 미사일
-        m = Util.m_list[i]
+        m = ss.get_missiles_fired()[i]
         # 미사일 속도만큼 미사일이 y축방향으로 빠져나간다.
         m.y -= m.velocity
-        if Util.score > Util.score_400:
-            missile2.stop()
-            missile3.play()
-            # 점수가 400점 이상이면 미사일이 꼬여서 나가는것 처럼 보이게 함
-            m.x+= random.uniform(-Util.m_loc_10,Util.m_loc_10)
-        # 미사일의 사이즈만큼 나갔을때 지워준다.
         if m.y < -m.sx:
             d_list.append(i)
     d_list.reverse()
     for d in d_list:
-        del Util.m_list[d]
+        del ss.get_missiles_fired()[d]
     
     # score 400점마다 비행체의 속도 1씩 증가
     Speed.s_speed = Speed.s_speed + Util.score // Util.score_400
@@ -515,9 +453,9 @@ while not SB:
     dm_list = []
     da_list = []
 
-    for i in range(len(Util.m_list)):
+    for i in range(len(ss.get_missiles_fired())):
         for j in range(len(Util.a_list)):
-            m = Util.m_list[i]
+            m = ss.get_missiles_fired()[i]
             a = Util.a_list[j]
             if crash2(m,a) is True:
                 dm_list.append(i)
@@ -530,11 +468,10 @@ while not SB:
     dm_list.reverse()
     da_list.reverse()
 
-
     # del로 미사일과 외계인 삭제하기
     try:
         for dm in dm_list:
-            del Util.m_list[dm]
+            del ss.get_missiles_fired()[dm]
     except :
         pass
     try:
@@ -546,8 +483,6 @@ while not SB:
             Util.kill += Util.obj_num
     except :
         pass
-
-    
 
     for i in range(len(Util.a_list)):
         a = Util.a_list[i]
@@ -609,7 +544,7 @@ while not SB:
     # 비행체 보여주기
     ss.show(screen)
     # 미사일 보여주기
-    for m in Util.m_list:
+    for m in ss.get_missiles_fired():
         m.show(screen)
     # 피사체 보여주기
     for a in Util.a_list:

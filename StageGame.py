@@ -10,6 +10,7 @@ import random
 import pygame_menu
 import json
 from collections import OrderedDict
+from Character import Character
 from Mob import Mob
 from Defs import *
 from StageDataManager import *
@@ -80,8 +81,8 @@ class StageGame:
                 
 
             #플레이어 객체 이동
-            key_pressed = pygame.key.get_pressed()
-            self.character.move(key_pressed, self.size)
+
+            self.character.update()
 
             #몹 객체 이동
             for mob in self.mobList:
