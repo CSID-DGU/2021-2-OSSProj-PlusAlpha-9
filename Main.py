@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 import json
+import pymysql
 from collections import OrderedDict
 from datetime import datetime
 import pygame_menu 
@@ -51,6 +52,7 @@ def back():
     menu.clear()
     menu.add.button('Select mode', show_mode)
     menu.add.button('Help',show_help)
+    menu.add.button('Rank',show_rank)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
 def help():
@@ -60,6 +62,56 @@ def show_help():
     menu.clear()
     menu.add.button('Back',back)
     menu.add.image(image_path='./Image/howtoplay.png', angle=Display.angle, scale=Display.help_scale)
+
+score_db = pymysql.connect(
+        user = 'admin',
+        passwd = 'the-journey',
+        # port = 3306,
+        host = 'the-journey-db.cvfqry6l19ls.ap-northeast-2.rds.amazonaws.com',
+        db = 'sys',
+        charset = 'utf8'
+        )
+
+def show_rank():
+    menu.clear()
+    menu.add.label("   - RANKING -   ", selectable=False)
+    menu.add.button('     test ranking     ', test_rank)
+    menu.add.button('         back         ', back)
+
+def test_rank():                                                                                                            #easy 모드 랭킹
+        menu.clear()
+        menu.add.label("--Test Rank--",selectable=False,font_size=30)
+        menu.add.label("ID      Score",selectable=False, font_size=20)
+        easy_data = load_data()
+        if len(easy_data)>5:
+            for i in range(5):
+                easy_name = str(easy_data[i]['ID'])
+                easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
+                r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
+                menu.add.label(r,selectable=False, font_size=15)
+        else:
+            for i in range(len(easy_data)):
+                easy_name = str(easy_data[i]['ID'])
+                easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
+                r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
+                menu.add.label(r,selectable=False, font_size=15)
+        menu.add.button('back', back)
+
+def load_data():                                             #데이터 베이스에서 데이터 불러오기
+        pass
+        curs = score_db.cursor(pymysql.cursors.DictCursor)
+        sql = "select * from test_score order by score desc"
+        curs.execute(sql)
+        data = curs.fetchall()
+        curs.close()
+        return data
+
+def add_data(self, ID, score):                                   #데이터 베이스에서 데이터 추가하기
+    curs = self.score_db.cursor()
+    sql = "INSERT INTO test_score (ID, score) VALUES (%s, %s)"
+    curs.execute(sql, (ID, score))
+    self.score_db.commit()
+    curs.close()  
 
 def on_resize() -> None:
     """
@@ -153,11 +205,11 @@ stageMenu.add.button("BACK",pygame_menu.events.BACK)
 #메인 메뉴 구성
 menu.add.button('Select mode', show_mode)
 menu.add.button('Help',show_help)
+menu.add.button('Rank',show_rank)
 menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
 if __name__ == '__main__':
     while True:
-        
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
