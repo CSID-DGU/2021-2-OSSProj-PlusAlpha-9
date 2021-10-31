@@ -5,6 +5,7 @@ class Object:
     def __init__(self, img_path, size, velocity):
         self.x =0
         self.y=0
+        self.img_path = img_path
         self.put_img(img_path)
         self.sx, self.sy = size
         self.change_size(self.sx, self.sy)
