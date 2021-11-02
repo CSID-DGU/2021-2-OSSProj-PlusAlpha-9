@@ -5,12 +5,13 @@
 # 로직 : 세이브파일 변경 후 저장 필요
 
 import time
+from typing import Sized
 import pygame
 import random
 import pygame_menu
 import json
 from collections import OrderedDict
-from Character import Character
+from Character import *
 from Mob import Mob
 from Defs import *
 from StageDataManager import *
@@ -81,29 +82,29 @@ class StageGame:
                 
 
             #플레이어 객체 이동
-
+            self.character.set_boundary(self.size)
             self.character.update()
 
             #몹 객체 이동
             for mob in self.mobList:
                 mob.move(self.size,self)
-                
-
-            #발사체 이동
-            for missile in self.missileList:
-                pass
 
             #발사체와 몹 충돌 감지
-            for missile in self.missileList:
+            for idx in range(len(self.character.get_missiles_fired())):
                 for mob in self.mobList:
-                    if(self.checkCrash(missile,mob)):
+                    if(self.checkCrash(self.character.get_missiles_fired()[idx],mob)):
                         self.score += 10
+                        self.character.missiles_to_be_del.append(idx)
 
             #몹과 플레이어 충돌 감지
             for mob in self.mobList:
                 if(self.checkCrash(mob,self.character)):
                     print("crash!")
                     self.life -= 1
+
+            self.character.missiles_to_be_del.reverse()
+            for idx in self.character.missiles_to_be_del:
+                del self.character.missiles_fired[idx]
 
             #화면 그리기
             self.screen.fill((255,255,255))
@@ -114,6 +115,9 @@ class StageGame:
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
+
+            for i in self.character.get_missiles_fired():
+                i.show(self.screen)
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)

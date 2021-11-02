@@ -8,3 +8,6 @@ class Missile(Object):
         self.sfx_path = sfx_path
         self.sfx = pygame.mixer.Sound(sfx_path)
         self.sfx.set_volume(0.1)
+
+    def update(self, boundary):
+        self.y -= self.velocity
