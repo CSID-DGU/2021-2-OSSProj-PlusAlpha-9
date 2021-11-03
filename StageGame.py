@@ -11,8 +11,10 @@ import random
 import pygame_menu
 import json
 from collections import OrderedDict
-from Character import *
+from Character import Character
+from Boss import Boss
 from Mob import Mob
+from Bullet import Bullet
 from Defs import *
 from StageDataManager import *
 class StageGame:
@@ -43,10 +45,16 @@ class StageGame:
         self.score = 0
         self.life = 3
         self.startTime = time.time()
-        self.mobGenRate = 0.1
+        self.mobGenRate = 0.01
         self.mobImage = stage.mobImage
         self.k=0
         self.SB = 0
+
+        # 4-1. 보스 스테이지를 위한 변수 초기화
+        self.isBossStage = stage.isBossStage
+        print("boss??",self.isBossStage)
+        self.boss = Boss(self.size,(150,200))
+        self.enemyBullets =[]
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
@@ -57,6 +65,9 @@ class StageGame:
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
             self.clock.tick(30)
+            
+            #화면 흰색으로 채우기
+            self.screen.fill((255,255,255))
 
             # 입력 처리
             for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
@@ -87,6 +98,17 @@ class StageGame:
             #몹 객체 이동
             for mob in self.mobList:
                 mob.move(self.size,self)
+
+            #보스 이동
+            if(self.isBossStage):
+                self.boss.draw(self.screen)
+                self.boss.update(self.enemyBullets,self.character)
+                self.boss.check()
+            
+            #적 투사체 이동
+            for bullet in self.enemyBullets:
+                bullet.move()
+                bullet.show(self.screen)
 
             #발사체와 몹 충돌 감지
             for idx in range(len(self.character.get_missiles_fired())):
