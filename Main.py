@@ -14,6 +14,7 @@ from Stage import Stage
 from Character import *
 from Defs import *
 from StageDataManager import *
+from CharacterDataManager import *
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -139,13 +140,13 @@ def startStageGame(character,stage):
     
 #스테이지 데이터 파일 읽어오기
 stageData = StageDataManager.loadStageData()
-
+characterData = CharacterDataManager.load()
 
 #스테이지 메뉴 관련 함수
 selectedChapter = [list(stageData["chapter"].keys())[0]]
 selectedStage = ["1"]
 
-selectedCharacter = ["Battleship"]
+selectedCharacter = [0]
 def toTuple(str):
     return (str,str)
 
@@ -173,24 +174,22 @@ def changeStage(selected_value, stageNumber, **kwargs):
 
 def changeCharacter(selected_value, characterNumber, **kwargs):
     value_tuple, index = selected_value
-    selectedCharacter[0] = value_tuple[0]
+    selectedCharacter[0] = characterNumber
     print(value_tuple)
     print(selectedCharacter[0])
 
-def checkStageUnlocked(selectedCh:list,selectedSt:list,selectedChar:list):
+def checkStageUnlocked(selectedCh:list,selectedSt:list, selectedChar:list):
     selectedChapter = selectedCh[0]
     selectedStage = selectedSt[0]
     selectedCharacter = selectedChar[0]
     stageData = StageDataManager.loadStageData()
     if(stageData["chapter"][selectedChapter][selectedStage][6]): #스테이지가 unlocked되어 있다면 실행
-        if(selectedCharacter == "Battleship"):
-            startStageGame(Battleship(size),Stage(stageData["chapter"][selectedChapter][selectedStage]))
-        elif(selectedCharacter == "Speedship"):
-            startStageGame(Speedship(size),Stage(stageData["chapter"][selectedChapter][selectedStage]))
-        elif(selectedCharacter == "Medship"):
-            startStageGame(Medship(size),Stage(stageData["chapter"][selectedChapter][selectedStage]))
+        if characterData[selectedCharacter].unlocked == True:
+            startStageGame(characterData[selectedCharacter],Stage(stageData["chapter"][selectedChapter][selectedStage]))
+        else:
+            print("character locked")    
     else:
-        print("locked")
+        print("stage locked")
 
 
 #스테이지 메뉴 구성
@@ -217,8 +216,10 @@ stageSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
 stageMenu.add.button("PLAY",character_menu)
 stageMenu.add.button("BACK",pygame_menu.events.BACK)
 
+characters = []
+for idx in range(len(characterData)):
+    characters.append((characterData[idx].name, idx))
 
-characters = [('Battleship', (0)), ('Speedship', (1)), ('Medship', (2))]
 character_selector = character_menu.add.selector(
     title='Character :\t',
     items=characters,
@@ -256,6 +257,3 @@ if __name__ == '__main__':
         menu.draw(surface)
 
         pygame.display.flip()
-
-            
-

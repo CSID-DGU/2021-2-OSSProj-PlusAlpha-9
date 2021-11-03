@@ -82,7 +82,6 @@ class StageGame:
                 
 
             #플레이어 객체 이동
-            self.character.set_boundary(self.size)
             self.character.update()
 
             #몹 객체 이동
@@ -104,7 +103,10 @@ class StageGame:
 
             self.character.missiles_to_be_del.reverse()
             for idx in self.character.missiles_to_be_del:
-                del self.character.missiles_fired[idx]
+                try:
+                    del self.character.missiles_fired[idx]
+                except IndexError:
+                    print("invalid index")
 
             #화면 그리기
             self.screen.fill((255,255,255))
