@@ -320,7 +320,8 @@ def change_size_rate(size):
 #     pygame.display.flip() # 그려왔던게 화면에 업데이트가 됨
 
 # 객체 생성
-ss = Battleship(size)
+
+ss = Character("Speedship", "./Image/bgspeedship.png", [10, 9], 15, "./Image/MISSILE_2.png", [10, 5], 20, 1.5, "./Sound/weapon-sound8.ogg", True)
 # 비행체의 위치를 하단의 중앙으로 바꾸기위해!
 # x값의 절반에서 피사체의 길이의 절반만큼 왼쪽으로 이동해야 정확히 가운데임
 ss.x = round(size[0]/2 - ss.sx/2)
@@ -359,7 +360,6 @@ while not SB:
             size =[width,height]
             window = pygame.display.set_mode(size, pygame.RESIZABLE)
             Move.position = True
-            ss.set_boundary(size)
 
     ss.update()
 
