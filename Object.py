@@ -31,3 +31,16 @@ class Object:
 
     def show(self, screen):
         screen.blit(self.img,(self.x,self.y))
+
+    #충돌 감지 함수
+    def checkCrash(self, o2):
+        o1_mask = pygame.mask.from_surface(self.img)
+        o2_mask = pygame.mask.from_surface(o2.img)
+
+        offset = (int(o2.x - self.x), int(o2.y - self.y))
+        collision = o1_mask.overlap(o2_mask, offset)
+        
+        if collision:
+            return True
+        else:
+            return False

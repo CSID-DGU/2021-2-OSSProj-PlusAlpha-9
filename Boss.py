@@ -29,6 +29,7 @@ class Boss():
         self.max_health = 12000
         self.health = self.max_health
         self.vulnerable = True
+        self.velocity = 8
         ##timers for attack balancing
         self.pause_timer = 120
         #firing time is reset if firing speed is reached
@@ -56,6 +57,8 @@ class Boss():
         self.angles_triple = [45, 90, 135]
         self.angles_quad = [18, 36, 54, 72]
         self.angles_quint = [15, 30, 45, 60, 75]
+        #Colors for HP display
+        self.colors = [(0,0,255),(0,255,0),(255,0,0)]
 
     def change_size(self,sx,sy):
         self.img = pygame.transform.scale(self.img,(sx,sy)) # 그림의 크기를 조정한다.
@@ -67,24 +70,24 @@ class Boss():
         #범위 내에서 이동하고, 총 위치도 이동
         if self.directions == 0:
             if self.y < boundary[1] - self.sy:
-                self.y += 3
+                self.y += self.velocity
                 for gun in self.gun_pos:
-                    gun.y +=3
+                    gun.y += self.velocity
         elif self.directions == 1:
             if 0 < self.y:
-                self.y -= 3
+                self.y -= self.velocity
                 for gun in self.gun_pos:
-                    gun.y -=3
+                    gun.y -= self.velocity
         elif self.directions == 2:
             if 0 < self.x:
-                self.x -= 3
+                self.x -= self.velocity
                 for gun in self.gun_pos:
-                    gun.x -=3
+                    gun.x -= self.velocity
         elif self.directions == 3:
             if self.x < boundary[0] - self.sx:
-                self.x += 3  
+                self.x += self.velocity 
                 for gun in self.gun_pos:
-                    gun.x +=3 
+                    gun.x += self.velocity
     
     
     #attack coreography
@@ -181,12 +184,14 @@ class Boss():
 
         #체력 표시
         font = pygame.font.Font(Fonts.font_default.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
-        boss_health_text = font.render("HP : %i/%i" %(self.health, self.max_health), True, (0,0,0)) # 폰트렌더링(문자열,안티앨리어싱,컬러)
+        boss_health_text = font.render("HP : %i/%i" %(self.health, self.max_health), True, self.colors[self.phase]) # 폰트렌더링(문자열,안티앨리어싱,컬러)
         screen.blit(boss_health_text,(self.x,self.y-20))
-    
+
+        #다음 액션 타이밍 예고
+        pygame.draw.rect(screen,(255,0,0),pygame.Rect(self.x+self.sx+10,self.y+(self.sy*0.2),5,self.grace_time))
+
     
     def update(self,enemyBullets,player,boundary):
-        print(self.firing_time)
 
         if self.grace_time == 0:
             #handles attack timings with some randomness
@@ -219,10 +224,11 @@ class Boss():
         self.outOfRangeAttack(enemyBullets,player) #shoots player if player is out of range
     
     #checks itself for health, changes phases after certain point
-    def check(self):
-        # for b in bullets:
-        #     if b.rect.colliderect(self.weakpoint_rect):
-        #         self.health -= b.dmg 
+    def check(self,player,game):
+        for bullet in player.missiles_fired:
+            if(bullet.checkCrash(self)):
+                self.health -= 1000
+                player.missiles_fired.remove(bullet)
         
         # #if health permits, spawns a randomly placed heart 
         # if 0 <= self.health%500 <= 10 and self.health != self.max_health:
@@ -233,15 +239,9 @@ class Boss():
         #     self.health -= 11
         
         
-        
         # checks if it is supposed to die
         if self.health <= 0:
-            # global bossFight
-            # bossFight = False
-            # global level
-            # level = 6
-            # self.health = self.max_health
-            pass
+            game.stage_cleared = True
         #changes phases
         elif self.health <= self.max_health // 3:
             self.phase = 2        
