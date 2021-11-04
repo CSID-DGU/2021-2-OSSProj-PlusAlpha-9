@@ -5,17 +5,26 @@ from Missile import Missile
 from Defs import *
 
 class Character(Object):
-    def __init__(self, img_path, size, velocity, missile, boundary):
-        super().__init__(img_path, size, velocity)
-        self.last_fired = time.time()
+    def __init__(self, name, img_path, size, velocity, missile_img, missile_size, missile_velocity, fire_interval, missile_sfx, unlocked):
+        self.boundary = pygame.display.get_surface().get_size()
+        
+        super().__init__(img_path, (self.boundary[0]//size[0], self.boundary[1]//size[1]), velocity)
+        
+        self.name = name
+        self.last_fired = 0.0
         self.missiles_fired = []
-        self.missile = missile
-        self.boundary = boundary
-
-    def set_boundary(self, boundary):
-        self.boundary = boundary
+        self.missiles_to_be_del = []
+        
+        self.missile_img = missile_img
+        self.missile_size = missile_size
+        self.missile_velocity = missile_velocity
+        self.fire_interval = fire_interval
+        self.missile_sfx = missile_sfx
+        self.unlocked = unlocked
 
     def update(self):
+        self.missiles_to_be_del = []
+        self.boundary = pygame.display.get_surface().get_size()
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
             self.x -= self.velocity
@@ -34,12 +43,16 @@ class Character(Object):
             if self.y >= self.boundary[1] - self.sy:
                 self.y = self.boundary[1] - self.sy
         if key_pressed[pygame.K_SPACE]:
-            if(time.time() - self.last_fired > 0.5):
+            if(time.time() - self.last_fired > self.fire_interval):
                 self.shoot()
+        for idx in range(len(self.missiles_fired)):
+            self.missiles_fired[idx].update(self.boundary)
+            if self.missiles_fired[idx].y < -self.missiles_fired[idx].sy:
+                self.missiles_to_be_del.append(idx)
             
     def shoot(self):
         self.last_fired = time.time()
-        missile = Missile(self.missile.img_path, (self.missile.sx, self.missile.sy), self.missile.velocity, self.missile.interval, self.missile.sfx_path)
+        missile = Missile(self.missile_img, self.missile_size, self.missile_velocity, self.fire_interval, self.missile_sfx)
         missile.change_size(self.boundary[0]//30,self.boundary[1]//20)
         missile.sfx.play()
         missile.x = round(self.x + self.sx / 2 - missile.sx / 2) 
@@ -48,18 +61,3 @@ class Character(Object):
 
     def get_missiles_fired(self):
         return self.missiles_fired
-
-class Battleship(Character):
-    def __init__(self, size):
-        missile = Missile(Images.missile_missile2.value, (size[0]//10, size[1]//5), 20, 2.0, Sounds.sfx_weapon2.value)
-        super().__init__(Images.char_battleship.value, (size[0]//9, size[1]//8), 5, missile, size)
-
-class Speedship(Character):
-    def __init__(self, size):
-        missile = Missile(Images.missile_missile2.value, (size[0]//30, size[1]//20), 30, 0.5, Sounds.sfx_weapon2.value)
-        super().__init__(Images.char_speedship.value, (size[0]//9, size[1]//8), 10, missile, size)
-
-class Medship(Character):
-    def __init__(self, size):
-        missile = Missile(Images.missile_missile2.value, (size[0]//20, size[1]//5), 25, 1.5, Sounds.sfx_weapon2.value)
-        super().__init__(Images.char_medship.value, (size[0]//7, size[1]//5), 25, missile, size)

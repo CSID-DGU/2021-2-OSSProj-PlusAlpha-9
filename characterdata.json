@@ -1,0 +1,52 @@
+{
+	"Characters": [
+		{
+			"name": "Battleship",
+			"img_path": "./Image/bgbattleship.png",
+			"size": [9, 8],
+			"velocity": 10,
+			"missile_img": "./Image/MISSILE_2.png",
+			"missile_size": [10, 5],
+			"missile_velocity": 20,
+			"fire_interval": 1.0,
+			"missile_sfx": "./Sound/weapon-sound8.ogg",
+			"unlocked": true
+		},
+		{
+			"name": "Speedship",
+			"img_path": "./Image/bgspeedship.png",
+			"size": [10, 9],
+			"velocity": 20,
+			"missile_img": "./Image/MISSILE_2.png",
+			"missile_size": [20, 10],
+			"missile_velocity": 20,
+			"fire_interval": 1.5,
+			"missile_sfx": "./Sound/weapon-sound8.ogg",
+			"unlocked": true
+		},
+		{
+			"name": "Medship",
+			"img_path": "./Image/medfrighter.png",
+			"size": [8, 7],
+			"velocity": 5,
+			"missile_img": "./Image/MISSILE_2.png",
+			"missile_size": [5, 2],
+			"missile_velocity": 20,
+			"fire_interval": 0.5,
+			"missile_sfx": "./Sound/weapon-sound8.ogg",
+			"unlocked": true
+		},
+		{
+			"name": "F5S1",
+			"img_path": "./Image/F5S1.png",
+			"size": [8, 7],
+			"velocity": 30,
+			"missile_img": "./Image/MISSILE_2.png",
+			"missile_size": [5, 2],
+			"missile_velocity": 20,
+			"fire_interval": 0.2,
+			"missile_sfx": "./Sound/weapon-sound8.ogg",
+			"unlocked": true
+		}
+	]
+}

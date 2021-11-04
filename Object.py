@@ -15,7 +15,7 @@ class Object:
         # png파일 일때
         # convert해줘야하는 문제가 있기때문에
         if address[-3:] == "png":
-            self.img = pygame.image.load(address).convert_alpha()    
+            self.img = pygame.image.load(address).convert_alpha()
         else: 
             self.img = pygame.image.load(address)
         self.sx, self.sy = self.img.get_size()
