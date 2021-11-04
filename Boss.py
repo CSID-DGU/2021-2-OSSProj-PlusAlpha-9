@@ -18,6 +18,7 @@ class Boss():
             self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(self.sx,self.sy))
         
         self.sx, self.sy = self.orig_imgs[0].get_size()
+        self.img = self.orig_imgs[0]
 
         self.rect = pygame.Rect(self.x, self.y, 800, 100)
 
@@ -87,7 +88,7 @@ class Boss():
     
     
     #attack coreography
-    def attack1(self,enemyBullets,player):  
+    def attack1(self,enemyBullets,player):
         #shoots 5 pellet spread from random gun
         if self.attacks[0]:
             self.target_gun = self.gun_pos[random.randint(0,3)]
@@ -111,7 +112,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle)), 
                         #                           self.target_gun[1]+self.y + 50 * sin(radians(angle)))            
-                       enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
                 #ends attack
                 if self.firing_time == self.firing_speed[self.phase] * len(self.gun_queue):
                     self.attacks[1] = False
@@ -171,11 +172,13 @@ class Boss():
     #draws itself and it's health
     def draw(self,screen):
         screen.blit(self.orig_imgs[self.phase], (self.x, self.y))
-        # self.rect = pygame.Rect(self.x, self.y, 800, 100)
+        pygame.draw.rect(screen,(0,0,0),pygame.Rect(self.x,self.y,self.sx,self.sy),width=2)
+
         # 총 그리기
         for gun in self.gun_pos:
             pygame.draw.circle(screen, (255,0,0), (gun.x,gun.y), 10)
         # draw.rect(screen, (255, 255,0), (15, self.HEIGHT - 85, int(985 * self.health / self.max_health), 75))
+
         #체력 표시
         font = pygame.font.Font(Fonts.font_default.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
         boss_health_text = font.render("HP : %i/%i" %(self.health, self.max_health), True, (0,0,0)) # 폰트렌더링(문자열,안티앨리어싱,컬러)
@@ -183,6 +186,8 @@ class Boss():
     
     
     def update(self,enemyBullets,player,boundary):
+        print(self.firing_time)
+
         if self.grace_time == 0:
             #handles attack timings with some randomness
             self.attacks[random.randint(0,3)] = True

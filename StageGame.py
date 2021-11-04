@@ -108,13 +108,15 @@ class StageGame:
                 self.boss.draw(self.screen)
                 self.boss.update(self.enemyBullets,self.character,self.size)
                 self.boss.check()
+
+            # 보스와 플레이어 충돌 감지
+            if(self.checkCrash(self.boss,self.character)):
+                self.life -= 1
             
             #적 투사체 이동
             for bullet in self.enemyBullets:
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
-
-            print(len(self.enemyBullets))
 
             #발사체와 몹 충돌 감지
             for missile in self.missileList:
