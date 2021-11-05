@@ -13,7 +13,7 @@ class Character(Object):
         self.name = name
         self.last_fired = 0.0
         self.missiles_fired = []
-        self.missiles_to_be_del = []
+        self.missiles_to_del = []
         
         self.missile_img = missile_img
         self.missile_size = missile_size
@@ -21,9 +21,15 @@ class Character(Object):
         self.fire_interval = fire_interval
         self.missile_sfx =  pygame.mixer.Sound(missile_sfx)
         self.missile_sfx.set_volume(0.1)
-        
+
         self.unlocked = unlocked
-        self.fire_count = 3
+        
+        self.min_fire_count = 1
+        self.max_fire_count = 5
+        self.fire_count = self.min_fire_count
+
+        self.last_crashed = 0.0
+        self.invincibility = 2.0
 
     def update(self):
         self.missiles_to_be_del = []
@@ -46,12 +52,15 @@ class Character(Object):
             if self.y >= self.boundary[1] - self.sy:
                 self.y = self.boundary[1] - self.sy
         if key_pressed[pygame.K_SPACE]:
-            if(time.time() - self.last_fired > self.fire_interval):
+            if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
-        for idx in range(len(self.missiles_fired)):
-            self.missiles_fired[idx].update(self.boundary)
-            if self.missiles_fired[idx].y < -self.missiles_fired[idx].sy:
-                self.missiles_to_be_del.append(idx)
+        if self.is_collidable == False:
+            if time.time() - self.last_crashed > self.invincibility:
+                self.is_collidable = True
+        for missile in list(self.missiles_fired):
+            missile.update()
+            if missile.y < -missile.sy:
+                self.missiles_fired.remove(missile)
             
     def shoot(self):
         self.last_fired = time.time()
