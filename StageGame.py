@@ -23,6 +23,7 @@ class StageGame:
     def __init__(self,character,stage):
         # 1. 게임초기화 
         pygame.init()
+        self.stage_cleared = False
 
         # 2. 게임창 옵션 설정
         infoObject = pygame.display.Info()
@@ -54,7 +55,6 @@ class StageGame:
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
         self.isBossStage = stage.isBossStage
-        print("boss??",self.isBossStage)
         self.boss = Boss(self.size,(150,200))
         self.enemyBullets =[]
 
@@ -109,14 +109,27 @@ class StageGame:
                 item.move()
 
             #보스 이동
+            #보스 업데이트
+
             if(self.isBossStage):
                 self.boss.draw(self.screen)
-                self.boss.update(self.enemyBullets,self.character)
-                self.boss.check()
-            
+                self.boss.update(self.enemyBullets,self.character,self.size)
+                self.boss.check(self.character,self)
+
+                # 보스와 플레이어 충돌 감지
+                if(self.checkCrash(self.boss,self.character)):
+                    self.life -= 1
+
+                #보스의 총알과 플레이어 충돌 감지
+                for bullet in self.enemyBullets:
+                    if(bullet.checkCrash(self.character)):
+                        self.life -=1
+                        self.enemyBullets.remove(bullet)
+
+        
             #적 투사체 이동
             for bullet in self.enemyBullets:
-                bullet.move()
+                bullet.move(self.size,self)
                 bullet.show(self.screen)
 
             for item in list(self.item_list):
@@ -133,17 +146,17 @@ class StageGame:
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
-            for mob in self.mobList:
+            for mob in list(self.mobList):
                 if(self.checkCrash(mob,self.character)):
                     if self.character.is_collidable == True:
                         self.character.last_crashed = time.time()
                         self.character.is_collidable = False
                         print("crash!")
                         self.life -= 1
+                        self.mobList.remove(mob)
+                   
 
             #화면 그리기
-            self.screen.fill((255,255,255))
-
             #플레이어 그리기
             self.character.show(self.screen)
 
@@ -171,7 +184,7 @@ class StageGame:
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
 
             #점수가 목표점수 이상이면 스테이지 클리어 화면
-            if(self.score>=self.goalScore):
+            if(self.score>=self.goalScore or self.stage_cleared):
                 self.showStageClearScreen()
                 return
 
