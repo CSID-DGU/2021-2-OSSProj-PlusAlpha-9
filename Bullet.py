@@ -19,10 +19,12 @@ class Bullet(Object):
         self.x = fire_loc[0]
         self.y = fire_loc[1]
 
-    def move(self):
+    def move(self,boundary,game):
         self.x += self.dx
         self.y += self.dy
-        
+        if self.y >= boundary[1] - self.sy or self.x>=boundary[0]-self.sx or self.x<0 or self.y< 0:
+            game.enemyBullets.remove(self)
+
 
 
     
