@@ -12,6 +12,7 @@ import pygame_menu
 import json
 from collections import OrderedDict
 from Character import Character
+from Item import Item
 from Boss import Boss
 from Mob import Mob
 from Bullet import Bullet
@@ -38,8 +39,8 @@ class StageGame:
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
+        self.item_list = []
         self.missileList = []
-        self.itemList = []
         self.character = character
         self.stage = stage
         self.goalScore = stage.goalScore
@@ -47,6 +48,7 @@ class StageGame:
         self.life = 3
         self.startTime = time.time()
         self.mobGenRate = 0.01
+        self.item_gen_rate = 0.004
         self.mobImage = stage.mobImage
         self.k=0
         self.SB = 0
@@ -91,6 +93,10 @@ class StageGame:
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
+            if(random.random()<self.item_gen_rate):
+                new_item = Item(Images.item_powerup.value,(20,20),5)
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
 
             #플레이어 객체 이동
             self.character.update()
@@ -99,7 +105,12 @@ class StageGame:
             for mob in self.mobList:
                 mob.move(self.size,self)
 
+            for item in self.item_list:
+                item.move()
+
+            #보스 이동
             #보스 업데이트
+
             if(self.isBossStage):
                 self.boss.draw(self.screen)
                 self.boss.update(self.enemyBullets,self.character,self.size)
@@ -121,25 +132,29 @@ class StageGame:
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
+            for item in list(self.item_list):
+                if(self.checkCrash(self.character,item)):
+                    item.use(self.character)
+                    self.item_list.remove(item)
+
             #발사체와 몹 충돌 감지
-            for idx in range(len(self.character.get_missiles_fired())):
-                for mob in self.mobList:
-                    if(self.checkCrash(self.character.get_missiles_fired()[idx],mob)):
+            for missile in list(self.character.get_missiles_fired()):
+                for mob in list(self.mobList):
+                    if self.checkCrash(missile,mob):
                         self.score += 10
-                        self.character.missiles_to_be_del.append(idx)
+                        self.character.missiles_fired.remove(missile)
+                        self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
-            for mob in self.mobList:
+            for mob in list(self.mobList):
                 if(self.checkCrash(mob,self.character)):
-                    self.life -= 1
-                    self.mobList.remove(mob)
-
-            self.character.missiles_to_be_del.reverse()
-            for idx in self.character.missiles_to_be_del:
-                try:
-                    del self.character.missiles_fired[idx]
-                except IndexError:
-                    print("invalid index")
+                    if self.character.is_collidable == True:
+                        self.character.last_crashed = time.time()
+                        self.character.is_collidable = False
+                        print("crash!")
+                        self.life -= 1
+                        self.mobList.remove(mob)
+                   
 
             #화면 그리기
             #플레이어 그리기
@@ -148,6 +163,9 @@ class StageGame:
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
+
+            for item in self.item_list:
+                item.show(self.screen)
 
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)

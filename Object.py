@@ -10,6 +10,7 @@ class Object:
         self.sx, self.sy = size
         self.change_size(self.sx, self.sy)
         self.velocity = velocity
+        self.is_collidable = True
 
     def put_img(self,address):
         # png파일 일때
