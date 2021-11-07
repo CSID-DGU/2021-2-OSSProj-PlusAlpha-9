@@ -78,32 +78,47 @@ score_db = pymysql.connect(
 def show_rank():
     menu.clear()
     menu.add.label("   - RANKING -   ", selectable=False)
-    menu.add.button('     test ranking     ', test_rank)
+    menu.add.button('     current ranking     ', show_current_rank)
+    menu.add.button('     past ranking     ', show_current_rank)
     menu.add.button('         back         ', back)
 
-def test_rank():                                                                                                            #easy 모드 랭킹
-        menu.clear()
-        menu.add.label("--Test Rank--",selectable=False,font_size=30)
-        menu.add.label("ID      Score",selectable=False, font_size=20)
-        easy_data = load_data()
-        if len(easy_data)>5:
-            for i in range(5):
-                easy_name = str(easy_data[i]['ID'])
-                easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
-                r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
-                menu.add.label(r,selectable=False, font_size=15)
-        else:
-            for i in range(len(easy_data)):
-                easy_name = str(easy_data[i]['ID'])
-                easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
-                r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
-                menu.add.label(r,selectable=False, font_size=15)
-        menu.add.button('back', back)
+def show_current_rank():
+    menu.clear()
+    menu.add.label("   - Current Rank -   ", selectable=False)
+    menu.add.button('     easy mode     ', current_easy_rank)
+    menu.add.button('     hard mode     ', current_hard_rank)
+    menu.add.button('         back         ', show_rank)
 
-def load_data():                                             #데이터 베이스에서 데이터 불러오기
-        pass
+def current_easy_rank():                                                                                                            #easy 모드 랭킹
+        menu.clear()
+        menu.add.label("--Current Rank--",selectable=False,font_size=30)
+        menu.add.label("ID      Score",selectable=False, font_size=20)
+        easy_data = load_data("easy")
+        for i in range(len(easy_data)):
+                easy_name = str(easy_data[i]['ID'])
+                easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
+                r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
+                menu.add.label(r,selectable=False, font_size=15)
+        menu.add.button('back', show_current_rank)
+    
+def current_hard_rank():                                                                                                            #easy 모드 랭킹
+        menu.clear()
+        menu.add.label("--Current Rank--",selectable=False,font_size=30)
+        menu.add.label("ID      Score",selectable=False, font_size=20)
+        easy_data = load_data("hard")
+        for i in range(len(easy_data)):
+                easy_name = str(easy_data[i]['ID'])
+                easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
+                r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
+                menu.add.label(r,selectable=False, font_size=15)
+        menu.add.button('back', show_current_rank)
+
+def load_data(mode):                                             #데이터 베이스에서 데이터 불러오기
         curs = score_db.cursor(pymysql.cursors.DictCursor)
-        sql = "select * from test_score order by score desc"
+        if mode == "easy":
+            sql = "select * from easy_score order by score desc"
+        elif mode == "hard":
+            sql = "select * from hard_score order by score desc"
         curs.execute(sql)
         data = curs.fetchall()
         curs.close()

@@ -9,7 +9,9 @@ class Images(enum.Enum):
     char_speedship= "./Image/bgspeedship.png"
     char_medship = "./Image/medfrighter.png"
 
-    background_desert = "./Image/DESERT.jpeg"
+    # background_desert = "./Image/DESERT.jpeg"
+    background_desert = "./Image/DESERT_modified_v3.jpg"
+    background_antarctic = "./Image/Antarctic_modified_v1.jpg"
     enemy_scrophion = "./Image/Scorphion.png"
     enemy_cactus = "./Image/Catus.png"
     missile_missile2 = "./Image/MISSILE_2.png"

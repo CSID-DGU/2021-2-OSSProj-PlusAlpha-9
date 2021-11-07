@@ -679,7 +679,8 @@ while not SB:
 
     # 4-4. 그리기 
     #  마우스에의해 창크기가 바뀜에 따라 배경화면 크기가 바뀜
-    background_image_desert = pygame.image.load("./Image/Antartic.png")
+    # background_image_desert = pygame.image.load("./Image/Antartic.png")
+    background_image_desert = pygame.image.load("./Image/Antarctic_modified_v1.jpg")
     background_image_desert = pygame.transform.scale(background_image_desert, size)
     # screen.blit(background_image_desert, Util.start_loc)
 

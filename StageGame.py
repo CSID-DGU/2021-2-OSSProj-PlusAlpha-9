@@ -50,6 +50,8 @@ class StageGame:
         self.mobGenRate = 0.01
         self.item_gen_rate = 0.004
         self.mobImage = stage.mobImage
+        self.backgroundImage = stage.backgroundImage
+        self.backgroundMusic = stage.backgroundMusic
         self.k=0
         self.SB = 0
 
@@ -63,13 +65,18 @@ class StageGame:
 
     def main(self):
         # 메인 이벤트
-        
+        pygame.mixer.init()
+        pygame.mixer.music.load(self.backgroundMusic)
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
+        background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
             self.clock.tick(30)
             
             #화면 흰색으로 채우기
             self.screen.fill((255,255,255))
+
 
             # 입력 처리
             for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
@@ -155,8 +162,20 @@ class StageGame:
                         self.life -= 1
                         self.mobList.remove(mob)
                    
-
             #화면 그리기
+
+            # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
+            background1 =  pygame.image.load(self.backgroundImage)
+            background1 = pygame.transform.scale(background1, self.size)
+            background_width = background1.get_width()
+            background_height = background1.get_height()
+            background2 = background1.copy()
+            background1_y += 2
+            if background1_y > background_height:
+                background1_y = 0
+            self.screen.blit(background1, (0, background1_y))
+            self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
+
             #플레이어 그리기
             self.character.show(self.screen)
 
