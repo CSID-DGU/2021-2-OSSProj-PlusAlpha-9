@@ -142,8 +142,6 @@ class StageGame:
                     boom1.set_volume(0.1)
                     # 부딛칠 때 효과음
                     boom1.play()
-                    # 1초뒤에 꺼지도록 함
-                    # time.sleep(1)
                     self.life -= 1
                     self.mobList.remove(mob)
 
