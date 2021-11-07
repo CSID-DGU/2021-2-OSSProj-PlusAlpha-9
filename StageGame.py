@@ -76,6 +76,19 @@ class StageGame:
             
             #화면 흰색으로 채우기
             self.screen.fill((255,255,255))
+            # 배경 크기 변경 처리 및 그리기
+            # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
+            background1 =  pygame.image.load(self.backgroundImage)
+            background1 = pygame.transform.scale(background1, self.size)
+            background_width = background1.get_width()
+            background_height = background1.get_height()
+            background2 = background1.copy()
+            background1_y += 2
+            if background1_y > background_height:
+                background1_y = 0
+            self.screen.blit(background1, (0, background1_y))
+            self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
+
 
 
             # 입력 처리
@@ -163,22 +176,9 @@ class StageGame:
                         self.mobList.remove(mob)
                    
             #화면 그리기
-
-            # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
-            background1 =  pygame.image.load(self.backgroundImage)
-            background1 = pygame.transform.scale(background1, self.size)
-            background_width = background1.get_width()
-            background_height = background1.get_height()
-            background2 = background1.copy()
-            background1_y += 2
-            if background1_y > background_height:
-                background1_y = 0
-            self.screen.blit(background1, (0, background1_y))
-            self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
-
             #플레이어 그리기
             self.character.show(self.screen)
-
+            
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
