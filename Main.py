@@ -99,18 +99,6 @@ def current_easy_rank():                                                        
                 easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
                 r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
                 menu.add.label(r,selectable=False, font_size=15)
-        # if len(easy_data)>5:
-        #     for i in range(5):
-        #         easy_name = str(easy_data[i]['ID'])
-        #         easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
-        #         r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
-        #         menu.add.label(r,selectable=False, font_size=15)
-        # else:
-        #     for i in range(len(easy_data)):
-        #         easy_name = str(easy_data[i]['ID'])
-        #         easy_score = '{0:>05s}'.format(str(easy_data[i]['score']))
-        #         r= "#{} : ".format(i+1) + easy_name + "    " + easy_score
-        #         menu.add.label(r,selectable=False, font_size=15)
         menu.add.button('back', show_current_rank)
     
 def current_hard_rank():                                                                                                            #easy 모드 랭킹
