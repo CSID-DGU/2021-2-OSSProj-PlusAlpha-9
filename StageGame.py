@@ -12,7 +12,7 @@ import pygame_menu
 import json
 from collections import OrderedDict
 from Character import Character
-from Item import Item
+from Item import *
 from Boss import Boss
 from Mob import Mob
 from Bullet import Bullet
@@ -40,7 +40,6 @@ class StageGame:
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
         self.item_list = []
-        self.missileList = []
         self.character = character
         self.stage = stage
         self.goalScore = stage.goalScore
@@ -62,7 +61,8 @@ class StageGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
-
+        self.character.fire_count = self.character.min_fire_count
+        
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
@@ -76,7 +76,6 @@ class StageGame:
             
             #화면 흰색으로 채우기
             self.screen.fill((255,255,255))
-
 
             # 입력 처리
             for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
@@ -96,12 +95,12 @@ class StageGame:
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mobGenRate):
-                newMob = Mob(self.mobImage,(50,50),2,0)
+                newMob = Mob(self.mobImage,{"x":100, "y":100},2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
             if(random.random()<self.item_gen_rate):
-                new_item = Item(Images.item_powerup.value,(20,20),5)
+                new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 

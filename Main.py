@@ -15,6 +15,7 @@ from Character import *
 from Defs import *
 from StageDataManager import *
 from CharacterDataManager import *
+
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -199,7 +200,7 @@ def checkStageUnlocked(selectedCh:list,selectedSt:list, selectedChar:list):
     selectedCharacter = selectedChar[0]
     stageData = StageDataManager.loadStageData()
     if(stageData["chapter"][selectedChapter][selectedStage][6]): #스테이지가 unlocked되어 있다면 실행
-        if characterData[selectedCharacter].unlocked == True:
+        if characterData[selectedCharacter].is_unlocked == True:
             startStageGame(characterData[selectedCharacter],Stage(stageData["chapter"][selectedChapter][selectedStage]))
         else:
             print("character locked")    

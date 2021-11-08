@@ -5,34 +5,32 @@ from Missile import Missile
 from Defs import *
 
 class Character(Object):
-    def __init__(self, name, img_path, size, velocity, missile_img, missile_size, missile_velocity, fire_interval, missile_sfx, unlocked):
-        self.boundary = pygame.display.get_surface().get_size()
-        
-        super().__init__(img_path, (self.boundary[0]//size[0], self.boundary[1]//size[1]), velocity)
+    def __init__(self, name, img_path, size, velocity, 
+                missile_img, missile_size, missile_velocity, missile_sfx, 
+                fire_interval, min_fire_count, max_fire_count, 
+                invincibility_period, is_unlocked):
+        super().__init__(img_path, size, velocity)
         
         self.name = name
         self.last_fired = 0.0
         self.missiles_fired = []
-        self.missiles_to_del = []
-        
+
         self.missile_img = missile_img
         self.missile_size = missile_size
         self.missile_velocity = missile_velocity
-        self.fire_interval = fire_interval
         self.missile_sfx =  pygame.mixer.Sound(missile_sfx)
         self.missile_sfx.set_volume(0.1)
 
-        self.unlocked = unlocked
-        
-        self.min_fire_count = 1
-        self.max_fire_count = 5
+        self.fire_interval = fire_interval
+        self.min_fire_count = min_fire_count
+        self.max_fire_count = max_fire_count
         self.fire_count = self.min_fire_count
 
         self.last_crashed = 0.0
-        self.invincibility = 2.0
+        self.invincibility_period = invincibility_period
+        self.is_unlocked = is_unlocked
 
     def update(self):
-        self.missiles_to_be_del = []
         self.boundary = pygame.display.get_surface().get_size()
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
@@ -55,7 +53,7 @@ class Character(Object):
             if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
         if self.is_collidable == False:
-            if time.time() - self.last_crashed > self.invincibility:
+            if time.time() - self.last_crashed > self.invincibility_period:
                 self.is_collidable = True
         for missile in list(self.missiles_fired):
             missile.update()
@@ -67,7 +65,7 @@ class Character(Object):
         self.missile_sfx.play()
         for num in range(1, self.fire_count+1):
             missile = Missile(self.missile_img, self.missile_size, self.missile_velocity, self.fire_interval)
-            missile.change_size(self.boundary[0]//30,self.boundary[1]//20)
+            missile.change_size()
             div_factor = self.fire_count + 1
             missile.x = round((self.x + (num * (self.sx / div_factor))) - missile.sx / 2) 
             missile.y = self.y - missile.sy - 1
