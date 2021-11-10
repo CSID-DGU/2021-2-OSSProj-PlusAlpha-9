@@ -104,7 +104,7 @@ class InfiniteGame:
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,(50,50),2,0)
+                newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 

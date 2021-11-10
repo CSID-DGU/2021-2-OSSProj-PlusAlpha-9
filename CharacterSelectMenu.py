@@ -54,8 +54,6 @@ class CharacterSelectMenu:
 
     def start_game(self): #게임 시작 함수
 
-        
-
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_character = self.character_selector.get_value()[0][1]
 
@@ -69,5 +67,3 @@ class CharacterSelectMenu:
         else:
             print("character locked")
 
-    def check_character_unlock(self): #캐릭터 해금 여부 확인 함수
-        return True
