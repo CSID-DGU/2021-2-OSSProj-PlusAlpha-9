@@ -15,12 +15,9 @@ from Character import *
 from Defs import *
 from StageDataManager import *
 from CharacterDataManager import *
-<<<<<<< HEAD
 from Rank import Rank
-=======
 from StageSelectMenu import *
 
->>>>>>> 7f89686e7542e556769b136cc11728677a84bc9c
 class Display:
     w_init = 1/2
     h_init = 8/9
