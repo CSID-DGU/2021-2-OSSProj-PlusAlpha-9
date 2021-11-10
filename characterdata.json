@@ -83,6 +83,7 @@
 			"max_fire_count": 5,
 			"invincibility_period": 2.0,
 			"is_unlocked": true
+
 		}
 	]
 }
