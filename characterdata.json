@@ -46,7 +46,7 @@
 			"missile_velocity": 20,
 			"fire_interval": 0.2,
 			"missile_sfx": "./Sound/weapon-sound8.ogg",
-			"unlocked": true
+			"unlocked": false
 		}
 	]
 }

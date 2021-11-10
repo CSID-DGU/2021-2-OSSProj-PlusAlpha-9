@@ -35,3 +35,8 @@ class Sounds(enum.Enum):
 
 class Fonts(enum.Enum):
     font_default = "./Font/DXHanlgrumStd-Regular.otf"
+
+class Color(enum.Enum):
+    RED = (255,0,0)
+    BLUE = (0,0,255)
+    GREEN = (0,255,0)

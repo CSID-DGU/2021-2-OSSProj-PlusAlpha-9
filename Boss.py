@@ -1,6 +1,29 @@
+'''MIT License
+
+Copyright (c) 2018 TimurKhayrullin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.'''
+
 import random
 import pygame
 from sys import *
+from math import *
 from Bullet import Bullet
 from Defs import *
 from Gun import Gun
@@ -8,28 +31,21 @@ from Gun import Gun
 class Boss():
 
     
-    def __init__(self, screen, sizeOfBoss):
+    def __init__(self, screen,image_path_list,bullet_image_path):
         #image and position
-        self.orig_imgs = [pygame.image.load('Image/santa.png').convert_alpha(), pygame.image.load('Image/santa.png').convert_alpha(), pygame.image.load('Image/santa.png').convert_alpha()]
-        self.x = 100
-        self.y = 100
-        self.sx, self.sy = sizeOfBoss
-        for i in range(len(self.orig_imgs)):
-            self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(self.sx,self.sy))
-        
-        self.sx, self.sy = self.orig_imgs[0].get_size()
+        self.load_images(image_path_list)
+        self.x = screen[0]*0.5
+        self.y = 0
+        self.sx, self.sy = (screen[0]*0.25,screen[1]*0.3)
+        self.change_img_size(self.sx,self.sy)
         self.img = self.orig_imgs[0]
-
-        self.rect = pygame.Rect(self.x, self.y, 800, 100)
-
-        self.WIDTH, self.HEIGHT = screen
+        self.bullet_image_path = bullet_image_path
 
         #boss properties init
         self.phase = 0
         self.max_health = 12000
         self.health = self.max_health
-        self.vulnerable = True
-        self.velocity = 8
+        self.velocity = [6,8,12]
         ##timers for attack balancing
         self.pause_timer = 120
         #firing time is reset if firing speed is reached
@@ -37,17 +53,16 @@ class Boss():
         self.firing_time = 0
         #grace time is reset if grace time is reached
         self.grace_timers = [120, 90, 65]
-        self.grace_time = 180
-        #attacks init (similar to pl.directions)
+        self.grace_time = 30
+        #attacks init
         self.attacks = [False, False, False, False]
         self.directions = 0
         #counter of how much boss moved
         self.frames_spent_moving = 0
 
         ##vars for gun positions and angles for attack patterns
-        self.gun_pos = [Gun(self.x, self.y),Gun(self.x+self.sx, self.y),Gun(self.x, self.y+self.sy),Gun(self.x+self.sx, self.y+self.sy)]
-        self.weakpoint = 2
-        self.weakpoint_rect = (self.gun_pos[self.weakpoint].x + self.x, self.gun_pos[self.weakpoint].y + self.y , 53, 53)
+        # 이미지 아웃라인에 Gun 생성
+        self.random_pos_gun_on_outline()
         self.gun_queue = random.sample(self.gun_pos, len(self.gun_pos))
         #chosen angle and chosen gun 
         self.target_angle = 0
@@ -58,36 +73,36 @@ class Boss():
         self.angles_quad = [18, 36, 54, 72]
         self.angles_quint = [15, 30, 45, 60, 75]
         #Colors for HP display
-        self.colors = [(0,0,255),(0,255,0),(255,0,0)]
+        self.colors = [Color.BLUE.value,Color.GREEN.value,Color.RED.value]
 
-    def change_size(self,sx,sy):
-        self.img = pygame.transform.scale(self.img,(sx,sy)) # 그림의 크기를 조정한다.
-        self.sx, self.sy = self.img.get_size()
+    def change_img_size(self,sx,sy):
+        for i in range(len(self.orig_imgs)):
+            self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(self.sx,self.sy))
+
 
         
     def move(self,boundary):
-        #very similar to pl.directions, moves if it can
         #범위 내에서 이동하고, 총 위치도 이동
         if self.directions == 0:
-            if self.y < boundary[1] - self.sy:
-                self.y += self.velocity
+            if self.y < boundary[1] * 0.8 - self.sy:
+                self.y += self.velocity[self.phase]
                 for gun in self.gun_pos:
-                    gun.y += self.velocity
+                    gun.y += self.velocity[self.phase]
         elif self.directions == 1:
             if 0 < self.y:
-                self.y -= self.velocity
+                self.y -= self.velocity[self.phase]
                 for gun in self.gun_pos:
-                    gun.y -= self.velocity
+                    gun.y -= self.velocity[self.phase]
         elif self.directions == 2:
             if 0 < self.x:
-                self.x -= self.velocity
+                self.x -= self.velocity[self.phase]
                 for gun in self.gun_pos:
-                    gun.x -= self.velocity
+                    gun.x -= self.velocity[self.phase]
         elif self.directions == 3:
             if self.x < boundary[0] - self.sx:
-                self.x += self.velocity 
+                self.x += self.velocity[self.phase]
                 for gun in self.gun_pos:
-                    gun.x += self.velocity
+                    gun.x += self.velocity[self.phase]
     
     
     #attack coreography
@@ -95,11 +110,11 @@ class Boss():
         #shoots 5 pellet spread from random gun
         if self.attacks[0]:
             self.target_gun = self.gun_pos[random.randint(0,3)]
-            for angle in self.angles_quad:
+            for angle in self.angles_quint:
                 #finds point on circle based on angle and radius, fires enemyBullet there
-                # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle + 45)), 
-                #                           self.target_gun[1]+self.y + 50 * sin(radians(angle + 45)))            
-                enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                self.target_angle = (self.target_gun.x + 50 * cos(radians(angle + 45)), 
+                                          self.target_gun.y + 50 * sin(radians(angle + 45)))            
+                enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                  #ends attack
             self.attacks[0] = False
     
@@ -113,9 +128,9 @@ class Boss():
                     self.target_gun = self.gun_queue[i]
                     for angle in self.angles_triple:
                         #finds point on circle based on angle and radius, fires enemyBullet there
-                        # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle)), 
-                        #                           self.target_gun[1]+self.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                        self.target_angle = (self.target_gun.x + 50 * cos(radians(angle)), 
+                                                  self.target_gun.y + 50 * sin(radians(angle)))            
+                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                 #ends attack
                 if self.firing_time == self.firing_speed[self.phase] * len(self.gun_queue):
                     self.attacks[1] = False
@@ -134,9 +149,9 @@ class Boss():
                         #chooses random gun (twice)
                         self.target_gun = self.gun_queue[i]
                         #finds point on circle based on angle and radius, fires enemyBullet there
-                        # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle)), 
-                        #                           self.target_gun[1]+self.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                        self.target_angle = (self.target_gun.x + 50 * cos(radians(angle)), 
+                                                  self.target_gun.y + 50 * sin(radians(angle)))            
+                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[2] = False
@@ -156,31 +171,21 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(180 - angle)), 
                         #                           self.target_gun[1]+self.y + 50 * sin(radians(180 -angle)))            
-                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[3] = False
                     self.firing_time = 0
                     break
             else: self.firing_time += 1        
-    
-    #if player is out of range, shoots beam straight at player (to encourage player to stay within borderlines)
-    def outOfRangeAttack(self,enemyBullets,player):
-        # if pl.center_x < self.x - 100:
-        #     enemyBullets.append(EnemyBullet(self.gun_pos[0][0]+self.x, self.gun_pos[0][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
-        # elif pl.center_x > self.x + 800 + 100:
-        #     enemyBullets.append(EnemyBullet(self.gun_pos[4][0]+self.x, self.gun_pos[4][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
-        pass
-    
+
     #draws itself and it's health
     def draw(self,screen):
         screen.blit(self.orig_imgs[self.phase], (self.x, self.y))
-        pygame.draw.rect(screen,(0,0,0),pygame.Rect(self.x,self.y,self.sx,self.sy),width=2)
 
         # 총 그리기
         for gun in self.gun_pos:
             pygame.draw.circle(screen, (255,0,0), (gun.x,gun.y), 10)
-        # draw.rect(screen, (255, 255,0), (15, self.HEIGHT - 85, int(985 * self.health / self.max_health), 75))
 
         #체력 표시
         font = pygame.font.Font(Fonts.font_default.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
@@ -212,16 +217,12 @@ class Boss():
                 self.move(boundary)
                 self.frames_spent_moving += 1
             self.grace_time -= 1
-        
-        #updates weakpoint
-        self.weakpoint_rect = (self.gun_pos[self.weakpoint].x + self.x - 53, self.gun_pos[self.weakpoint].y + self.y - 53 , 106, 106)
-        
+      
         #tries to fire each attack
-        self.attack1(enemyBullets,player) # random quad shot
+        self.attack1(enemyBullets,player) # random quintuple shot
         self.attack2(enemyBullets,player) # random sequence of triple shots
         self.attack3(enemyBullets,player) #chooses 2 random guns to fire from, goes from left to right
-        self.attack4(enemyBullets,player) #chooses 2 random guns to fire from, goes from right to left
-        self.outOfRangeAttack(enemyBullets,player) #shoots player if player is out of range
+        self.attack4(enemyBullets,player) #chooses 2 random guns to fire from, aim player
     
     #checks itself for health, changes phases after certain point
     def check(self,player,game):
@@ -230,21 +231,30 @@ class Boss():
                 self.health -= 1000
                 player.missiles_fired.remove(bullet)
         
-        # #if health permits, spawns a randomly placed heart 
-        # if 0 <= self.health%500 <= 10 and self.health != self.max_health:
-        #     pickups.append(Heart(random.randint(300, 700), random.randint(200, 500), random.randint(250, 500)))        
-        
-        # if 0 <= self.health%250 <= 10 and self.health != self.max_health:
-        #     self.weakpoint = random.randint(0, 4)
-        #     self.health -= 11
-        
-        
         # checks if it is supposed to die
         if self.health <= 0:
             game.stage_cleared = True
         #changes phases
-        elif self.health <= self.max_health // 3:
-            self.phase = 2        
-        elif self.health <= self.max_health // 3 * 2:
+        elif self.health <= self.max_health // 3 and self.phase<2:
+            self.phase = 2
+            self.img = self.orig_imgs[self.phase]
+            self.random_pos_gun_on_outline()
+        elif self.health <= self.max_health // 3 * 2 and self.phase<1:
             self.phase = 1
+            self.img = self.orig_imgs[self.phase]
+            self.random_pos_gun_on_outline()
+            
+            
+            
+
+    def load_images(self,image_path_list):
+        self.orig_imgs = []
+        for image_path in image_path_list:
+            self.orig_imgs.append(pygame.image.load(image_path).convert_alpha())
       
+    def random_pos_gun_on_outline(self):
+        mask = pygame.mask.from_surface(self.img)
+        random_pos =[]
+        for tu in random.sample(mask.outline(10),4):
+            random_pos.append(Gun(tu[0]+self.x,tu[1]+self.y))
+        self.gun_pos = random_pos
