@@ -12,12 +12,15 @@ import pygame_menu
 import json
 from collections import OrderedDict
 from Character import Character
-from Item import Item
+from Item import *
+from Effect import Effect
 from Boss import Boss
 from Mob import Mob
 from Bullet import Bullet
 from Defs import *
 from StageDataManager import *
+from CharacterDataManager import *
+
 class StageGame:
 
     def __init__(self,character,stage):
@@ -34,39 +37,41 @@ class StageGame:
         
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
-        self.black=(0,0,0) # RGB임
-        self.white=(255,255,255)
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
-        self.item_list = []
-        self.missileList = []
+        self.power_up_list = []
+        self.bomb_list = []
+        self.effect_list = []
         self.character = character
         self.stage = stage
-        self.goalScore = stage.goalScore
+        self.goal_score = stage.goal_score
         self.score = 0
         self.life = 3
         self.startTime = time.time()
-        self.mobGenRate = 0.01
+        self.mob_gen_rate = 0.01
         self.item_gen_rate = 0.004
-        self.mobImage = stage.mobImage
-        self.backgroundImage = stage.backgroundImage
-        self.backgroundMusic = stage.backgroundMusic
+        self.mob_image = stage.mob_image
+        self.background_image = stage.background_image
+        self.background_music = stage.background_music
         self.k=0
         self.SB = 0
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
-        self.isBossStage = stage.isBossStage
-        self.boss = Boss(self.size,(150,200))
+        self.is_boss_stage = stage.is_boss_stage
+        if self.is_boss_stage:
+            self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
         self.enemyBullets =[]
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
-
+        self.character.fire_count = self.character.min_fire_count
+        self.character.missiles_fired = []
+        
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
-        pygame.mixer.music.load(self.backgroundMusic)
+        pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
         background1_y = 0 # 배경 움직임을 위한 변수
@@ -76,6 +81,18 @@ class StageGame:
             
             #화면 흰색으로 채우기
             self.screen.fill((255,255,255))
+            # 배경 크기 변경 처리 및 그리기
+            # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
+            background1 =  pygame.image.load(self.background_image)
+            background1 = pygame.transform.scale(background1, self.size)
+            background_width = background1.get_width()
+            background_height = background1.get_height()
+            background2 = background1.copy()
+            background1_y += 2
+            if background1_y > background_height:
+                background1_y = 0
+            self.screen.blit(background1, (0, background1_y))
+            self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
 
 
             # 입력 처리
@@ -95,15 +112,21 @@ class StageGame:
                         pass
 
             #몹을 확률적으로 발생시키기
-            if(random.random()<self.mobGenRate):
-                newMob = Mob(self.mobImage,(50,50),2,0)
+
+            if(random.random()<self.mob_gen_rate):
+                newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
             if(random.random()<self.item_gen_rate):
-                new_item = Item(Images.item_powerup.value,(20,20),5)
+                new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.item_list.append(new_item)
+                self.power_up_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Bomb()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.bomb_list.append(new_item)
 
             #플레이어 객체 이동
             self.character.update()
@@ -112,24 +135,37 @@ class StageGame:
             for mob in self.mobList:
                 mob.move(self.size,self)
 
-            for item in self.item_list:
+            for item in self.power_up_list:
                 item.move()
+
+            for item in self.bomb_list:
+                item.move()
+
+            for effect in self.effect_list:
+                effect.move()
+
+
+            for effect in list(self.effect_list):
+                if time.time() - effect.occurred > effect.duration:
+                    self.effect_list.remove(effect)
+                else:
+                    effect.show(self.screen)
 
             #보스 이동
             #보스 업데이트
 
-            if(self.isBossStage):
+            if(self.is_boss_stage):
                 self.boss.draw(self.screen)
                 self.boss.update(self.enemyBullets,self.character,self.size)
                 self.boss.check(self.character,self)
 
                 # 보스와 플레이어 충돌 감지
-                if(self.checkCrash(self.boss,self.character)):
+                if(self.check_crash(self.boss,self.character)):
                     self.life -= 1
 
                 #보스의 총알과 플레이어 충돌 감지
                 for bullet in self.enemyBullets:
-                    if(bullet.checkCrash(self.character)):
+                    if(bullet.check_crash(self.character)):
                         self.life -=1
                         self.enemyBullets.remove(bullet)
 
@@ -139,22 +175,30 @@ class StageGame:
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
-            for item in list(self.item_list):
-                if(self.checkCrash(self.character,item)):
+            for item in list(self.power_up_list):
+                if(self.check_crash(self.character,item)):
                     item.use(self.character)
-                    self.item_list.remove(item)
+                    self.power_up_list.remove(item)
+
+            for item in list(self.bomb_list):
+                if(self.check_crash(self.character,item)):
+                    item.use(self.mobList)
+                    self.bomb_list.remove(item)
+                    explosion = Effect(Images.effect_explosion.value, {"x":500, "y":500}, 2)
+                    explosion.set_XY((item.x- explosion.sx/2, item.y- explosion.sy/2))
+                    self.effect_list.append(explosion)
 
             #발사체와 몹 충돌 감지
             for missile in list(self.character.get_missiles_fired()):
                 for mob in list(self.mobList):
-                    if self.checkCrash(missile,mob):
+                    if self.check_crash(missile,mob):
                         self.score += 10
                         self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
             for mob in list(self.mobList):
-                if(self.checkCrash(mob,self.character)):
+                if(self.check_crash(mob,self.character)):
                     if self.character.is_collidable == True:
                         self.character.last_crashed = time.time()
                         self.character.is_collidable = False
@@ -163,31 +207,30 @@ class StageGame:
                         self.mobList.remove(mob)
                    
             #화면 그리기
-
-            # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
-            background1 =  pygame.image.load(self.backgroundImage)
-            background1 = pygame.transform.scale(background1, self.size)
-            background_width = background1.get_width()
-            background_height = background1.get_height()
-            background2 = background1.copy()
-            background1_y += 2
-            if background1_y > background_height:
-                background1_y = 0
-            self.screen.blit(background1, (0, background1_y))
-            self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
-
             #플레이어 그리기
             self.character.show(self.screen)
-
+            
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
 
-            for item in self.item_list:
-                item.show(self.screen)
+            for item in list(self.power_up_list):
+                if time.time() - item.spawned > item.duration:
+                    self.power_up_list.remove(item)
+                else:
+                    item.show(self.screen)
+
+            for item in list(self.bomb_list):
+                if time.time() - item.spawned > item.duration:
+                    self.bomb_list.remove(item)
+                else:
+                    item.show(self.screen)
 
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
+
+            for effect in self.effect_list:
+                effect.show(self.screen)
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
@@ -203,7 +246,7 @@ class StageGame:
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
 
             #점수가 목표점수 이상이면 스테이지 클리어 화면
-            if(self.score>=self.goalScore or self.stage_cleared):
+            if(self.score>=self.goal_score or self.stage_cleared):
                 self.showStageClearScreen()
                 return
 
@@ -217,7 +260,7 @@ class StageGame:
         self.showGameOverScreen()
 
     #충돌 감지 함수
-    def checkCrash(self,o1,o2):
+    def check_crash(self,o1,o2):
         o1_mask = pygame.mask.from_surface(o1.img)
         o2_mask = pygame.mask.from_surface(o2.img)
 

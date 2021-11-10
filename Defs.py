@@ -15,8 +15,10 @@ class Images(enum.Enum):
     enemy_scrophion = "./Image/Scorphion.png"
     enemy_cactus = "./Image/Catus.png"
     missile_missile2 = "./Image/MISSILE_2.png"
-    item_powerup = "./Image/powerup.png"
-
+    item_powerup = "./Image/Items/powerupYellow_bolt.png"
+    item_bomb = "./Image/Items/powerupYellow_star.png"
+    effect_explosion = "./Image/Lasers/laserBlue08.png"
+    
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.mp3"
     bgm_rien = "./Sound/Rien.mp3"
@@ -35,3 +37,8 @@ class Sounds(enum.Enum):
 
 class Fonts(enum.Enum):
     font_default = "./Font/DXHanlgrumStd-Regular.otf"
+
+class Color(enum.Enum):
+    RED = (255,0,0)
+    BLUE = (0,0,255)
+    GREEN = (0,255,0)

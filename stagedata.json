@@ -9,7 +9,9 @@
 				"./Sound/ariant.mp3",
 				0,
 				1,
-				"./Image/Scorphion.png"
+				"./Image/Scorphion.png",
+				[],
+				""
 			],
 			"2": [
 				"Oasis",
@@ -19,7 +21,9 @@
 				"./Sound/ariant.mp3",
 				0,
 				1,
-				"./Image/Scorphion.png"
+				"./Image/Scorphion.png",
+				[],
+				""
 			],
 			"3": [
 				"Oasis",
@@ -29,6 +33,12 @@
 				"./Sound/ariant.mp3",
 				1,
 				1,
+				"./Image/Scorphion.png",
+				[
+					"Image/santa.png",
+					"./Image/Scorphion.png",
+					"Image/santa.png"
+				],
 				"./Image/Scorphion.png"
 			]
 		},
@@ -41,7 +51,9 @@
 				"./Sound/Rien.mp3",
 				0,
 				1,
-				"./Image/Catus.png"
+				"./Image/Catus.png",
+				[],
+				""
 			],
 			"2": [
 				"Ice",
@@ -51,7 +63,9 @@
 				"./Sound/Rien.mp3",
 				0,
 				1,
-				"./Image/Catus.png"
+				"./Image/Catus.png",
+				[],
+				""
 			],
 			"3": [
 				"Ice",
@@ -61,7 +75,13 @@
 				"./Sound/Rien.mp3",
 				1,
 				0,
-				"./Image/Catus.png"
+				"./Image/Catus.png",
+				[
+					"Image/santa.png",
+					"Image/santa.png",
+					"Image/santa.png"
+				],
+				"./Image/Scorphion.png"
 			]
 		}
 	}
