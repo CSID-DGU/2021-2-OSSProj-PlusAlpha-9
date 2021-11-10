@@ -138,7 +138,7 @@ def on_resize() -> None:
     print(f'New menu size: {menu.get_size()}')
 
 def show_character_select_menu():
-    StageSelectMenu(screen).show()
+    CharacterSelectMenu(screen,None).show()
     
 
 def show_stage_select_menu():
