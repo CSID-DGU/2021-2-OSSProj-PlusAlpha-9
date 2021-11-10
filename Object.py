@@ -42,7 +42,7 @@ class Object:
         screen.blit(self.img,(self.x,self.y))
 
     #충돌 감지 함수
-    def checkCrash(self, o2):
+    def check_crash(self, o2):
         o1_mask = pygame.mask.from_surface(self.img)
         o2_mask = pygame.mask.from_surface(o2.img)
 
