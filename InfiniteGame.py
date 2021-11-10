@@ -12,10 +12,11 @@ import pygame_menu
 import json
 from collections import OrderedDict
 from Character import Character
-from Item import Item
+from Item import *
 from Boss import Boss
 from Mob import Mob
 from Bullet import Bullet
+from Effect import *
 from Defs import *
 from StageDataManager import *
 
@@ -37,7 +38,9 @@ class InfiniteGame:
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
-        self.item_list = []
+        self.power_up_list = []
+        self.bomb_list = []
+        self.effect_list = []
         self.missileList = []
         self.character = character
         self.score = 0
@@ -107,11 +110,17 @@ class InfiniteGame:
                 newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
-                
+            
             if(random.random()<self.item_gen_rate):
-                new_item = Item(Images.item_powerup.value,(20,20),5)
+                new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.item_list.append(new_item)
+                self.power_up_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Bomb()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.bomb_list.append(new_item)
+            
 
             #플레이어 객체 이동
             self.character.update()
@@ -120,9 +129,21 @@ class InfiniteGame:
             for mob in self.mobList:
                 mob.move(self.size,self)
 
-            for item in self.item_list:
+            for item in self.power_up_list:
                 item.move()
 
+            for item in self.bomb_list:
+                item.move()
+
+            for effect in self.effect_list:
+                effect.move()
+
+            for effect in list(self.effect_list):
+                if time.time() - effect.occurred > effect.duration:
+                    self.effect_list.remove(effect)
+                else:
+                    effect.show(self.screen)
+            
             #보스 이동
             #보스 업데이트
 
@@ -147,10 +168,18 @@ class InfiniteGame:
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
-            for item in list(self.item_list):
+            for item in list(self.power_up_list):
                 if(self.check_crash(self.character,item)):
                     item.use(self.character)
-                    self.item_list.remove(item)
+                    self.power_up_list.remove(item)
+
+            for item in list(self.bomb_list):
+                if(self.check_crash(self.character,item)):
+                    item.use(self.mobList)
+                    self.bomb_list.remove(item)
+                    explosion = Effect(Images.effect_explosion.value, {"x":500, "y":500}, 2)
+                    explosion.set_XY((item.x- explosion.sx/2, item.y- explosion.sy/2))
+                    self.effect_list.append(explosion)
 
             #발사체와 몹 충돌 감지
             for missile in list(self.character.get_missiles_fired()):
@@ -178,11 +207,23 @@ class InfiniteGame:
             for mob in self.mobList:
                 mob.show(self.screen)
 
-            for item in self.item_list:
-                item.show(self.screen)
-
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
+
+            for item in list(self.power_up_list):
+                if time.time() - item.spawned > item.duration:
+                    self.power_up_list.remove(item)
+                else:
+                    item.show(self.screen)
+
+            for item in list(self.bomb_list):
+                if time.time() - item.spawned > item.duration:
+                    self.bomb_list.remove(item)
+                else:
+                    item.show(self.screen)
+
+            for effect in self.effect_list:
+                effect.show(self.screen)
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
@@ -234,15 +275,15 @@ class InfiniteGame:
     def show_ranking_register_screen(self):
         menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
                             theme=pygame_menu.themes.THEME_BLUE)
-        text_input = menu.add.text_input('Name: ', default='ABC')
+        self.text_input = menu.add.text_input('Name: ', default='ABC')
         menu.add.label("")
-        menu.add.button('Register Ranking', self.register_ranking,text_input.get_value,self.score)
+        menu.add.button('Register Ranking', self.register_ranking,self.score)
         menu.add.button('to Menu', self.to_menu,menu)
         menu.mainloop(self.screen)
         
     #랭킹 서버에 등록
-    def register_ranking(self,name,score):
-        print(name)
+    def register_ranking(self,score):
+        print(self.text_input.get_value())
         print(score)
 
     
