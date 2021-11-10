@@ -34,8 +34,6 @@ class StageGame:
         
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
-        self.black=(0,0,0) # RGB임
-        self.white=(255,255,255)
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
@@ -43,21 +41,22 @@ class StageGame:
         self.missileList = []
         self.character = character
         self.stage = stage
-        self.goalScore = stage.goalScore
+        self.goal_score = stage.goal_score
         self.score = 0
         self.life = 3
         self.startTime = time.time()
-        self.mobGenRate = 0.01
+        self.mob_gen_rate = 0.01
         self.item_gen_rate = 0.004
-        self.mobImage = stage.mobImage
-        self.backgroundImage = stage.backgroundImage
-        self.backgroundMusic = stage.backgroundMusic
+        self.mob_image = stage.mob_image
+        self.background_image = stage.background_image
+        self.background_music = stage.background_music
         self.k=0
         self.SB = 0
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
-        self.isBossStage = stage.isBossStage
-        self.boss = Boss(self.size,(150,200))
+        self.is_boss_stage = stage.is_boss_stage
+        if self.is_boss_stage:
+            self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
         self.enemyBullets =[]
 
         # 5. 캐릭터 위치 초기화
@@ -66,7 +65,7 @@ class StageGame:
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
-        pygame.mixer.music.load(self.backgroundMusic)
+        pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
         background1_y = 0 # 배경 움직임을 위한 변수
@@ -78,7 +77,7 @@ class StageGame:
             self.screen.fill((255,255,255))
             # 배경 크기 변경 처리 및 그리기
             # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
-            background1 =  pygame.image.load(self.backgroundImage)
+            background1 =  pygame.image.load(self.background_image)
             background1 = pygame.transform.scale(background1, self.size)
             background_width = background1.get_width()
             background_height = background1.get_height()
@@ -108,8 +107,8 @@ class StageGame:
                         pass
 
             #몹을 확률적으로 발생시키기
-            if(random.random()<self.mobGenRate):
-                newMob = Mob(self.mobImage,(50,50),2,0)
+            if(random.random()<self.mob_gen_rate):
+                newMob = Mob(self.mob_image,(50,50),2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
@@ -131,7 +130,7 @@ class StageGame:
             #보스 이동
             #보스 업데이트
 
-            if(self.isBossStage):
+            if(self.is_boss_stage):
                 self.boss.draw(self.screen)
                 self.boss.update(self.enemyBullets,self.character,self.size)
                 self.boss.check(self.character,self)
@@ -203,7 +202,7 @@ class StageGame:
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
 
             #점수가 목표점수 이상이면 스테이지 클리어 화면
-            if(self.score>=self.goalScore or self.stage_cleared):
+            if(self.score>=self.goal_score or self.stage_cleared):
                 self.showStageClearScreen()
                 return
 

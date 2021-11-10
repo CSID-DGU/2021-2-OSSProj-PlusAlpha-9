@@ -15,6 +15,7 @@ from Character import *
 from Defs import *
 from StageDataManager import *
 from CharacterDataManager import *
+from StageSelectMenu import *
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -37,17 +38,13 @@ mytheme.background_color = menu_image
 
 #메인메뉴
 menu = pygame_menu.Menu('MUHIRRYO GOOD', ww,wh,theme=mytheme)
-#스테이지선택메뉴
-stageMenu = pygame_menu.Menu("Stage Select",ww,wh,theme=mytheme)
-character_menu = pygame_menu.Menu("Character Select",ww,wh,theme=mytheme)
 
 background = pygame.image.load("./Image/StartImage.png")
 
 def show_mode():
     menu.clear()
-    menu.add.button('Oasis',start_the_game_1)
-    menu.add.button('Ice',startInfiniteGame)
-    menu.add.button('StageSelect',stageMenu)
+    menu.add.button('Infinite Game',show_character_select_menu)
+    menu.add.button('Stage Game',show_stage_select_menu)
     menu.add.button('Back', back)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
@@ -140,110 +137,13 @@ def on_resize() -> None:
     menu.resize(new_w, new_h)
     print(f'New menu size: {menu.get_size()}')
 
-def start_the_game_1():
-    import Oasis
-
-def start_the_game_2():
-    import Ice
-
-def startInfiniteGame():
-    infi = InfiniteGame(1,1)
-    infi.main()
-
-def startStageGame(character,stage):
-    StageGame(character,stage).main()
+def show_character_select_menu():
+    StageSelectMenu(screen).show()
     
-#스테이지 데이터 파일 읽어오기
-stageData = StageDataManager.loadStageData()
-characterData = CharacterDataManager.load()
 
-#스테이지 메뉴 관련 함수
-selectedChapter = [list(stageData["chapter"].keys())[0]]
-selectedStage = ["1"]
+def show_stage_select_menu():
+    StageSelectMenu(screen).show()
 
-selectedCharacter = [0]
-def toTuple(str):
-    return (str,str)
-
-def change_background_color(selected_value, color, **kwargs):
-    value_tuple, index = selected_value
-    print('Change widget color to', value_tuple[0])  # selected_value ('Color', surface, color)
-    if color == (-1, -1, -1):  # Generate a random color
-        color = (randrange(0, 255), randrange(0, 255), randrange(0, 255))
-    widget: 'pygame_menu.widgets.Selector' = kwargs.get('widget')
-    widget.update_font({'selected_color': color})
-    widget.get_selection_effect().color = color
-
-def changeChapter(selected_value, chapterName, **kwargs):
-    value_tuple, index = selected_value
-    selectedChapter[0] = value_tuple[0]
-    print(value_tuple)
-    print(selectedChapter[0])
-
-
-def changeStage(selected_value, stageNumber, **kwargs):
-    value_tuple, index = selected_value
-    selectedStage[0] = value_tuple[0]
-    print(value_tuple)
-    print(selectedStage[0])
-
-def changeCharacter(selected_value, characterNumber, **kwargs):
-    value_tuple, index = selected_value
-    selectedCharacter[0] = characterNumber
-    print(value_tuple)
-    print(selectedCharacter[0])
-
-def checkStageUnlocked(selectedCh:list,selectedSt:list, selectedChar:list):
-    selectedChapter = selectedCh[0]
-    selectedStage = selectedSt[0]
-    selectedCharacter = selectedChar[0]
-    stageData = StageDataManager.loadStageData()
-    if(stageData["chapter"][selectedChapter][selectedStage][6]): #스테이지가 unlocked되어 있다면 실행
-        if characterData[selectedCharacter].unlocked == True:
-            startStageGame(characterData[selectedCharacter],Stage(stageData["chapter"][selectedChapter][selectedStage]))
-        else:
-            print("character locked")    
-    else:
-        print("stage locked")
-
-
-#스테이지 메뉴 구성
-chapters = list(map(toTuple,list(stageData["chapter"].keys())))
-chapterSelector = stageMenu.add.selector(
-    title='Chapter :\t',
-    items=chapters,
-    # onreturn=change_background_color,  # User press "Return" button
-    onchange=changeChapter  # User changes value with left/right keys
-)
-chapterSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
-
-stages = [('1', (0)),
-         ('2', (0)),
-         ('3', (0))]
-stageSelector = stageMenu.add.selector(
-    title='Stage :\t',
-    items=stages,
-    # onreturn=change_background_color,  # User press "Return" button
-    onchange=changeStage  # User changes value with left/right keys
-)
-stageSelector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
-
-stageMenu.add.button("PLAY",character_menu)
-stageMenu.add.button("BACK",pygame_menu.events.BACK)
-
-characters = []
-for idx in range(len(characterData)):
-    characters.append((characterData[idx].name, idx))
-
-character_selector = character_menu.add.selector(
-    title='Character :\t',
-    items=characters,
-    # onreturn=change_background_color,  # User press "Return" button
-    onchange=changeCharacter  # User changes value with left/right keys
-)
-character_selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
-character_menu.add.button("PLAY",checkStageUnlocked,selectedChapter,selectedStage, selectedCharacter)
-character_menu.add.button("BACK",pygame_menu.events.BACK)
 
 #메인 메뉴 구성
 menu.add.button('Select mode', show_mode)
@@ -251,6 +151,7 @@ menu.add.button('Help',show_help)
 menu.add.button('Rank',show_rank)
 menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
+
 if __name__ == '__main__':
     while True:
         events = pygame.event.get()

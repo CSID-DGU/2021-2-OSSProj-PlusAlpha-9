@@ -31,14 +31,15 @@ from Gun import Gun
 class Boss():
 
     
-    def __init__(self, screen, sizeOfBoss):
+    def __init__(self, screen,image_path_list,bullet_image_path):
         #image and position
-        self.orig_imgs = [pygame.image.load('Image/santa.png').convert_alpha(), pygame.image.load('Image/santa.png').convert_alpha(), pygame.image.load('Image/santa.png').convert_alpha()]
-        self.x = 100
-        self.y = 100
-        self.sx, self.sy = sizeOfBoss
+        self.load_images(image_path_list)
+        self.x = screen[0]*0.5
+        self.y = 0
+        self.sx, self.sy = (screen[0]*0.25,screen[1]*0.3)
         self.change_img_size(self.sx,self.sy)
         self.img = self.orig_imgs[0]
+        self.bullet_image_path = bullet_image_path
 
         #boss properties init
         self.phase = 0
@@ -61,7 +62,6 @@ class Boss():
 
         ##vars for gun positions and angles for attack patterns
         # 이미지 아웃라인에 Gun 생성
-        self.gun_pos = [Gun(self.x, self.y),Gun(self.x+self.sx, self.y),Gun(self.x, self.y+self.sy),Gun(self.x+self.sx, self.y+self.sy)]
         self.random_pos_gun_on_outline()
         self.gun_queue = random.sample(self.gun_pos, len(self.gun_pos))
         #chosen angle and chosen gun 
@@ -79,7 +79,6 @@ class Boss():
         for i in range(len(self.orig_imgs)):
             self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(self.sx,self.sy))
 
-        self.sx, self.sy = self.orig_imgs[len(self.orig_imgs)-1].get_size()
 
         
     def move(self,boundary):
@@ -115,7 +114,7 @@ class Boss():
                 #finds point on circle based on angle and radius, fires enemyBullet there
                 self.target_angle = (self.target_gun.x + 50 * cos(radians(angle + 45)), 
                                           self.target_gun.y + 50 * sin(radians(angle + 45)))            
-                enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
+                enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                  #ends attack
             self.attacks[0] = False
     
@@ -131,7 +130,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun.x + 50 * cos(radians(angle)), 
                                                   self.target_gun.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
+                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                 #ends attack
                 if self.firing_time == self.firing_speed[self.phase] * len(self.gun_queue):
                     self.attacks[1] = False
@@ -152,7 +151,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun.x + 50 * cos(radians(angle)), 
                                                   self.target_gun.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
+                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[2] = False
@@ -172,7 +171,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(180 - angle)), 
                         #                           self.target_gun[1]+self.y + 50 * sin(radians(180 -angle)))            
-                        enemyBullets.append(Bullet("Image/Scorphion.png",(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[3] = False
@@ -183,7 +182,6 @@ class Boss():
     #draws itself and it's health
     def draw(self,screen):
         screen.blit(self.orig_imgs[self.phase], (self.x, self.y))
-        pygame.draw.rect(screen,(0,0,0),pygame.Rect(self.x,self.y,self.sx,self.sy),width=2)
 
         # 총 그리기
         for gun in self.gun_pos:
@@ -237,10 +235,22 @@ class Boss():
         if self.health <= 0:
             game.stage_cleared = True
         #changes phases
-        elif self.health <= self.max_health // 3:
-            self.phase = 2        
-        elif self.health <= self.max_health // 3 * 2:
+        elif self.health <= self.max_health // 3 and self.phase<2:
+            self.phase = 2
+            self.img = self.orig_imgs[self.phase]
+            self.random_pos_gun_on_outline()
+        elif self.health <= self.max_health // 3 * 2 and self.phase<1:
             self.phase = 1
+            self.img = self.orig_imgs[self.phase]
+            self.random_pos_gun_on_outline()
+            
+            
+            
+
+    def load_images(self,image_path_list):
+        self.orig_imgs = []
+        for image_path in image_path_list:
+            self.orig_imgs.append(pygame.image.load(image_path).convert_alpha())
       
     def random_pos_gun_on_outline(self):
         mask = pygame.mask.from_surface(self.img)
