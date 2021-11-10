@@ -46,6 +46,7 @@ class Boss():
         self.max_health = 12000
         self.health = self.max_health
         self.velocity = [6,8,12]
+        self.bullet_size = {"x":20,"y":20}
         ##timers for attack balancing
         self.pause_timer = 120
         #firing time is reset if firing speed is reached
@@ -114,7 +115,7 @@ class Boss():
                 #finds point on circle based on angle and radius, fires enemyBullet there
                 self.target_angle = (self.target_gun.x + 50 * cos(radians(angle + 45)), 
                                           self.target_gun.y + 50 * sin(radians(angle + 45)))            
-                enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
+                enemyBullets.append(Bullet(self.bullet_image_path,self.bullet_size,10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                  #ends attack
             self.attacks[0] = False
     
@@ -130,7 +131,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun.x + 50 * cos(radians(angle)), 
                                                   self.target_gun.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
+                        enemyBullets.append(Bullet(self.bullet_image_path,self.bullet_size,10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                 #ends attack
                 if self.firing_time == self.firing_speed[self.phase] * len(self.gun_queue):
                     self.attacks[1] = False
@@ -151,7 +152,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun.x + 50 * cos(radians(angle)), 
                                                   self.target_gun.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),self.target_angle))
+                        enemyBullets.append(Bullet(self.bullet_image_path,self.bullet_size,10,(self.target_gun.x,self.target_gun.y),self.target_angle))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[2] = False
@@ -171,7 +172,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         # self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(180 - angle)), 
                         #                           self.target_gun[1]+self.y + 50 * sin(radians(180 -angle)))            
-                        enemyBullets.append(Bullet(self.bullet_image_path,(20,20),10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
+                        enemyBullets.append(Bullet(self.bullet_image_path,self.bullet_size,10,(self.target_gun.x,self.target_gun.y),(player.x,player.y)))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[3] = False
