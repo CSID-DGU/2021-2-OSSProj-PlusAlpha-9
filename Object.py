@@ -3,12 +3,17 @@ from pygame.sysfont import SysFont
 
 class Object:
     def __init__(self, img_path, size, velocity):
+        self.boundary = pygame.display.get_surface().get_size()
+        self.org_boundary = self.boundary
         self.x =0
         self.y=0
         self.img_path = img_path
+        self.size = size
+        self.sx = size["x"]
+        self.sy = size["y"]
         self.put_img(img_path)
-        self.sx, self.sy = size
-        self.change_size(self.sx, self.sy)
+
+        self.change_size()
         self.velocity = velocity
         self.is_collidable = True
 
@@ -26,8 +31,11 @@ class Object:
         self.y = loc[1]
 
     # 피사체의 그림 조정
-    def change_size(self,sx,sy):
-        self.img = pygame.transform.scale(self.img,(sx,sy)) # 그림의 크기를 조정한다.
+    def change_size(self):
+        x_scale = self.boundary[0]//self.org_boundary[0]
+        y_scale = self.boundary[1]//self.org_boundary[1]
+        self.img = pygame.transform.scale(self.img,(self.size["x"]*x_scale,self.size["y"]*y_scale)) # 그림의 크기를 조정한다.
+        self.img_trans = self.img.copy()
         self.sx, self.sy = self.img.get_size()
 
     def show(self, screen):
