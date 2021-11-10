@@ -78,7 +78,7 @@ class Boss():
 
     def change_img_size(self,sx,sy):
         for i in range(len(self.orig_imgs)):
-            self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(self.sx,self.sy))
+            self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(int(sx),int(sy)))
 
 
         
@@ -186,7 +186,7 @@ class Boss():
 
         # 총 그리기
         for gun in self.gun_pos:
-            pygame.draw.circle(screen, (255,0,0), (gun.x,gun.y), 10)
+            pygame.draw.circle(screen, (255,0,0), (int(gun.x),int(gun.y)), 10)
 
         #체력 표시
         font = pygame.font.Font(Fonts.font_default.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
