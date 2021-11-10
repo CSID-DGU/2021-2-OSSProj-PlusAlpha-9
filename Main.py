@@ -16,6 +16,7 @@ from Defs import *
 from StageDataManager import *
 from CharacterDataManager import *
 from StageSelectMenu import *
+
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -143,6 +144,7 @@ def show_character_select_menu():
 
 def show_stage_select_menu():
     StageSelectMenu(screen).show()
+
 
 
 #메인 메뉴 구성
