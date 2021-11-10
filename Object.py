@@ -35,6 +35,7 @@ class Object:
         x_scale = self.boundary[0]//self.org_boundary[0]
         y_scale = self.boundary[1]//self.org_boundary[1]
         self.img = pygame.transform.scale(self.img,(self.size["x"]*x_scale,self.size["y"]*y_scale)) # 그림의 크기를 조정한다.
+        self.img_trans = self.img.copy()
         self.sx, self.sy = self.img.get_size()
 
     def show(self, screen):
