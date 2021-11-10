@@ -80,8 +80,7 @@ class Boss():
         for i in range(len(self.orig_imgs)):
             self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(int(sx),int(sy)))
 
-
-        
+      
     def move(self,boundary):
         #범위 내에서 이동하고, 총 위치도 이동
         if self.directions == 0:

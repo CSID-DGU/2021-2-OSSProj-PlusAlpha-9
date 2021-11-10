@@ -160,12 +160,12 @@ class StageGame:
                 self.boss.check(self.character,self)
 
                 # 보스와 플레이어 충돌 감지
-                if(self.checkCrash(self.boss,self.character)):
+                if(self.check_crash(self.boss,self.character)):
                     self.life -= 1
 
                 #보스의 총알과 플레이어 충돌 감지
                 for bullet in self.enemyBullets:
-                    if(bullet.checkCrash(self.character)):
+                    if(bullet.check_crash(self.character)):
                         self.life -=1
                         self.enemyBullets.remove(bullet)
 
@@ -176,12 +176,12 @@ class StageGame:
                 bullet.show(self.screen)
 
             for item in list(self.power_up_list):
-                if(self.checkCrash(self.character,item)):
+                if(self.check_crash(self.character,item)):
                     item.use(self.character)
                     self.power_up_list.remove(item)
 
             for item in list(self.bomb_list):
-                if(self.checkCrash(self.character,item)):
+                if(self.check_crash(self.character,item)):
                     item.use(self.mobList)
                     self.bomb_list.remove(item)
                     explosion = Effect(Images.effect_explosion.value, {"x":500, "y":500}, 2)
@@ -191,14 +191,14 @@ class StageGame:
             #발사체와 몹 충돌 감지
             for missile in list(self.character.get_missiles_fired()):
                 for mob in list(self.mobList):
-                    if self.checkCrash(missile,mob):
+                    if self.check_crash(missile,mob):
                         self.score += 10
                         self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
             for mob in list(self.mobList):
-                if(self.checkCrash(mob,self.character)):
+                if(self.check_crash(mob,self.character)):
                     if self.character.is_collidable == True:
                         self.character.last_crashed = time.time()
                         self.character.is_collidable = False
@@ -260,7 +260,7 @@ class StageGame:
         self.showGameOverScreen()
 
     #충돌 감지 함수
-    def checkCrash(self,o1,o2):
+    def check_crash(self,o1,o2):
         o1_mask = pygame.mask.from_surface(o1.img)
         o2_mask = pygame.mask.from_surface(o2.img)
 
