@@ -24,7 +24,6 @@ class InfiniteGame:
     def __init__(self,character):
         # 1. 게임초기화 
         pygame.init()
-        self.stage_cleared = False
 
         # 2. 게임창 옵션 설정
         infoObject = pygame.display.Info()
@@ -41,21 +40,19 @@ class InfiniteGame:
         self.item_list = []
         self.missileList = []
         self.character = character
-        self.stage = stage
         self.score = 0
         self.life = 3
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
         self.item_gen_rate = 0.004
-        self.mob_image = stage.mob_image
-        self.background_image = stage.background_image
-        self.background_music = stage.background_music
-        self.k=0
+        self.mob_image = "./Image/Catus.png"
+        self.background_image = "./Image/Antarctic_modified_v1.jpg"
+        self.background_music = "./Sound/Rien.mp3"
         self.SB = 0
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
-        self.isBossStage = stage.isBossStage
-        self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
+        # self.isBossStage = stage.isBossStage
+        # self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
         self.enemyBullets =[]
 
         # 5. 캐릭터 위치 초기화
@@ -107,7 +104,7 @@ class InfiniteGame:
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,(50,50),2,0)
+                newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
@@ -129,20 +126,20 @@ class InfiniteGame:
             #보스 이동
             #보스 업데이트
 
-            if(self.isBossStage):
-                self.boss.draw(self.screen)
-                self.boss.update(self.enemyBullets,self.character,self.size)
-                self.boss.check(self.character,self)
+            # if(self.isBossStage):
+            #     self.boss.draw(self.screen)
+            #     self.boss.update(self.enemyBullets,self.character,self.size)
+            #     self.boss.check(self.character,self)
 
-                # 보스와 플레이어 충돌 감지
-                if(self.check_crash(self.boss,self.character)):
-                    self.life -= 1
+            #     # 보스와 플레이어 충돌 감지
+            #     if(self.check_crash(self.boss,self.character)):
+            #         self.life -= 1
 
-                #보스의 총알과 플레이어 충돌 감지
-                for bullet in self.enemyBullets:
-                    if(bullet.check_crash(self.character)):
-                        self.life -=1
-                        self.enemyBullets.remove(bullet)
+            #     #보스의 총알과 플레이어 충돌 감지
+            #     for bullet in self.enemyBullets:
+            #         if(bullet.check_crash(self.character)):
+            #             self.life -=1
+            #             self.enemyBullets.remove(bullet)
 
         
             #적 투사체 이동
@@ -228,8 +225,6 @@ class InfiniteGame:
     #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가)
     def update_difficulty(self):
         play_time = (time.time() - self.start_time) #게임 진행 시간
-        print(play_time)
-        print(type(play_time))
 
 
     def to_menu(self,menu):
@@ -237,12 +232,17 @@ class InfiniteGame:
 
     #랭킹 등록 화면
     def show_ranking_register_screen(self):
-        menu = pygame_menu.Menu('Failed!!', self.size[0]*0.7, self.size[1]*0.8,
+        menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
                             theme=pygame_menu.themes.THEME_BLUE)
-        menu.add.label(":(",font_size=250)
+        text_input = menu.add.text_input('Name: ', default='ABC')
         menu.add.label("")
+        menu.add.button('Register Ranking', self.register_ranking,text_input.get_value,self.score)
         menu.add.button('to Menu', self.to_menu,menu)
         menu.mainloop(self.screen)
         
+    #랭킹 서버에 등록
+    def register_ranking(self,name,score):
+        print(name)
+        print(score)
 
     
