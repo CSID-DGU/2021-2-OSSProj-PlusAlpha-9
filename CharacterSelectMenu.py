@@ -57,12 +57,12 @@ class CharacterSelectMenu:
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_character = self.character_selector.get_value()[0][1]
 
+
         if(self.stage is None ):
             InfiniteGame(selected_character).main()
             return
 
-
-        if (selected_character.unlocked):
+        if (selected_character.is_unlocked):
             StageGame(selected_character,self.stage).main()
         else:
             print("character locked")
