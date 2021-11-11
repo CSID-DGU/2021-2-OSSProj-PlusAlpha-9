@@ -14,6 +14,9 @@ class Object:
         self.put_img(img_path)
 
         self.change_size()
+        self.img_copy = self.img.copy()
+        self.img_trans = self.img.copy()
+        self.img_trans.fill((255,255,255,128), None, pygame.BLEND_RGBA_MULT)
         self.velocity = velocity
         self.is_collidable = True
 
@@ -35,7 +38,6 @@ class Object:
         x_scale = self.boundary[0]//self.org_boundary[0]
         y_scale = self.boundary[1]//self.org_boundary[1]
         self.img = pygame.transform.scale(self.img,(self.size["x"]*x_scale,self.size["y"]*y_scale)) # 그림의 크기를 조정한다.
-        self.img_trans = self.img.copy()
         self.sx, self.sy = self.img.get_size()
 
     def show(self, screen):
