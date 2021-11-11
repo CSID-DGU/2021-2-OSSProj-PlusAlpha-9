@@ -42,3 +42,8 @@ class Color(enum.Enum):
     RED = (255,0,0)
     BLUE = (0,0,255)
     GREEN = (0,255,0)
+
+class Misc(enum.Enum):
+    missile_volume = 0.1
+    blinking_step = 0.05
+    blinking_speed = 0.2

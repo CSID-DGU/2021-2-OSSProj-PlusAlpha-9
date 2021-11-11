@@ -30,7 +30,10 @@ class Character(Object):
         self.invincibility_period = invincibility_period
         self.is_unlocked = is_unlocked
 
-    def update(self):
+        self.blink_count = 0.0
+        self.is_blinking = False
+
+    def update(self, game):
         self.boundary = pygame.display.get_surface().get_size()
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
@@ -53,8 +56,22 @@ class Character(Object):
             if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
         if self.is_collidable == False:
-            if time.time() - self.last_crashed > self.invincibility_period:
-                self.is_collidable = True
+            time_passed = time.time() - self.last_crashed
+            self.blink_count += Misc.blinking_step.value
+            if game.life > 0:
+                if(self.blink_count >= Misc.blinking_speed.value):
+                    if(self.is_blinking == False):
+                        self.img = self.img_trans
+                        self.blink_count = 0.0
+                        self.is_blinking = True
+                    else:
+                        self.img = self.img_copy
+                        self.blink_count = 0.0
+                        self.is_blinking = False
+                if time_passed > self.invincibility_period:
+                    self.is_collidable = True
+                    if(self.is_blinking):
+                        self.img = self.img_copy
         for missile in list(self.missiles_fired):
             missile.update()
             if missile.y < -missile.sy:

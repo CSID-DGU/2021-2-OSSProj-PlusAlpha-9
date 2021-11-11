@@ -38,8 +38,7 @@ class InfiniteGame:
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
-        self.power_up_list = []
-        self.bomb_list = []
+        self.item_list = []
         self.effect_list = []
         self.missileList = []
         self.character = character
@@ -114,26 +113,23 @@ class InfiniteGame:
             if(random.random()<self.item_gen_rate):
                 new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.power_up_list.append(new_item)
+                self.item_list.append(new_item)
 
             if(random.random()<self.item_gen_rate):
                 new_item = Bomb()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.bomb_list.append(new_item)
+                self.item_list.append(new_item)
             
 
             #플레이어 객체 이동
-            self.character.update()
+            self.character.update(self)
 
             #몹 객체 이동
             for mob in self.mobList:
                 mob.move(self.size,self)
 
-            for item in self.power_up_list:
-                item.move()
-
-            for item in self.bomb_list:
-                item.move()
+            for item in self.item_list:
+                item.move(self)
 
             for effect in self.effect_list:
                 effect.move()
@@ -168,18 +164,9 @@ class InfiniteGame:
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
-            for item in list(self.power_up_list):
+            for item in list(self.item_list):
                 if(self.check_crash(self.character,item)):
-                    item.use(self.character)
-                    self.power_up_list.remove(item)
-
-            for item in list(self.bomb_list):
-                if(self.check_crash(self.character,item)):
-                    item.use(self.mobList)
-                    self.bomb_list.remove(item)
-                    explosion = Effect(Images.effect_explosion.value, {"x":500, "y":500}, 2)
-                    explosion.set_XY((item.x- explosion.sx/2, item.y- explosion.sy/2))
-                    self.effect_list.append(explosion)
+                    item.use(self)
 
             #발사체와 몹 충돌 감지
             for missile in list(self.character.get_missiles_fired()):
@@ -210,17 +197,8 @@ class InfiniteGame:
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
 
-            for item in list(self.power_up_list):
-                if time.time() - item.spawned > item.duration:
-                    self.power_up_list.remove(item)
-                else:
-                    item.show(self.screen)
-
-            for item in list(self.bomb_list):
-                if time.time() - item.spawned > item.duration:
-                    self.bomb_list.remove(item)
-                else:
-                    item.show(self.screen)
+            for item in list(self.item_list):
+                item.show(self.screen)
 
             for effect in self.effect_list:
                 effect.show(self.screen)
