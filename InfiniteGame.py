@@ -9,6 +9,7 @@ from typing import Sized
 import pygame
 import random
 import pygame_menu
+import pymysql
 import json
 from collections import OrderedDict
 from Character import Character
@@ -52,6 +53,8 @@ class InfiniteGame:
         self.background_image = "./Image/Antarctic_modified_v1.jpg"
         self.background_music = "./Sound/Rien.mp3"
         self.SB = 0
+        self.dy = 2
+        self.mob_velocity = 2
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
         # self.isBossStage = stage.isBossStage
@@ -60,6 +63,15 @@ class InfiniteGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
+
+        self.score_db = pymysql.connect(
+        user = 'admin',
+        passwd = 'the-journey',
+        # port = 3306,
+        host = 'the-journey-db.cvfqry6l19ls.ap-northeast-2.rds.amazonaws.com',
+        db = 'sys',
+        charset = 'utf8'
+        )
 
     def main(self):
         # 메인 이벤트
@@ -76,12 +88,13 @@ class InfiniteGame:
             self.screen.fill((255,255,255))
             # 배경 크기 변경 처리 및 그리기
             # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
+            
             background1 =  pygame.image.load(self.background_image)
             background1 = pygame.transform.scale(background1, self.size)
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            background1_y += 2
+            background1_y += self.dy
             if background1_y > background_height:
                 background1_y = 0
             self.screen.blit(background1, (0, background1_y))
@@ -107,7 +120,7 @@ class InfiniteGame:
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
+                newMob = Mob(self.mob_image,{"x":100, "y":100},self.mob_velocity,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
             
@@ -263,27 +276,40 @@ class InfiniteGame:
         else:
             return False
 
-    #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가)
+    #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가, 진행 속도 증가)
     def update_difficulty(self):
         play_time = (time.time() - self.start_time) #게임 진행 시간
+        self.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
+        self.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
+        self.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
-
-    def to_menu(self,menu):
-        menu.disable()
+    def to_menu(self):
+        self.menu.disable()
 
     #랭킹 등록 화면
     def show_ranking_register_screen(self):
-        menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
+        self.menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
                             theme=pygame_menu.themes.THEME_BLUE)
-        self.text_input = menu.add.text_input('Name: ', default='ABC')
-        menu.add.label("")
-        menu.add.button('Register Ranking', self.register_ranking,self.score)
-        menu.add.button('to Menu', self.to_menu,menu)
-        menu.mainloop(self.screen)
+        self.text_input = self.menu.add.text_input('Name: ', default='ABC')
+        self.menu.add.label("")
+        self.menu.add.button('Register Ranking', self.register_ranking)
+        self.menu.add.button('Register Ranking', )
+        self.menu.add.button('to Menu', self.to_menu)
+        self.menu.mainloop(self.screen)
         
     #랭킹 서버에 등록
-    def register_ranking(self,score):
-        print(self.text_input.get_value())
-        print(score)
+    def register_ranking(self):
 
-    
+        self.add_data(self.text_input.get_value(),self.score)
+        
+        self.menu.clear()
+        self.menu.add.label("Score Registered!")
+        self.menu.add.button('to Menu', self.to_menu)
+
+
+    def add_data(self, ID, score):                                   #데이터 베이스에서 데이터 추가하기
+        curs = self.score_db.cursor()
+        sql = "INSERT INTO test_score (ID, score) VALUES (%s, %s)"
+        curs.execute(sql, (ID, score))
+        self.score_db.commit()
+        curs.close() 

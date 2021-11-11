@@ -35,9 +35,9 @@
 				1,
 				"./Image/Scorphion.png",
 				[
-					"Image/santa.png",
-					"./Image/Scorphion.png",
-					"Image/santa.png"
+					"Image/tutankhamun_1.png",
+					"Image/tutankhamun_2.png",
+					"Image/tutankhamun_3.png"
 				],
 				"./Image/Scorphion.png"
 			]
@@ -74,14 +74,14 @@
 				"./Image/Antarctic_modified_v1.jpg",
 				"./Sound/Rien.mp3",
 				1,
-				0,
+				1,
 				"./Image/Catus.png",
 				[
-					"Image/santa.png",
-					"Image/santa.png",
-					"Image/santa.png"
+					"Image/penguin_boss_1.png",
+					"Image/penguin_boss_2.png",
+					"Image/penguin_boss_3.png"
 				],
-				"./Image/Scorphion.png"
+				"./Image/penguin_boss_3.png"
 			]
 		}
 	}
