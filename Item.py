@@ -63,10 +63,6 @@ class PowerUp(Item):
 class Bomb(Item):
     def __init__(self):
         super().__init__(Images.item_bomb.value, {"x":50, "y":50 }, 5)
-        self.dist = 250
-
-    def check_distance(self, enemy):
-        return math.hypot((enemy.x + (enemy.sx/2)) - (self.x + (self.sx/2)), (enemy.y + (enemy.sy/2)) - (self.y + (self.sy/2))) <= float(self.dist)
 
     def use(self, game):
         if self.is_collidable == True:
@@ -74,8 +70,8 @@ class Bomb(Item):
             explosion.set_XY((self.x- explosion.sx/2, self.y- explosion.sy/2))
             game.effect_list.append(explosion)
             for enemy in list(game.mobList):
-                if self.check_distance(enemy):
+                if explosion.check_crash(enemy):
                     game.mobList.remove(enemy)
+                    game.score += 10
             self.is_collidable = False
             game.item_list.remove(self)
-
