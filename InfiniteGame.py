@@ -119,6 +119,21 @@ class InfiniteGame:
                 new_item = Bomb()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Health()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Coin()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = SpeedUp()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
             
 
             #플레이어 객체 이동
@@ -181,6 +196,8 @@ class InfiniteGame:
                         self.mobList.remove(mob)
                    
             #화면 그리기
+            for effect in self.effect_list:
+                effect.show(self.screen)
             #플레이어 그리기
             self.character.show(self.screen)
             
@@ -193,9 +210,6 @@ class InfiniteGame:
 
             for item in list(self.item_list):
                 item.show(self.screen)
-
-            for effect in self.effect_list:
-                effect.show(self.screen)
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)

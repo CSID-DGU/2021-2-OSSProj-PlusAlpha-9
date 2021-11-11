@@ -127,6 +127,21 @@ class StageGame:
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
+            if(random.random()<self.item_gen_rate):
+                new_item = Health()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Coin()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = SpeedUp()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
             #플레이어 객체 이동
             self.character.update(self)
 

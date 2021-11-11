@@ -33,6 +33,11 @@ class Character(Object):
         self.blink_count = 0.0
         self.is_blinking = False
 
+        self.is_boosted = False
+        self.powerup_duration = 10.0
+        self.org_velocity = velocity
+        self.org_fire_interval = fire_interval
+
     def update(self, game):
         self.boundary = pygame.display.get_surface().get_size()
         key_pressed = pygame.key.get_pressed()
@@ -55,6 +60,11 @@ class Character(Object):
         if key_pressed[pygame.K_SPACE]:
             if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
+        if self.is_boosted == True:
+            if time.time() - self.boosted > self.powerup_duration:
+                self.velocity = self.org_velocity
+                self.fire_interval = self.org_fire_interval
+                self.is_boosted = False
         if self.is_collidable == False:
             time_passed = time.time() - self.last_crashed
             self.blink_count += Misc.blinking_step.value
@@ -90,3 +100,9 @@ class Character(Object):
 
     def get_missiles_fired(self):
         return self.missiles_fired
+
+    def speed_up(self):
+        self.boosted = time.time()
+        self.velocity = self.org_velocity + 5
+        self.fire_interval = self.org_fire_interval/3.0
+        self.is_boosted = True
