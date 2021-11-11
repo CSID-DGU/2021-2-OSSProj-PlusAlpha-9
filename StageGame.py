@@ -138,14 +138,7 @@ class StageGame:
                 item.move(self)
 
             for effect in self.effect_list:
-                effect.move()
-
-
-            for effect in list(self.effect_list):
-                if time.time() - effect.occurred > effect.duration:
-                    self.effect_list.remove(effect)
-                else:
-                    effect.show(self.screen)
+                effect.move(self)
 
             #보스 이동
             #보스 업데이트
@@ -195,22 +188,21 @@ class StageGame:
                         self.mobList.remove(mob)
                    
             #화면 그리기
+            #효과 그리기(폭탄 아이템)
+            for effect in self.effect_list:
+                effect.show(self.screen)
             #플레이어 그리기
             self.character.show(self.screen)
-            
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
-                
+            #아이템 그리기
             for item in list(self.item_list):
                 item.show(self.screen)
-
+            #플레이어 발사체 그리기
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
 
-            for effect in self.effect_list:
-                effect.show(self.screen)
-            
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
             score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔

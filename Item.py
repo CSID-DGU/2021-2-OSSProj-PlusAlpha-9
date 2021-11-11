@@ -63,15 +63,12 @@ class PowerUp(Item):
 class Bomb(Item):
     def __init__(self):
         super().__init__(Images.item_bomb.value, {"x":50, "y":50 }, 5)
+        self.radius = {"x":500, "y":500}
 
     def use(self, game):
         if self.is_collidable == True:
-            explosion = Effect(Images.effect_explosion.value, {"x":500, "y":500}, 2)
+            explosion = Effect(Images.effect_bomb.value[0], self.radius, 2)
             explosion.set_XY((self.x- explosion.sx/2, self.y- explosion.sy/2))
             game.effect_list.append(explosion)
-            for enemy in list(game.mobList):
-                if explosion.check_crash(enemy):
-                    game.mobList.remove(enemy)
-                    game.score += 10
             self.is_collidable = False
             game.item_list.remove(self)

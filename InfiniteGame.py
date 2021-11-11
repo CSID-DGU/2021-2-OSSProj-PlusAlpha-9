@@ -132,14 +132,8 @@ class InfiniteGame:
                 item.move(self)
 
             for effect in self.effect_list:
-                effect.move()
+                effect.move(self)
 
-            for effect in list(self.effect_list):
-                if time.time() - effect.occurred > effect.duration:
-                    self.effect_list.remove(effect)
-                else:
-                    effect.show(self.screen)
-            
             #보스 이동
             #보스 업데이트
 

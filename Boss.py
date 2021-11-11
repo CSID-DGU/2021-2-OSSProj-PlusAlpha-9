@@ -227,7 +227,7 @@ class Boss():
     #checks itself for health, changes phases after certain point
     def check(self,player,game):
         for bullet in player.missiles_fired:
-            if(bullet.checkCrash(self)):
+            if(bullet.check_crash(self)):
                 self.health -= 1000
                 player.missiles_fired.remove(bullet)
         
