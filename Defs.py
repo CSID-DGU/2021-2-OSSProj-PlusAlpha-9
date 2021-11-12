@@ -17,7 +17,11 @@ class Images(enum.Enum):
     missile_missile2 = "./Image/MISSILE_2.png"
     item_powerup = "./Image/Items/powerupYellow_bolt.png"
     item_bomb = "./Image/Items/powerupYellow_star.png"
-    effect_explosion = "./Image/Lasers/laserBlue08.png"
+    effect_bomb = ["./Image/Effects/Bomb/bomb01.png", "./Image/Effects/Bomb/bomb02.png", "./Image/Effects/Bomb/bomb03.png", 
+                    "./Image/Effects/Bomb/bomb04.png", "./Image/Effects/Bomb/bomb05.png", "./Image/Effects/Bomb/bomb06.png", 
+                    "./Image/Effects/Bomb/bomb07.png", "./Image/Effects/Bomb/bomb08.png", "./Image/Effects/Bomb/bomb09.png",
+                    "./Image/Effects/Bomb/bomb10.png", "./Image/Effects/Bomb/bomb11.png", "./Image/Effects/Bomb/bomb12.png",
+                    "./Image/Effects/Bomb/bomb13.png", "./Image/Effects/Bomb/bomb14.png", "./Image/Effects/Bomb/bomb15.png"]
     
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.mp3"
@@ -42,3 +46,13 @@ class Color(enum.Enum):
     RED = (255,0,0)
     BLUE = (0,0,255)
     GREEN = (0,255,0)
+
+class Misc(enum.Enum):
+    missile_volume = 0.1
+    blinking_step = 0.05
+    blinking_speed = 0.2
+
+class Utils():
+    @classmethod
+    def clamp(cls, val, n_min, n_max):
+        return max(n_min, min(val, n_max)) 

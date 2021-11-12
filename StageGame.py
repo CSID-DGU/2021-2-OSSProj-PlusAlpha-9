@@ -40,8 +40,7 @@ class StageGame:
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
-        self.power_up_list = []
-        self.bomb_list = []
+        self.item_list = []
         self.effect_list = []
         self.character = character
         self.stage = stage
@@ -121,35 +120,25 @@ class StageGame:
             if(random.random()<self.item_gen_rate):
                 new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.power_up_list.append(new_item)
+                self.item_list.append(new_item)
 
             if(random.random()<self.item_gen_rate):
                 new_item = Bomb()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.bomb_list.append(new_item)
+                self.item_list.append(new_item)
 
             #플레이어 객체 이동
-            self.character.update()
+            self.character.update(self)
 
             #몹 객체 이동
             for mob in self.mobList:
                 mob.move(self.size,self)
 
-            for item in self.power_up_list:
-                item.move()
-
-            for item in self.bomb_list:
-                item.move()
+            for item in self.item_list:
+                item.move(self)
 
             for effect in self.effect_list:
-                effect.move()
-
-
-            for effect in list(self.effect_list):
-                if time.time() - effect.occurred > effect.duration:
-                    self.effect_list.remove(effect)
-                else:
-                    effect.show(self.screen)
+                effect.move(self)
 
             #보스 이동
             #보스 업데이트
@@ -175,18 +164,10 @@ class StageGame:
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
-            for item in list(self.power_up_list):
+            for item in list(self.item_list):
                 if(self.check_crash(self.character,item)):
-                    item.use(self.character)
-                    self.power_up_list.remove(item)
+                    item.use(self)
 
-            for item in list(self.bomb_list):
-                if(self.check_crash(self.character,item)):
-                    item.use(self.mobList)
-                    self.bomb_list.remove(item)
-                    explosion = Effect(Images.effect_explosion.value, {"x":500, "y":500}, 2)
-                    explosion.set_XY((item.x- explosion.sx/2, item.y- explosion.sy/2))
-                    self.effect_list.append(explosion)
 
             #발사체와 몹 충돌 감지
             for missile in list(self.character.get_missiles_fired()):
@@ -207,31 +188,21 @@ class StageGame:
                         self.mobList.remove(mob)
                    
             #화면 그리기
+            #효과 그리기(폭탄 아이템)
+            for effect in self.effect_list:
+                effect.show(self.screen)
             #플레이어 그리기
             self.character.show(self.screen)
-            
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
-
-            for item in list(self.power_up_list):
-                if time.time() - item.spawned > item.duration:
-                    self.power_up_list.remove(item)
-                else:
-                    item.show(self.screen)
-
-            for item in list(self.bomb_list):
-                if time.time() - item.spawned > item.duration:
-                    self.bomb_list.remove(item)
-                else:
-                    item.show(self.screen)
-
+            #아이템 그리기
+            for item in list(self.item_list):
+                item.show(self.screen)
+            #플레이어 발사체 그리기
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
 
-            for effect in self.effect_list:
-                effect.show(self.screen)
-            
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
             score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
