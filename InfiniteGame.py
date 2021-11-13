@@ -185,7 +185,8 @@ class InfiniteGame:
                 for mob in list(self.mobList):
                     if self.check_crash(missile,mob):
                         self.score += 10
-                        self.character.missiles_fired.remove(missile)
+                        if missile in self.character.missiles_fired:
+                            self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
