@@ -11,17 +11,68 @@ class Images(enum.Enum):
 
     # background_desert = "./Image/DESERT.jpeg"
     background_desert = "./Image/DESERT_modified_v3.jpg"
-    background_antarctic = "./Image/Antarctic_modified_v1.jpg"
+    background_antarctic = "./Image/Antarctic_modified_v2.jpg"
     enemy_scrophion = "./Image/Scorphion.png"
     enemy_cactus = "./Image/Catus.png"
     missile_missile2 = "./Image/MISSILE_2.png"
-    item_powerup = "./Image/Items/powerupYellow_bolt.png"
-    item_bomb = "./Image/Items/powerupYellow_star.png"
-    effect_bomb = ["./Image/Effects/Bomb/bomb01.png", "./Image/Effects/Bomb/bomb02.png", "./Image/Effects/Bomb/bomb03.png", 
-                    "./Image/Effects/Bomb/bomb04.png", "./Image/Effects/Bomb/bomb05.png", "./Image/Effects/Bomb/bomb06.png", 
-                    "./Image/Effects/Bomb/bomb07.png", "./Image/Effects/Bomb/bomb08.png", "./Image/Effects/Bomb/bomb09.png",
-                    "./Image/Effects/Bomb/bomb10.png", "./Image/Effects/Bomb/bomb11.png", "./Image/Effects/Bomb/bomb12.png",
-                    "./Image/Effects/Bomb/bomb13.png", "./Image/Effects/Bomb/bomb14.png", "./Image/Effects/Bomb/bomb15.png"]
+
+    item_bomb = [
+        "./Image/Items/Bomb/frame-1.png", 
+        "./Image/Items/Bomb/frame-2.png", 
+        "./Image/Items/Bomb/frame-3.png", 
+        "./Image/Items/Bomb/frame-4.png", 
+        "./Image/Items/Bomb/frame-5.png",
+        "./Image/Items/Bomb/frame-1.png"
+    ]
+    item_coin = [
+        "./Image/Items/Coin/frame-1.png", 
+        "./Image/Items/Coin/frame-2.png", 
+        "./Image/Items/Coin/frame-3.png", 
+        "./Image/Items/Coin/frame-4.png", 
+        "./Image/Items/Coin/frame-5.png",
+        "./Image/Items/Coin/frame-1.png"
+    ]
+    item_health = [
+        "./Image/Items/Health/frame-1.png", 
+        "./Image/Items/Health/frame-2.png", 
+        "./Image/Items/Health/frame-3.png", 
+        "./Image/Items/Health/frame-4.png",
+        "./Image/Items/Health/frame-1.png"
+    ]
+    item_powerup = [
+        "./Image/Items/PowerUp/frame-1.png", 
+        "./Image/Items/PowerUp/frame-2.png", 
+        "./Image/Items/PowerUp/frame-3.png", 
+        "./Image/Items/PowerUp/frame-4.png", 
+        "./Image/Items/PowerUp/frame-5.png",
+        "./Image/Items/PowerUp/frame-1.png"
+    ]
+    item_speedup = [
+        "./Image/Items/SpeedUp/frame-1.png", 
+        "./Image/Items/SpeedUp/frame-2.png", 
+        "./Image/Items/SpeedUp/frame-3.png", 
+        "./Image/Items/SpeedUp/frame-4.png", 
+        "./Image/Items/SpeedUp/frame-5.png",
+        "./Image/Items/SpeedUp/frame-1.png"
+    ]
+
+    anim_explosion = [
+        "./Image/Effects/Bomb/bomb01.png", 
+        "./Image/Effects/Bomb/bomb02.png", 
+        "./Image/Effects/Bomb/bomb03.png", 
+        "./Image/Effects/Bomb/bomb04.png", 
+        "./Image/Effects/Bomb/bomb05.png", 
+        "./Image/Effects/Bomb/bomb06.png", 
+        "./Image/Effects/Bomb/bomb07.png", 
+        "./Image/Effects/Bomb/bomb08.png", 
+        "./Image/Effects/Bomb/bomb09.png",
+        "./Image/Effects/Bomb/bomb10.png", 
+        "./Image/Effects/Bomb/bomb11.png", 
+        "./Image/Effects/Bomb/bomb12.png",
+        "./Image/Effects/Bomb/bomb13.png", 
+        "./Image/Effects/Bomb/bomb14.png", 
+        "./Image/Effects/Bomb/bomb15.png"
+    ]
     
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.mp3"

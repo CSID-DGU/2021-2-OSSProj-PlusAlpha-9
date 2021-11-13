@@ -11,6 +11,7 @@
 				1,
 				"./Image/Scorphion.png",
 				[],
+				"",
 				""
 			],
 			"2": [
@@ -23,6 +24,7 @@
 				1,
 				"./Image/Scorphion.png",
 				[],
+				"",
 				""
 			],
 			"3": [
@@ -39,7 +41,8 @@
 					"Image/tutankhamun_2.png",
 					"Image/tutankhamun_3.png"
 				],
-				"./Image/Scorphion.png"
+				"./Image/Scorphion.png",
+				"UFO"
 			]
 		},
 		"Ice": {
@@ -47,31 +50,33 @@
 				"Ice",
 				1,
 				300,
-				"./Image/Antarctic_modified_v1.jpg",
+				"./Image/Antarctic_modified_v3.jpg",
 				"./Sound/Rien.mp3",
 				0,
 				1,
 				"./Image/Catus.png",
 				[],
+				"",
 				""
 			],
 			"2": [
 				"Ice",
 				2,
 				450,
-				"./Image/Antarctic_modified_v1.jpg",
+				"./Image/Antarctic_modified_v3.jpg",
 				"./Sound/Rien.mp3",
 				0,
 				1,
 				"./Image/Catus.png",
 				[],
+				"",
 				""
 			],
 			"3": [
 				"Ice",
 				3,
 				450,
-				"./Image/Antarctic_modified_v1.jpg",
+				"./Image/Antarctic_modified_v3.jpg",
 				"./Sound/Rien.mp3",
 				1,
 				1,
@@ -81,7 +86,8 @@
 					"Image/penguin_boss_2.png",
 					"Image/penguin_boss_3.png"
 				],
-				"./Image/penguin_boss_3.png"
+				"./Image/penguin_boss_3.png",
+        ""
 			]
 		}
 	}

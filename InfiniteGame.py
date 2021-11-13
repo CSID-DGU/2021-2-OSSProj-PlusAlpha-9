@@ -63,6 +63,9 @@ class InfiniteGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
+        self.character.fire_count = self.character.min_fire_count
+        self.character.missiles_fired = []
+        self.character.bomb_count = 0
 
         self.score_db = pymysql.connect(
         user = 'admin',
@@ -133,6 +136,21 @@ class InfiniteGame:
                 new_item = Bomb()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Health()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Coin()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = SpeedUp()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
             
 
             #플레이어 객체 이동
@@ -181,7 +199,8 @@ class InfiniteGame:
                 for mob in list(self.mobList):
                     if self.check_crash(missile,mob):
                         self.score += 10
-                        self.character.missiles_fired.remove(missile)
+                        if missile in self.character.missiles_fired:
+                            self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
@@ -195,6 +214,8 @@ class InfiniteGame:
                         self.mobList.remove(mob)
                    
             #화면 그리기
+            for effect in self.effect_list:
+                effect.show(self.screen)
             #플레이어 그리기
             self.character.show(self.screen)
             
@@ -207,19 +228,16 @@ class InfiniteGame:
 
             for item in list(self.item_list):
                 item.show(self.screen)
-
-            for effect in self.effect_list:
-                effect.show(self.screen)
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
-            score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             play_time = (time.time() - self.start_time)
             time_text = font.render("Time : {:.2f}".format(play_time), True, (255,255,0))
-            self.screen.blit(time_text,(300,5))
+            self.screen.blit(time_text,(350,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨

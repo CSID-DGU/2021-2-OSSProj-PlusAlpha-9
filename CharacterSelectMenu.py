@@ -59,10 +59,10 @@ class CharacterSelectMenu:
         #캐릭터가 열려있는지 확인
         if (selected_character.is_unlocked): #캐릭터가 열려있다면
 
-            if(isinstance(self.attr,InfiniteGame.Mode)): #인자가 난이도 모드의 객체이면 무한모드 실행
-                InfiniteGame(selected_character,self.attr).main()
-            else: #인자가 스테이지 객체이면 스테이지 모드 실행
-                StageGame(selected_character,self.attr).main()
+          if(isinstance(self.attr,InfiniteGame.Mode)): #인자가 난이도 모드의 객체이면 무한모드 실행
+              InfiniteGame(selected_character,self.attr).main()
+          else: #인자가 스테이지 객체이면 스테이지 모드 실행
+              StageGame(self.character_data,selected_character,self.attr).main()
 
         else:
             print("character locked")
