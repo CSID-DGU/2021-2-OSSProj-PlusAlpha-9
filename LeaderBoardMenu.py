@@ -50,12 +50,6 @@ class LeaderBoardMenu:
         self.menu.add.button('     hard mode     ', self.show_past_hard_rank)
         self.menu.add.button('         back         ', self.rank)
 
-# 1. current rank 페이지화 O
-# 2. current rank 검색 기능 추가
-# 3. past rank 100위까지 자르고 정렬
-# 4. 데이터베이스에 날짜 속성 추가 (서버 타임스탬프 ??)
-# 5. 월 바뀔 때 데이터 갱신
-
     def show_current_easy_rank(self):
         self.get_current_rank('easy')
 
@@ -88,7 +82,6 @@ class LeaderBoardMenu:
             name = str(easy_data[tens*10+i]['ID'])
             score = '{0:>05s}'.format(str(easy_data[tens*10+i]['score']))
             r = "{:<15s}{:<30s}{:<20s}".format(str(tens*10+i+1), name, score)
-            # r= "#{} : ".format(tens*10+i+1) + name + "    " + score
             self.menu.add.label(r,selectable=False, font_size=20)
         prev_next_frame = self.menu.add.frame_h(250, 60)
         if(tens == 0):
@@ -124,7 +117,6 @@ class LeaderBoardMenu:
             name = str(hard_data[tens*10+i]['ID'])
             score = '{0:>05s}'.format(str(hard_data[tens*10+i]['score']))
             r = "{:<15s}{:<30s}{:<20s}".format(str(tens*10+i+1), name, score)
-            # r= "#{} : ".format(tens*10+i+1) + name + "    " + score
             self.menu.add.label(r,selectable=False, font_size=20)
         prev_next_frame = self.menu.add.frame_h(250, 60)
         if(tens == 0):
@@ -171,7 +163,6 @@ class LeaderBoardMenu:
                     name = str(past_easy_data[i]['ID'])
                     score = '{0:>05s}'.format(str(past_easy_data[i]['score']))
                     r = "{:<15s}{:<30s}{:<20s}".format(str(i+1), name, score)
-                    # r= "#{} : ".format(tens*10+i+1) + name + "    " + scor
                     self.menu.add.label(r,selectable=False, font_size=20)
 
             elif(mode == 'hard'):
@@ -184,7 +175,6 @@ class LeaderBoardMenu:
                     name = str(past_hard_data[i]['ID'])
                     score = '{0:>05s}'.format(str(past_hard_data[i]['score']))
                     r = "{:<15s}{:<30s}{:<20s}".format(str(i+1), name, score)
-                    # r= "#{} : ".format(tens*10+i+1) + name + "    " + scor
                     self.menu.add.label(r,selectable=False, font_size=20)
 
             self.menu.add.button('back', self.past_rank)
