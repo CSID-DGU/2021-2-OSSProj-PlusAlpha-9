@@ -12,5 +12,6 @@ class Stage:
         self.mob_image = stageInfo[7]
         self.boss_image = stageInfo[8]
         self.boss_bullet_image = stageInfo[9]
+        self.unlock_char = stageInfo[10]
 
     

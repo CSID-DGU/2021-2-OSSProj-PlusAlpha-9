@@ -23,7 +23,7 @@ from CharacterDataManager import *
 
 class StageGame:
 
-    def __init__(self,character,stage):
+    def __init__(self,character_data,character,stage):
         # 1. 게임초기화 
         pygame.init()
         self.stage_cleared = False
@@ -42,6 +42,7 @@ class StageGame:
         self.mobList = []
         self.item_list = []
         self.effect_list = []
+        self.character_data = character_data
         self.character = character
         self.stage = stage
         self.goal_score = stage.goal_score
@@ -66,6 +67,7 @@ class StageGame:
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
         self.character.fire_count = self.character.min_fire_count
         self.character.missiles_fired = []
+        self.character.bomb_count = 0
         
     def main(self):
         # 메인 이벤트
@@ -127,6 +129,21 @@ class StageGame:
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
+            if(random.random()<self.item_gen_rate):
+                new_item = Health()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = Coin()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if(random.random()<self.item_gen_rate):
+                new_item = SpeedUp()
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
             #플레이어 객체 이동
             self.character.update(self)
 
@@ -150,13 +167,19 @@ class StageGame:
 
                 # 보스와 플레이어 충돌 감지
                 if(self.check_crash(self.boss,self.character)):
-                    self.life -= 1
+                    if self.character.is_collidable == True:
+                        self.character.last_crashed = time.time()
+                        self.character.is_collidable = False
+                        self.life -=1
 
                 #보스의 총알과 플레이어 충돌 감지
                 for bullet in self.enemyBullets:
                     if(bullet.check_crash(self.character)):
-                        self.life -=1
-                        self.enemyBullets.remove(bullet)
+                        if self.character.is_collidable == True:
+                            self.character.last_crashed = time.time()
+                            self.character.is_collidable = False
+                            self.life -=1
+                            self.enemyBullets.remove(bullet)
 
         
             #적 투사체 이동
@@ -205,13 +228,13 @@ class StageGame:
 
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
-            score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             playTime = (time.time() - self.startTime)
             time_text = font.render("Time : {:.2f}".format(playTime), True, (255,255,0))
-            self.screen.blit(time_text,(300,5))
+            self.screen.blit(time_text,(350,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
@@ -253,10 +276,20 @@ class StageGame:
         #화면 표시
         menu = pygame_menu.Menu('Stage Clear!', self.size[0]*0.7, self.size[1]*0.8,
                             theme=pygame_menu.themes.THEME_BLUE)
-
         menu.add.label(f"{self.stage.chapter} - {self.stage.stage} clear!!")
         menu.add.label("Congratulation!")
         menu.add.label("")
+        if self.stage.unlock_char != "":
+            for character in self.character_data:
+                if character.name == self.stage.unlock_char:
+                    if character.is_unlocked == False:
+                        character.is_unlocked = True
+                        CharacterDataManager.save(self.character_data)
+                        print(type(self.character_data), type(character))
+                        menu.add.label(self.stage.unlock_char, "해금되었습니다.")
+
+            
+
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)
 

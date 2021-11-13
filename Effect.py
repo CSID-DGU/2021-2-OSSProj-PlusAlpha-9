@@ -14,7 +14,7 @@ class Effect(Object):
         self.animation = []
         x_scale = self.boundary[0]//self.org_boundary[0]
         y_scale = self.boundary[1]//self.org_boundary[1]
-        for path in Images.effect_bomb.value:
+        for path in Images.anim_explosion.value:
             img = pygame.image.load(path).convert_alpha()
             img = pygame.transform.scale(img,(self.size["x"]*x_scale,self.size["y"]*y_scale))
             self.animation.append(img)

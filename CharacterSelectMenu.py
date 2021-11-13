@@ -63,7 +63,7 @@ class CharacterSelectMenu:
             return
 
         if (selected_character.is_unlocked):
-            StageGame(selected_character,self.stage).main()
+            StageGame(self.character_data, selected_character, self.stage).main()
         else:
             print("character locked")
 

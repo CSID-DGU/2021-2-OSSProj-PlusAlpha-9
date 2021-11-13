@@ -22,6 +22,7 @@ SOFTWARE.'''
 
 import random
 import pygame
+import time
 from sys import *
 from math import *
 from Bullet import Bullet
@@ -75,6 +76,9 @@ class Boss():
         self.angles_quint = [15, 30, 45, 60, 75]
         #Colors for HP display
         self.colors = [Color.BLUE.value,Color.GREEN.value,Color.RED.value]
+
+        self.last_bombed = 0.0
+        self.hit_interval = 1.0
 
     def change_img_size(self,sx,sy):
         for i in range(len(self.orig_imgs)):
@@ -230,7 +234,11 @@ class Boss():
             if(bullet.check_crash(self)):
                 self.health -= 1000
                 player.missiles_fired.remove(bullet)
-        
+        for effect in game.effect_list:
+            if effect.check_crash(self):
+                if time.time()-self.last_bombed > self.hit_interval:
+                    self.last_bombed = time.time()
+                    self.health -= 2000
         # checks if it is supposed to die
         if self.health <= 0:
             game.stage_cleared = True
