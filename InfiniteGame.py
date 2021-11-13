@@ -20,6 +20,7 @@ from Bullet import Bullet
 from Effect import *
 from Defs import *
 from StageDataManager import *
+from Rank import *
 
 class InfiniteGame:
 
@@ -282,6 +283,8 @@ class InfiniteGame:
     def show_ranking_register_screen(self):
         self.menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
                             theme=pygame_menu.themes.THEME_BLUE)
+
+        self.menu.add.label("Record : {}".format(self.score))
         self.text_input = self.menu.add.text_input('Name: ', default='ABC')
         self.menu.add.label("")
         self.menu.add.button('Register Ranking', self.register_ranking)
@@ -291,25 +294,23 @@ class InfiniteGame:
     #랭킹 서버에 등록
     def register_ranking(self):
 
-        self.add_data(self.text_input.get_value(),self.score)
+        name = self.text_input.get_value()
+        rank = Rank()
+        if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
+            rank.add_data('current','easy',name,self.score)
+        else: # 그 외 ( 하드모드인 경우)
+            rank.add_data('current','hard',name,self.score)
         
         self.menu.clear()
         self.menu.add.label("Score Registered!")
         self.menu.add.button('to Menu', self.to_menu)
 
-
-    def add_data(self, ID, score):                                   #데이터 베이스에서 데이터 추가하기
-        curs = self.score_db.cursor()
-        sql = "INSERT INTO test_score (ID, score) VALUES (%s, %s)"
-        curs.execute(sql, (ID, score))
-        self.score_db.commit()
-        curs.close() 
-
+    #난이도를 나누는 모드 클래스 (상속하여 사용)
     class Mode:
         def update_difficulty():
             pass
 
-    class EasyMode(Mode):
+    class EasyMode(Mode): #이지 모드
         @staticmethod
         def update_difficulty(game):
             play_time = (time.time() - game.start_time) #게임 진행 시간
@@ -317,7 +318,7 @@ class InfiniteGame:
             game.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
             game.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
-    class HardMode(Mode):
+    class HardMode(Mode): #하드 모드
         @staticmethod
         def update_difficulty(game):
             play_time = (time.time() - game.start_time) #게임 진행 시간
