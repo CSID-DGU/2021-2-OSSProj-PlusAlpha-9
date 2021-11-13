@@ -284,7 +284,7 @@ class InfiniteGame:
                             theme=pygame_menu.themes.THEME_BLUE)
         self.text_input = self.menu.add.text_input('Name: ', default='ABC')
         self.menu.add.label("")
-        self.menu.add.button('Register Ranking', self.register_ranking))
+        self.menu.add.button('Register Ranking', self.register_ranking)
         self.menu.add.button('to Menu', self.to_menu)
         self.menu.mainloop(self.screen)
         
