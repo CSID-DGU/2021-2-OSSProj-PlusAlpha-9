@@ -23,7 +23,7 @@ from StageDataManager import *
 
 class InfiniteGame:
 
-    def __init__(self,character):
+    def __init__(self,character,mode):
         # 1. 게임초기화 
         pygame.init()
 
@@ -36,6 +36,7 @@ class InfiniteGame:
         
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
+        self.mode = mode
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
@@ -229,7 +230,8 @@ class InfiniteGame:
                 self.show_ranking_register_screen()
                 return
 
-            self.update_difficulty()
+            self.mode.update_difficulty(self)
+            print(self.dy)
 
 
         # While 빠져나오면 랭킹등록 스크린 실행
@@ -249,11 +251,11 @@ class InfiniteGame:
             return False
 
     #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가, 진행 속도 증가)
-    def update_difficulty(self):
-        play_time = (time.time() - self.start_time) #게임 진행 시간
-        self.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
-        self.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
-        self.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
+    # def update_difficulty(self):
+    #     play_time = (time.time() - self.start_time) #게임 진행 시간
+    #     self.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
+    #     self.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
+    #     self.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
     def to_menu(self):
         self.menu.disable()
@@ -264,8 +266,7 @@ class InfiniteGame:
                             theme=pygame_menu.themes.THEME_BLUE)
         self.text_input = self.menu.add.text_input('Name: ', default='ABC')
         self.menu.add.label("")
-        self.menu.add.button('Register Ranking', self.register_ranking)
-        self.menu.add.button('Register Ranking', )
+        self.menu.add.button('Register Ranking', self.register_ranking))
         self.menu.add.button('to Menu', self.to_menu)
         self.menu.mainloop(self.screen)
         
@@ -285,3 +286,24 @@ class InfiniteGame:
         curs.execute(sql, (ID, score))
         self.score_db.commit()
         curs.close() 
+
+    class Mode:
+        def update_difficulty():
+            pass
+
+    class EasyMode(Mode):
+        @staticmethod
+        def update_difficulty(game):
+            play_time = (time.time() - game.start_time) #게임 진행 시간
+            game.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
+            game.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
+            game.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
+
+    class HardMode(Mode):
+        @staticmethod
+        def update_difficulty(game):
+            play_time = (time.time() - game.start_time) #게임 진행 시간
+            game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
+            game.dy = play_time//10*3 + 2 #10초마다 dy(배경 이동 속도) 3 증가 (기본 2)
+            game.mob_velocity = play_time//5*2 + 2 #5초마다 mob_velocity(몹 이동 속도) 2 증가 (기본 2)
+

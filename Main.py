@@ -16,6 +16,7 @@ from Defs import *
 from StageDataManager import *
 from CharacterDataManager import *
 from StageSelectMenu import *
+from DifficultySelectMenu import *
 
 class Display:
     w_init = 1/2
@@ -44,7 +45,7 @@ background = pygame.image.load("./Image/StartImage.png")
 
 def show_mode():
     menu.clear()
-    menu.add.button('Infinite Game',show_character_select_menu)
+    menu.add.button('Infinite Game',show_difficulty_select_menu)
     menu.add.button('Stage Game',show_stage_select_menu)
     menu.add.button('Back', back)
     menu.add.button('Quit', pygame_menu.events.EXIT)
@@ -138,8 +139,8 @@ def on_resize() -> None:
     menu.resize(new_w, new_h)
     print(f'New menu size: {menu.get_size()}')
 
-def show_character_select_menu():
-    CharacterSelectMenu(screen,None).show()
+def show_difficulty_select_menu():
+    DifficultySelectMenu(screen).show()
     
 
 def show_stage_select_menu():
