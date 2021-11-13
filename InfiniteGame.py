@@ -59,6 +59,9 @@ class InfiniteGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
+        self.character.fire_count = self.character.min_fire_count
+        self.character.missiles_fired = []
+        self.character.bomb_count = 0
 
     def main(self):
         # 메인 이벤트
@@ -213,13 +216,13 @@ class InfiniteGame:
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
-            score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             play_time = (time.time() - self.start_time)
             time_text = font.render("Time : {:.2f}".format(play_time), True, (255,255,0))
-            self.screen.blit(time_text,(300,5))
+            self.screen.blit(time_text,(350,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
