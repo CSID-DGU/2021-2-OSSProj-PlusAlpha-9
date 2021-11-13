@@ -19,7 +19,7 @@ class Item(Object):
         self.is_blinking = False
 
         self.inc = 0.0
-        self.delay = 5.0
+        self.delay = 10.0
         self.inc_delay = 0.0
         self.anim_speed = 0.5
 
@@ -86,9 +86,7 @@ class Bomb(Item):
 
     def use(self, game):
         if self.is_collidable == True:
-            explosion = Effect(Images.anim_explosion.value[0], self.radius, 2)
-            explosion.set_XY((self.x- explosion.sx/2, self.y- explosion.sy/2))
-            game.effect_list.append(explosion)
+            game.character.bomb_count+=1
             self.is_collidable = False
             game.item_list.remove(self)
 
