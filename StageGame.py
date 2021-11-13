@@ -286,9 +286,7 @@ class StageGame:
                         character.is_unlocked = True
                         CharacterDataManager.save(self.character_data)
                         print(type(self.character_data), type(character))
-                        menu.add.label(self.stage.unlock_char, "해금되었습니다.")
-
-            
+                        menu.add.label("{} unlocked".format(self.stage.unlock_char))
 
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)

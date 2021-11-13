@@ -59,7 +59,10 @@ class CharacterSelectMenu:
 
 
         if(self.stage is None ):
-            InfiniteGame(selected_character).main()
+            if (selected_character.is_unlocked):
+                InfiniteGame(selected_character).main()
+            else:
+                print("character locked")
             return
 
         if (selected_character.is_unlocked):
