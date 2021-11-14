@@ -250,7 +250,6 @@ class InfiniteGame:
                 return
 
             self.mode.update_difficulty(self)
-            print(self.dy)
 
 
         # While 빠져나오면 랭킹등록 스크린 실행
@@ -269,12 +268,6 @@ class InfiniteGame:
         else:
             return False
 
-    #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가, 진행 속도 증가)
-    # def update_difficulty(self):
-    #     play_time = (time.time() - self.start_time) #게임 진행 시간
-    #     self.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
-    #     self.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
-    #     self.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
     def to_menu(self):
         self.menu.disable()
@@ -304,6 +297,12 @@ class InfiniteGame:
         self.menu.clear()
         self.menu.add.label("Score Registered!")
         self.menu.add.button('to Menu', self.to_menu)
+
+    #재시도 버튼 클릭 시 실행
+    def retry(self):
+        InfiniteGame(selected_character,self.attr).main()
+        self.menu.disable()
+    
 
     #난이도를 나누는 모드 클래스 (상속하여 사용)
     class Mode:
