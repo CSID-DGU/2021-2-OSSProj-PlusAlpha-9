@@ -4,27 +4,24 @@ from Object import Object
 from Defs import *
 
 class Effect(Object):
-    def __init__(self, img_path, size, velocity):
-        super().__init__(img_path, size, velocity)
+    def __init__(self, img_arr, size, velocity):
+        super().__init__(img_arr[0], size, velocity, img_arr)
         self.occurred = time.time()
         self.duration = 7.0
         self.inc = 0.0
         self.anim_speed = 0.4
 
-        self.animation = []
-        x_scale = self.boundary[0]//self.org_boundary[0]
-        y_scale = self.boundary[1]//self.org_boundary[1]
-        for path in Images.anim_explosion.value:
-            img = pygame.image.load(path).convert_alpha()
-            img = pygame.transform.scale(img,(self.size["x"]*x_scale,self.size["y"]*y_scale))
-            self.animation.append(img)
-        self.anim_count = len(self.animation)
-
+class Explosion(Effect):
+    def __init__(self, radius):
+        super().__init__(Images.anim_explosion.value, radius, 5)
+    
     def move(self, game):
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game.size)
         self.y += self.velocity
         self.inc += self.anim_speed
         self.inc = Utils.clamp(self.inc, 0.0, self.anim_count-1)
-        self.img = self.animation[int(self.inc)]
+        self.img = self.anim_list[int(self.inc)]
 
         if int(self.inc) >= self.anim_count-1:
             game.effect_list.remove(self)

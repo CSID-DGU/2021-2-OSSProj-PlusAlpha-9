@@ -8,5 +8,7 @@ class Missile(Object):
         super().__init__(img_path, size, velocity)
         self.interval = interval
 
-    def update(self):
+    def update(self, game):
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game.size)
         self.y -= self.velocity

@@ -35,13 +35,14 @@ infoObject = pygame.display.Info()
 size = [int(infoObject.current_w*Display.w_init),int(infoObject.current_h*Display.h_init)]
 screen = pygame.display.set_mode(size,pygame.RESIZABLE)
 ww, wh= pygame.display.get_surface().get_size()
-
+Misc.org_size.value["x"] = size[0]
+Misc.org_size.value["y"] = size[1]
 menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
 mytheme = pygame_menu.themes.THEME_ORANGE.copy()
 mytheme.background_color = menu_image 
 
 #메인메뉴
-menu = pygame_menu.Menu('MUHIRRYO GOOD', ww,wh,theme=mytheme)
+menu = pygame_menu.Menu('PLUS ALPHA', ww,wh,theme=mytheme)
 
 background = pygame.image.load("./Image/StartImage.png")
 
