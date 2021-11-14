@@ -64,10 +64,14 @@ class StageGame:
         self.enemyBullets =[]
 
         # 5. 캐릭터 위치 초기화
-        self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
+        self.character.set_XY((self.size[0]/2-(character.sx/2),self.size[1]-character.sy))
         self.character.fire_count = self.character.min_fire_count
         self.character.missiles_fired = []
         self.character.bomb_count = 0
+        if self.character.is_boosted == True:
+            self.character.velocity = self.character.org_velocity
+            self.character.fire_interval = self.character.org_fire_interval
+            self.character.is_boosted = False
         
     def main(self):
         # 메인 이벤트
@@ -101,16 +105,14 @@ class StageGame:
                 if event.type ==pygame.QUIT:
                     self.SB=1 # SB 가 1이되면 while 문을 벗어나오게 됨
                 if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
-                    '''
-                    각 키가 눌러지면 플레이어 캐릭터 객체의 값 수정 (현재는 종료를 위해 왼쪽키를 종료로 둠)
-                    '''
                     if event.key == pygame.K_x:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
-                elif event.type == pygame.KEYUP: # 키를 뗐을때
-                    if event.key == pygame.K_LEFT:
-                        pass
+                if event.type == pygame.VIDEORESIZE:
+                    width, height = event.w, event.h
+                    self.size =[width,height]
+                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
 
             #몹을 확률적으로 발생시키기
 
@@ -228,14 +230,14 @@ class StageGame:
                 i.show(self.screen)
 
             #점수와 목숨 표시
-            font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
+            font = pygame.font.Font(Fonts.font_default.value, self.size[0]//40)
             score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             playTime = (time.time() - self.startTime)
             time_text = font.render("Time : {:.2f}".format(playTime), True, (255,255,0))
-            self.screen.blit(time_text,(350,5))
+            self.screen.blit(time_text,(self.size[0]//2,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
@@ -311,6 +313,3 @@ class StageGame:
         menu.add.label("")
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)
-        
-
-    
