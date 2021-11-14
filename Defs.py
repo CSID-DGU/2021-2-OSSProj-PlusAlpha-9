@@ -57,21 +57,21 @@ class Images(enum.Enum):
     ]
 
     anim_explosion = [
-        "./Image/Effects/Bomb/bomb01.png", 
-        "./Image/Effects/Bomb/bomb02.png", 
-        "./Image/Effects/Bomb/bomb03.png", 
-        "./Image/Effects/Bomb/bomb04.png", 
-        "./Image/Effects/Bomb/bomb05.png", 
-        "./Image/Effects/Bomb/bomb06.png", 
-        "./Image/Effects/Bomb/bomb07.png", 
-        "./Image/Effects/Bomb/bomb08.png", 
-        "./Image/Effects/Bomb/bomb09.png",
-        "./Image/Effects/Bomb/bomb10.png", 
-        "./Image/Effects/Bomb/bomb11.png", 
-        "./Image/Effects/Bomb/bomb12.png",
-        "./Image/Effects/Bomb/bomb13.png", 
-        "./Image/Effects/Bomb/bomb14.png", 
-        "./Image/Effects/Bomb/bomb15.png"
+        "./Image/Effects/Bomb/frame-1.png", 
+        "./Image/Effects/Bomb/frame-2.png", 
+        "./Image/Effects/Bomb/frame-3.png", 
+        "./Image/Effects/Bomb/frame-4.png", 
+        "./Image/Effects/Bomb/frame-5.png", 
+        "./Image/Effects/Bomb/frame-6.png", 
+        "./Image/Effects/Bomb/frame-7.png", 
+        "./Image/Effects/Bomb/frame-8.png", 
+        "./Image/Effects/Bomb/frame-9.png",
+        "./Image/Effects/Bomb/frame-10.png", 
+        "./Image/Effects/Bomb/frame-11.png", 
+        "./Image/Effects/Bomb/frame-12.png",
+        "./Image/Effects/Bomb/frame-13.png", 
+        "./Image/Effects/Bomb/frame-14.png", 
+        "./Image/Effects/Bomb/frame-15.png"
     ]
     
 class Sounds(enum.Enum):
