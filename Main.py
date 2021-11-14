@@ -42,7 +42,7 @@ mytheme = pygame_menu.themes.THEME_ORANGE.copy()
 mytheme.background_color = menu_image 
 
 #메인메뉴
-menu = pygame_menu.Menu('MUHIRRYO GOOD', ww,wh,theme=mytheme)
+menu = pygame_menu.Menu('PLUS ALPHA', ww,wh,theme=mytheme)
 
 background = pygame.image.load("./Image/StartImage.png")
 
