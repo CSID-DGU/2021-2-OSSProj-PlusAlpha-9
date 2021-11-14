@@ -3,7 +3,7 @@ import time
 from Object import Object 
 from Missile import Missile
 from Defs import *
-from Effect import Effect
+from Effect import *
 
 class Character(Object):
     def __init__(self, name, img_path, size, velocity, 
@@ -11,7 +11,6 @@ class Character(Object):
                 fire_interval, min_fire_count, max_fire_count, 
                 invincibility_period, is_unlocked):
         super().__init__(img_path, size, velocity)
-
 
         self.name = name
         self.last_fired = 0.0
@@ -35,7 +34,6 @@ class Character(Object):
         self.is_unlocked = is_unlocked
 
         self.blink_count = 0.0
-        self.is_blinking = False
 
         self.is_boosted = False
         self.powerup_duration = 10.0
@@ -47,7 +45,8 @@ class Character(Object):
         self.bomb_radius = {"x":500, "y":500}
 
     def update(self, game):
-        self.boundary = pygame.display.get_surface().get_size()
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game.size)
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
             self.x -= self.velocity
@@ -83,22 +82,25 @@ class Character(Object):
             self.blink_count += Misc.blinking_step.value
             if game.life > 0:
                 if(self.blink_count >= Misc.blinking_speed.value):
-                    if(self.is_blinking == False):
+                    if(self.is_transparent == False):
                         self.img = self.img_trans
                         self.blink_count = 0.0
-                        self.is_blinking = True
+                        self.is_transparent = True
                     else:
                         self.img = self.img_copy
                         self.blink_count = 0.0
-                        self.is_blinking = False
+                        self.is_transparent = False
                 if time_passed > self.invincibility_period:
                     self.is_collidable = True
-                    if(self.is_blinking):
+                    if(self.is_transparent):
                         self.img = self.img_copy
+        else:
+            self.img = self.img_copy
         for missile in list(self.missiles_fired):
-            missile.update()
+            missile.update(game)
             if missile.y < -missile.sy:
-                self.missiles_fired.remove(missile)
+                if missile in self.missiles_fired:
+                    self.missiles_fired.remove(missile)
             
     def shoot(self):
         self.last_fired = time.time()
@@ -113,7 +115,7 @@ class Character(Object):
 
     def use_bomb(self, game):
         self.last_bomb = time.time()
-        explosion = Effect(Images.anim_explosion.value[0], self.bomb_radius, 2)
+        explosion = Explosion(self.bomb_radius)
         player_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
         explosion.set_XY((player_location["x"] - explosion.sx/2, player_location["y"]- explosion.sy/2))
         game.effect_list.append(explosion)

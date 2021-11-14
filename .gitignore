@@ -15,3 +15,6 @@ __pycache__/Stage.cpython-39.pyc
 __pycache__/StageDataManager.cpython-39.pyc
 __pycache__/StageGame.cpython-39.pyc
 __pycache__/StageSelectMenu.cpython-39.pyc
+__pycache__/DifficultySelectMenu.cpython-39.pyc
+__pycache__/LeaderBoardMenu.cpython-39.pyc
+__pycache__/Rank.cpython-39.pyc
