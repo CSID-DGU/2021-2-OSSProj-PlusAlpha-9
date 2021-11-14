@@ -276,10 +276,16 @@ class StageGame:
         #다음 스테이지 해제
         StageDataManager.unlockNextStage(self.stage)
         #화면 표시
-        menu = pygame_menu.Menu('Stage Clear!', self.size[0]*0.7, self.size[1]*0.8,
-                            theme=pygame_menu.themes.THEME_BLUE)
-        menu.add.label(f"{self.stage.chapter} - {self.stage.stage} clear!!")
-        menu.add.label("Congratulation!")
+        stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stageclear_theme.title_font_color = (255, 255, 255)
+        menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
+                            theme=stageclear_theme)
+
+        menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51)
+        # menu.add.label("Congratulation!") # clear!!
+        menu.add.image("./Image/Stageclear_v1.jpg", scale=(1, 1))
         menu.add.label("")
         if self.stage.unlock_char != "":
             for character in self.character_data:
@@ -295,9 +301,14 @@ class StageGame:
 
     #실패 화면
     def showGameOverScreen(self):
-        menu = pygame_menu.Menu('Failed!!', self.size[0]*0.7, self.size[1]*0.8,
-                            theme=pygame_menu.themes.THEME_BLUE)
-        menu.add.label(":(",font_size=250)
+        gameover_theme = pygame_menu.themes.THEME_DARK.copy()
+        gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        gameover_theme.title_font_color = (255, 255, 255)
+        menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
+                            theme=gameover_theme) # *0.7, *0.8
+        # menu.add.label(":(",font_size=250)
+        menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
         menu.add.label("")
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)

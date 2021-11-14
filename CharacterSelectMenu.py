@@ -12,7 +12,7 @@ from InfiniteGame import *
 
 class CharacterSelectMenu:
 
-    def __init__(self,screen,stage):
+    def __init__(self,screen,attr):
         # 화면 받고 화면 크기 값 받기
         self.screen = screen
         self.size = screen.get_size()
@@ -25,7 +25,7 @@ class CharacterSelectMenu:
                             theme=mytheme)
 
         #선택된 스테이지
-        self.stage =stage
+        self.attr =attr
 
         #캐릭터 데이터를 json에서 불러온다.
         self.character_data = CharacterDataManager.load()
@@ -48,7 +48,6 @@ class CharacterSelectMenu:
         self.menu.add.button("PLAY",self.start_game)
         self.menu.add.button("BACK",self.to_menu)
         
-        
         self.menu.mainloop(self.screen)
 
 
@@ -57,16 +56,14 @@ class CharacterSelectMenu:
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_character = self.character_selector.get_value()[0][1]
 
+        #캐릭터가 열려있는지 확인
+        if (selected_character.is_unlocked): #캐릭터가 열려있다면
 
-        if(self.stage is None ):
-            if (selected_character.is_unlocked):
-                InfiniteGame(selected_character).main()
-            else:
-                print("character locked")
-            return
+          if(isinstance(self.attr,InfiniteGame.Mode)): #인자가 난이도 모드의 객체이면 무한모드 실행
+              InfiniteGame(selected_character,self.attr).main()
+          else: #인자가 스테이지 객체이면 스테이지 모드 실행
+              StageGame(self.character_data,selected_character,self.attr).main()
 
-        if (selected_character.is_unlocked):
-            StageGame(self.character_data, selected_character, self.stage).main()
         else:
             print("character locked")
 
