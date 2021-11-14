@@ -11,6 +11,8 @@ import random
 import pygame_menu
 import json
 from collections import OrderedDict
+
+from pygame_menu.locals import ALIGN_CENTER
 from Character import Character
 from Item import *
 from Boss import Boss
@@ -19,6 +21,7 @@ from Bullet import Bullet
 from Effect import *
 from Defs import *
 from StageDataManager import *
+from Rank import *
 
 class InfiniteGame:
 
@@ -259,17 +262,37 @@ class InfiniteGame:
 
     #랭킹 등록 화면
     def show_ranking_register_screen(self):
-        menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
+        self.menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
                             theme=pygame_menu.themes.THEME_BLUE)
-        self.text_input = menu.add.text_input('Name: ', default='ABC')
-        menu.add.label("")
-        menu.add.button('Register Ranking', self.register_ranking,self.score)
-        menu.add.button('to Menu', self.to_menu,menu)
-        menu.mainloop(self.screen)
+        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
+        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20))
+        self.register_frame.pack(self.menu.add.vertical_margin(20))
+        # self.text_input = self.menu.add.text_input('Name: ', maxchar=20)
+        # self.menu.add.label("")
+        self.register_frame.pack(self.menu.add.label('Score : '+str(self.score), selectable=False, font_size=20),align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_info, font_size = 20), align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu,self.menu, font_size = 20), align=ALIGN_CENTER)
+        self.info_frame = self.menu.add.frame_v(400, 100, background_color = (255,255,255), align=ALIGN_CENTER)
+        self.menu.mainloop(self.screen)
         
     #랭킹 서버에 등록
-    def register_ranking(self,score):
-        print(self.text_input.get_value())
-        print(score)
+    def register_ranking(self, ID):
+        rank = Rank()
+        self.info_frame = self.menu.add.frame_v(400, 100, background_color = (255,255,255), align=ALIGN_CENTER)
+        if(ID == ''):
+            self.info_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
+        elif(rank.check_ID('easy', ID) == 0):
+            self.info_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
+        else:
+            self.info_frame.pack(self.menu.add.label("Register success.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            rank.add_data('current', 'easy', ID, str(self.score))
+
+    def show_register_info(self):
+        ID = self.text_input.get_value()
+        self.menu.remove_widget(self.info_frame)
+        self.register_ranking(ID)
+        # print(self.text_input.get_value())
+        # print(score)
 
     

@@ -32,7 +32,7 @@ class Rank():
         curs.close()
         return data
 
-    def load_current_latest_data(self, mode):
+    def load_current_latest_data(self, mode):       # 점수 기록할 때 체크해서 월 데이터 다르면 랭킹 갱신 후 점수 기록
         curs = self.score_db.cursor(pymysql.cursors.DictCursor)
         if mode == 'easy':
             sql = 'select * from current_easy_score order by date desc'
@@ -43,6 +43,24 @@ class Rank():
         curs.close()
         latest_data_date = str(data[0]['date'])
         return latest_data_date
+
+    def search_data(self, term, mode, ID):                                  
+        if term == 'current':
+            if mode == 'easy':
+                data = self.load_data('current', 'easy')
+            elif mode == 'hard':
+                data = self.load_data('current', 'hard')
+
+        if term == 'past':
+            if mode == 'easy':
+                data = self.load_data('past', 'easy')
+            elif mode == 'hard':
+                data = self.load_data('past', 'hard')
+
+        for i in range(len(data)):
+            if data[i]['ID'] == ID:
+                return i+1
+        return 0
 
     def add_data(self, term, mode, ID, score):                                   #데이터 베이스에서 데이터 추가하기
         curs = self.score_db.cursor()
@@ -126,4 +144,13 @@ class Rank():
 # 데이터 업데이트 (랭킹 갱신) 테스트 완료
 # r = Rank()
 # r.update_data()
+
+# 가장 최신 데이터의 날짜 데이터 불러오기 테스트 완료
+# r = Rank()
+# print(r.load_current_latest_data('easy'))
+# print(r.load_current_latest_data('hard'))
+
+# ID 로 순위 검색 테스트 완료
+# r = Rank()
+# print(r.search_data('current', 'easy', 'user10'))
 
