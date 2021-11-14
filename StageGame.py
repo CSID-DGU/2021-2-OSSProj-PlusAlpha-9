@@ -197,7 +197,8 @@ class StageGame:
                 for mob in list(self.mobList):
                     if self.check_crash(missile,mob):
                         self.score += 10
-                        self.character.missiles_fired.remove(missile)
+                        if missile in self.character.missiles_fired:
+                            self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
@@ -292,9 +293,7 @@ class StageGame:
                         character.is_unlocked = True
                         CharacterDataManager.save(self.character_data)
                         print(type(self.character_data), type(character))
-                        menu.add.label(self.stage.unlock_char, "해금되었습니다.")
-
-            
+                        menu.add.label("{} unlocked".format(self.stage.unlock_char))
 
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)

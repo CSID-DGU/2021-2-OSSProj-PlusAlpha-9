@@ -9,6 +9,7 @@ from typing import Sized
 import pygame
 import random
 import pygame_menu
+import pymysql
 import json
 from collections import OrderedDict
 
@@ -25,7 +26,7 @@ from Rank import *
 
 class InfiniteGame:
 
-    def __init__(self,character):
+    def __init__(self,character,mode):
         # 1. 게임초기화 
         pygame.init()
 
@@ -38,6 +39,7 @@ class InfiniteGame:
         
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
+        self.mode = mode
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.mobList = []
@@ -54,6 +56,8 @@ class InfiniteGame:
         self.background_image = "./Image/Antarctic_modified_v1.jpg"
         self.background_music = "./Sound/Rien.mp3"
         self.SB = 0
+        self.dy = 2
+        self.mob_velocity = 2
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
         # self.isBossStage = stage.isBossStage
@@ -62,6 +66,18 @@ class InfiniteGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
+        self.character.fire_count = self.character.min_fire_count
+        self.character.missiles_fired = []
+        self.character.bomb_count = 0
+
+        self.score_db = pymysql.connect(
+        user = 'admin',
+        passwd = 'the-journey',
+        # port = 3306,
+        host = 'the-journey-db.cvfqry6l19ls.ap-northeast-2.rds.amazonaws.com',
+        db = 'sys',
+        charset = 'utf8'
+        )
 
     def main(self):
         # 메인 이벤트
@@ -78,12 +94,13 @@ class InfiniteGame:
             self.screen.fill((255,255,255))
             # 배경 크기 변경 처리 및 그리기
             # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
+            
             background1 =  pygame.image.load(self.background_image)
             background1 = pygame.transform.scale(background1, self.size)
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            background1_y += 2
+            background1_y += self.dy
             if background1_y > background_height:
                 background1_y = 0
             self.screen.blit(background1, (0, background1_y))
@@ -109,7 +126,7 @@ class InfiniteGame:
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
+                newMob = Mob(self.mob_image,{"x":100, "y":100},self.mob_velocity,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
             
@@ -185,7 +202,8 @@ class InfiniteGame:
                 for mob in list(self.mobList):
                     if self.check_crash(missile,mob):
                         self.score += 10
-                        self.character.missiles_fired.remove(missile)
+                        if missile in self.character.missiles_fired:
+                            self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
@@ -216,13 +234,13 @@ class InfiniteGame:
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
-            score_life_text = font.render("Score : {} Life: {}".format(self.score,self.life), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             play_time = (time.time() - self.start_time)
             time_text = font.render("Time : {:.2f}".format(play_time), True, (255,255,0))
-            self.screen.blit(time_text,(300,5))
+            self.screen.blit(time_text,(350,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
@@ -233,7 +251,8 @@ class InfiniteGame:
                 self.show_ranking_register_screen()
                 return
 
-            self.update_difficulty()
+            self.mode.update_difficulty(self)
+            print(self.dy)
 
 
         # While 빠져나오면 랭킹등록 스크린 실행
@@ -252,47 +271,86 @@ class InfiniteGame:
         else:
             return False
 
-    #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가)
-    def update_difficulty(self):
-        play_time = (time.time() - self.start_time) #게임 진행 시간
+    #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가, 진행 속도 증가)
+    # def update_difficulty(self):
+    #     play_time = (time.time() - self.start_time) #게임 진행 시간
+    #     self.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
+    #     self.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
+    #     self.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
-
-    def to_menu(self,menu):
-        menu.disable()
+    def to_menu(self):
+        self.menu.disable()
 
     #랭킹 등록 화면
     def show_ranking_register_screen(self):
-        self.menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
+        self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
                             theme=pygame_menu.themes.THEME_BLUE)
-        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)
+        self.register_frame = self.menu.add.frame_v(600, 400, align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
-        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20))
+        self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=25),align=ALIGN_CENTER)
+        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.vertical_margin(20))
-        # self.text_input = self.menu.add.text_input('Name: ', maxchar=20)
-        # self.menu.add.label("")
-        self.register_frame.pack(self.menu.add.label('Score : '+str(self.score), selectable=False, font_size=20),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_info, font_size = 20), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu,self.menu, font_size = 20), align=ALIGN_CENTER)
-        self.info_frame = self.menu.add.frame_v(400, 100, background_color = (255,255,255), align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = 20), align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = 20), align=ALIGN_CENTER)
+        self.result_frame = self.menu.add.frame_v(500, 200, align=ALIGN_CENTER, background_color = (255,255,255))
         self.menu.mainloop(self.screen)
         
     #랭킹 서버에 등록
-    def register_ranking(self, ID):
+    def register_ranking(self):
+        self.result_frame = self.menu.add.frame_v(500, 200, align=ALIGN_CENTER, background_color = (255,255,255))
+        name = self.text_input.get_value()
         rank = Rank()
-        self.info_frame = self.menu.add.frame_v(400, 100, background_color = (255,255,255), align=ALIGN_CENTER)
-        if(ID == ''):
-            self.info_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
-        elif(rank.check_ID('easy', ID) == 0):
-            self.info_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
-        else:
-            self.info_frame.pack(self.menu.add.label("Register success.", selectable=False, font_size=20), align=ALIGN_CENTER)
-            rank.add_data('current', 'easy', ID, str(self.score))
+        if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
+            if(name == ''):
+                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            elif(rank.check_ID('easy', name) == 0):
+                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            else:
+                self.menu.clear()
+                rank.add_data('current','easy',name,self.score)
+                self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=20)
+                self.menu.add.vertical_margin(20)
+                self.menu.add.button('to Menu', self.to_menu)
 
-    def show_register_info(self):
-        ID = self.text_input.get_value()
-        self.menu.remove_widget(self.info_frame)
-        self.register_ranking(ID)
-        # print(self.text_input.get_value())
-        # print(score)
+        else: # 그 외 ( 하드모드인 경우)
+            self.menu.clear()
+            if(name == ''):
+                self.menu.add.label("Please type name.", selectable=False, font_size=20)
+                self.menu.add.vertical_margin(20)
+                self.menu.add.button("Try again", self.show_ranking_register_screen)
+            elif(rank.check_ID('hard', name) == 0):
+                self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20)
+                self.menu.add.vertical_margin(20)
+                self.menu.add.button("Try again", self.show_ranking_register_screen)
+            else:
+                rank.add_data('current','hard',name,self.score)
+                self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=20)
+                self.menu.add.vertical_margin(20)
+                self.menu.add.button('to Menu', self.to_menu)
 
-    
+    def show_register_result(self):
+        self.menu.remove_widget(self.result_frame)
+        self.register_ranking()
+        
+
+    #난이도를 나누는 모드 클래스 (상속하여 사용)
+    class Mode:
+        def update_difficulty():
+            pass
+
+    class EasyMode(Mode): #이지 모드
+        @staticmethod
+        def update_difficulty(game):
+            play_time = (time.time() - game.start_time) #게임 진행 시간
+            game.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
+            game.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
+            game.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
+
+    class HardMode(Mode): #하드 모드
+        @staticmethod
+        def update_difficulty(game):
+            play_time = (time.time() - game.start_time) #게임 진행 시간
+            game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
+            game.dy = play_time//10*3 + 2 #10초마다 dy(배경 이동 속도) 3 증가 (기본 2)
+            game.mob_velocity = play_time//5*2 + 2 #5초마다 mob_velocity(몹 이동 속도) 2 증가 (기본 2)
+
