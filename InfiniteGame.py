@@ -119,10 +119,21 @@ class InfiniteGame:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
-                if event.type == pygame.VIDEORESIZE:
-                    width, height = event.w, event.h
-                    self.size =[width,height]
-                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+                if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
+                    #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
+                    width, height = max(event.w,300), max(event.h,390)
+
+                    #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
+                    if(width<=height):
+                        height = int(width * (13/10))
+                    else:
+                        width = int(height * (10/13))
+                    
+                    w_ratio = width/self.size[0]
+                    h_ratio = height/self.size[1]
+
+                    self.size =[width,height] #게임의 size 속성 변경
+                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
