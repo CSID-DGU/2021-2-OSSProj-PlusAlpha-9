@@ -99,6 +99,7 @@ class Color(enum.Enum):
     GREEN = (0,255,0)
 
 class Misc(enum.Enum):
+    org_size = {"x":0, "y":0}
     missile_volume = 0.1
     blinking_step = 0.05
     blinking_speed = 0.2

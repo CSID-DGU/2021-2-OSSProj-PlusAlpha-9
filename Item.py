@@ -8,46 +8,39 @@ import random
 
 class Item(Object):
     def __init__(self, img_arr, size, velocity):
-        super().__init__(img_arr[0], size, velocity)
-        self.x_dir = random.choice([-1, 1])
-        self.y_dir = 1
+        super().__init__(img_arr[0], size, velocity, img_arr)
+        self.x_inv = random.choice([True, False])
+        self.y_inv = False
 
         self.duration = 10.0
         self.blinking_period = 4.0
         self.spawned = time.time()
         self.blink_count = 0.0
-        self.is_blinking = False
 
         self.inc = 0.0
         self.delay = 10.0
         self.inc_delay = 0.0
         self.anim_speed = 0.5
 
-        self.animation = []
-        self.animation_trans = []
-        x_scale = self.boundary[0]//self.org_boundary[0]
-        y_scale = self.boundary[1]//self.org_boundary[1]
-        for path in img_arr:
-            img = pygame.image.load(path).convert_alpha()
-            img = pygame.transform.scale(img,(self.size["x"]*x_scale,self.size["y"]*y_scale))
-            self.animation.append(img)
-            img_copy = img.copy()
-            img_copy.fill((255,255,255,128), None, pygame.BLEND_RGBA_MULT)
-            self.animation_trans.append(img_copy)
-        self.anim_count = len(self.animation)
-
     def move(self, game): 
-        self.boundary = pygame.display.get_surface().get_size()
-        self.x += self.velocity * self.x_dir
-        self.y += self.velocity * self.y_dir
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game.size)
+        if self.x_inv == False:
+            self.x += self.velocity
+        else:
+            self.x -= self.velocity
+        if self.y_inv == False:
+            self.y += self.velocity
+        else:
+            self.y -= self.velocity
         if self.x <= 0:
-            self.x_dir = -self.x_dir
+            self.x_inv = False
         elif self.y <= 0:
-            self.y_dir = -self.y_dir
+            self.y_inv = False
         elif self.x >= self.boundary[0] - self.sx:
-            self.x_dir = -self.x_dir
+            self.x_inv = True
         elif self.y >= self.boundary[1] - self.sy:
-            self.y_dir = -self.y_dir
+            self.y_inv = True
         
         self.inc += self.anim_speed
         self.inc = Utils.clamp(self.inc, 0.0, self.anim_count-1)
@@ -57,10 +50,10 @@ class Item(Object):
                 self.inc = 0.0
                 self.inc_delay = 0.0
 
-        if self.is_blinking == False:
-            self.img = self.animation[int(self.inc)]
+        if self.is_transparent == False:
+            self.img = self.anim_list[int(self.inc)]
         else:
-            self.img = self.animation_trans[int(self.inc)]
+            self.img = self.anim_trans_list[int(self.inc)]
 
         time_passed = time.time() - self.spawned
         time_left = self.duration - time_passed 
@@ -68,21 +61,20 @@ class Item(Object):
             if time_left <= self.blinking_period:
                 self.blink_count += Misc.blinking_step.value
                 if(self.blink_count >= Misc.blinking_speed.value):
-                    if self.is_blinking == False:
-                        self.img = self.animation_trans[int(self.inc)]
+                    if self.is_transparent == False:
+                        self.img = self.anim_trans_list[int(self.inc)]
                         self.blink_count = 0.0
-                        self.is_blinking = True
+                        self.is_transparent = True
                     else:
-                        self.img = self.animation[int(self.inc)]
+                        self.img = self.anim_list[int(self.inc)]
                         self.blink_count = 0.0
-                        self.is_blinking = False
+                        self.is_transparent = False
         else:
             game.item_list.remove(self)
 
 class Bomb(Item):
     def __init__(self):
         super().__init__(Images.item_bomb.value, {"x":50, "y":50 }, 5)
-        self.radius = {"x":500, "y":500}
 
     def use(self, game):
         if self.is_collidable == True:

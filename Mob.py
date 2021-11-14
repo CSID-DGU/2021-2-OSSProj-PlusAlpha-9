@@ -7,6 +7,8 @@ class Mob(Object):
         self.missile = missile
 
     def move(self, boundary, game):
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game.size)
         self.y += self.velocity
         if self.y >= boundary[1] - self.sy:
             game.mobList.remove(self)
