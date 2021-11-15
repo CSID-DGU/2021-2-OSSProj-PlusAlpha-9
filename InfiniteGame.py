@@ -121,10 +121,21 @@ class InfiniteGame:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
-                if event.type == pygame.VIDEORESIZE:
-                    width, height = event.w, event.h
-                    self.size =[width,height]
-                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+                if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
+                    #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
+                    width, height = max(event.w,300), max(event.h,390)
+
+                    #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
+                    if(width<=height):
+                        height = int(width * (13/10))
+                    else:
+                        width = int(height * (10/13))
+                    
+                    w_ratio = width/self.size[0]
+                    h_ratio = height/self.size[1]
+
+                    self.size =[width,height] #게임의 size 속성 변경
+                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
@@ -254,7 +265,6 @@ class InfiniteGame:
                 return
 
             self.mode.update_difficulty(self)
-            print(self.dy)
 
 
         # While 빠져나오면 랭킹등록 스크린 실행
@@ -273,12 +283,6 @@ class InfiniteGame:
         else:
             return False
 
-    #시간 흐름에 따라 난이도 상승 (몹 생성 확률 증가, 진행 속도 증가)
-    # def update_difficulty(self):
-    #     play_time = (time.time() - self.start_time) #게임 진행 시간
-    #     self.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
-    #     self.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
-    #     self.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
     def to_menu(self):
         self.menu.disable()
@@ -331,6 +335,12 @@ class InfiniteGame:
         self.menu.remove_widget(self.result_frame)
         self.register_ranking()
         
+
+    #재시도 버튼 클릭 시 실행
+    def retry(self):
+        InfiniteGame(selected_character,self.attr).main()
+        self.menu.disable()
+    
 
     #난이도를 나누는 모드 클래스 (상속하여 사용)
     class Mode:
