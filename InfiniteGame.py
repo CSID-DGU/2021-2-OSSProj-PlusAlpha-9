@@ -53,8 +53,8 @@ class InfiniteGame:
         self.mob_gen_rate = 0.01
         self.item_gen_rate = 0.004
         self.mob_image = "./Image/Catus.png"
-        self.background_image = "./Image/Antarctic_modified_v1.jpg"
-        self.background_music = "./Sound/Rien.mp3"
+        self.background_image = "./Image/Space_modified_v1.jpg"
+        self.background_music = "./Sound/Space.mp3"
         self.SB = 0
         self.dy = 2
         self.mob_velocity = 2
@@ -74,21 +74,12 @@ class InfiniteGame:
             self.character.fire_interval = self.character.org_fire_interval
             self.character.is_boosted = False
 
-        self.score_db = pymysql.connect(
-        user = 'admin',
-        passwd = 'the-journey',
-        # port = 3306,
-        host = 'the-journey-db.cvfqry6l19ls.ap-northeast-2.rds.amazonaws.com',
-        db = 'sys',
-        charset = 'utf8'
-        )
-
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0.5)
         background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
@@ -286,6 +277,7 @@ class InfiniteGame:
 
     def to_menu(self):
         self.menu.disable()
+        pygame.mixer.music.stop()
 
     #랭킹 등록 화면
     def show_ranking_register_screen(self):
