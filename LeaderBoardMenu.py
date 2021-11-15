@@ -78,13 +78,15 @@ class LeaderBoardMenu:
     def get_current_easy_rank_page(self, tens):
         self.menu.clear()
         self.menu.add.label("--Current Easy Rank--",selectable=False,font_size=30)
-        id_score_bar = "{:^15s}{:^30s}{:^20s}".format('Rank', 'ID', 'Score')
+        id_score_bar = "{:^7s}   {:^25s}   {:^5s}        {:^10s}".format('Rank', 'ID', 'Score', 'Date')
         self.menu.add.label(id_score_bar,selectable=False, font_size=20)
         for i in range(10):
             if(tens*10+i == len(easy_data)): break
             name = str(easy_data[tens*10+i]['ID'])
             score = '{0:>05s}'.format(str(easy_data[tens*10+i]['score']))
-            r = "{:^15s}{:^30s}{:^20s}".format(str(tens*10+i+1), name, score)
+            date = str(easy_data[tens*10+i]['date'])
+            # r = "{:^15s}{:^30s}{:^20s}{:^20s}".format(str(tens*10+i+1), name, score, date)
+            r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
             self.menu.add.label(r,selectable=False, font_size=20)
         prev_next_frame = self.menu.add.frame_h(250, 60)
         if(tens == 0):
@@ -113,20 +115,21 @@ class LeaderBoardMenu:
     def get_current_hard_rank_page(self, tens):
         self.menu.clear()
         self.menu.add.label("--Current Hard Rank--",selectable=False,font_size=30)
-        id_score_bar = "{:<15s}{:<30s}{:<20s}".format('Rank', 'ID', 'Score')
+        id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
         self.menu.add.label(id_score_bar,selectable=False, font_size=20)
         for i in range(10):
             if(tens*10+i == len(hard_data)): break
             name = str(hard_data[tens*10+i]['ID'])
             score = '{0:>05s}'.format(str(hard_data[tens*10+i]['score']))
-            r = "{:<15s}{:<30s}{:<20s}".format(str(tens*10+i+1), name, score)
+            date = str(hard_data[tens*10+i]['date'])
+            r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
             self.menu.add.label(r,selectable=False, font_size=20)
         prev_next_frame = self.menu.add.frame_h(250, 60)
         if(tens == 0):
             prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
             prev_next_frame.pack(self.menu.add._horizontal_margin(150),align=ALIGN_CENTER)
             prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
-        elif(tens == len(easy_data)//10):
+        elif(tens == len(hard_data)//10):
             prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
             prev_next_frame.pack(self.menu.add._horizontal_margin(150),align=ALIGN_CENTER)
             prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
@@ -198,25 +201,27 @@ class LeaderBoardMenu:
             if(mode == 'easy'):
                 past_easy_data = rank.load_data('past','easy')
                 self.menu.add.label("--Past Easy Rank--",selectable=False,font_size=30)
-                id_score_bar = "{:<15s}{:<30s}{:<20s}".format('Rank', 'ID', 'Score')
+                id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
                 self.menu.add.label(id_score_bar,selectable=False, font_size=20)
                 for i in range(100):
                     if (i == len(past_easy_data)): break
                     name = str(past_easy_data[i]['ID'])
                     score = '{0:>05s}'.format(str(past_easy_data[i]['score']))
-                    r = "{:<15s}{:<30s}{:<20s}".format(str(i+1), name, score)
+                    date = str(past_easy_data[i]['date'])
+                    r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(i+1), name, score, date)
                     self.menu.add.label(r,selectable=False, font_size=20)
 
             elif(mode == 'hard'):
                 past_hard_data = rank.load_data('past','hard')
                 self.menu.add.label("--Past Hard Rank--",selectable=False,font_size=30)
-                id_score_bar = "{:<15s}{:<30s}{:<20s}".format('Rank', 'ID', 'Score')
+                id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
                 self.menu.add.label(id_score_bar,selectable=False, font_size=20)
                 for i in range(100):
                     if (i == len(past_hard_data)): break
                     name = str(past_hard_data[i]['ID'])
                     score = '{0:>05s}'.format(str(past_hard_data[i]['score']))
-                    r = "{:<15s}{:<30s}{:<20s}".format(str(i+1), name, score)
+                    date = str(past_hard_data[i]['date'])
+                    r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(i+1), name, score, date)
                     self.menu.add.label(r,selectable=False, font_size=20)
 
             self.menu.add.button('back', self.past_rank)

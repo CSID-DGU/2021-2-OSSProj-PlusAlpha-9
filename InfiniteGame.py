@@ -315,20 +315,17 @@ class InfiniteGame:
                 self.menu.add.button('to Menu', self.to_menu)
 
         else: # 그 외 ( 하드모드인 경우)
-            self.menu.clear()
             if(name == ''):
-                self.menu.add.label("Please type name.", selectable=False, font_size=20)
-                self.menu.add.vertical_margin(20)
-                self.menu.add.button("Try again", self.show_ranking_register_screen)
+                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
             elif(rank.check_ID('hard', name) == 0):
-                self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20)
-                self.menu.add.vertical_margin(20)
-                self.menu.add.button("Try again", self.show_ranking_register_screen)
+                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
             else:
+                self.menu.clear()
                 rank.add_data('current','hard',name,self.score)
                 self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=20)
                 self.menu.add.vertical_margin(20)
                 self.menu.add.button('to Menu', self.to_menu)
+
 
     def show_register_result(self):
         self.menu.remove_widget(self.result_frame)
