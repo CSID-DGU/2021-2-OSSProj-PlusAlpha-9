@@ -40,9 +40,38 @@ class Rank():
             sql = 'select * from current_hard_score order by date desc'
         curs.execute(sql)
         data = curs.fetchall()
-        curs.close()
-        latest_data_date = str(data[0]['date'])
-        return latest_data_date
+        if(len(data) > 0): return str(data[0]['date'])
+        else:
+            if mode == 'easy':
+                sql = 'select * from past_easy_score order by date desc'
+            elif mode == 'hard':
+                sql = 'select * from past_hard_score order by date desc'
+            curs.execute(sql)
+            data = curs.fetchall()
+            curs.close()
+            return str(data[0]['date'])
+         
+        # return datetime.now().strftime('%Y-%m-%d')
+        # latest_data_date = str(data[0]['date'])
+        # return latest_data_date
+
+    def search_data(self, term, mode, ID):                                  
+        if term == 'current':
+            if mode == 'easy':
+                data = self.load_data('current', 'easy')
+            elif mode == 'hard':
+                data = self.load_data('current', 'hard')
+
+        if term == 'past':
+            if mode == 'easy':
+                data = self.load_data('past', 'easy')
+            elif mode == 'hard':
+                data = self.load_data('past', 'hard')
+
+        for i in range(len(data)):
+            if data[i]['ID'] == ID:
+                return i+1
+        return 0
 
     def add_data(self, term, mode, ID, score):                                   #데이터 베이스에서 데이터 추가하기
         curs = self.score_db.cursor()
@@ -61,6 +90,18 @@ class Rank():
             if mode == 'hard':
                 sql = 'INSERT INTO past_hard_score (ID, score, date) VALUES (%s, %s, %s)'
         curs.execute(sql, (ID, score, now.strftime('%Y-%m-%d')))
+        self.score_db.commit()
+        curs.close()
+
+    def paste_to_past_data(self, mode, ID, score, date):                                   #데이터 베이스에서 데이터 추가하기
+        curs = self.score_db.cursor()
+        if mode == 'easy':
+            sql = 'INSERT INTO past_easy_score (ID, score, date) VALUES (%s, %s, %s)'
+
+        if mode == 'hard':
+            sql = 'INSERT INTO past_hard_score (ID, score, date) VALUES (%s, %s, %s)'
+
+        curs.execute(sql, (ID, score, date))
         self.score_db.commit()
         curs.close()
 
@@ -100,7 +141,8 @@ class Rank():
         for i in range(len(data)):
             name = str(data[i]['ID'])
             score = str(data[i]['score'])
-            self.add_data('past', mode, name, score)
+            date = str(data[i]['date'])
+            self.paste_to_past_data(mode, name, score, date)
 
     def update_data(self):      # 랭킹 등록 시 date의 월 값이 달라질 때 update_data 호출 하면 될 듯
         self.clear_data('past', 'easy')
@@ -109,6 +151,17 @@ class Rank():
         self.move_data('hard')
         self.clear_data('current', 'easy')
         self.clear_data('current', 'hard')
+
+    def check_update(self):
+        # 가장 최근에 기록된 랭킹의 날짜 데이터 받아오기
+        current_latest_data_date = self.load_current_latest_data('easy')
+        # 예외처리 ?
+        # if(current_latest_data_date < self.load_current_latest_data('hard')): current_latest_data_date = self.load_current_latest_data('hard')
+
+        if(current_latest_data_date[0:4] < datetime.now().strftime('%Y')): # Year 비교
+            self.update_data()
+        elif(current_latest_data_date[5:7] < datetime.now().strftime('%m')): # month 비교
+            self.update_data()
 
 
 # 데이터 삽입 기능 테스트 완료
@@ -126,4 +179,20 @@ class Rank():
 # 데이터 업데이트 (랭킹 갱신) 테스트 완료
 # r = Rank()
 # r.update_data()
+
+# 가장 최신 데이터의 날짜 데이터 불러오기 테스트 완료
+# r = Rank()
+# print(r.load_current_latest_data('easy'))
+# print(r.load_current_latest_data('easy')[5:7])
+# if('2021-10-11'[5:7]<datetime.now().strftime('%m')): print('yes')
+# else: print('no')
+# print(datetime.now().strftime('%m'))
+# print(r.load_current_latest_data('hard'))
+# if('2021-11-11' < '2022-10-12'): print('yes')
+# else: print('no')
+# print('2021-11-15'[0:4])
+
+# ID 로 순위 검색 테스트 완료
+# r = Rank()
+# print(r.search_data('current', 'easy', 'user10'))
 

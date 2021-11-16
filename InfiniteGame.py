@@ -12,6 +12,8 @@ import pygame_menu
 import pymysql
 import json
 from collections import OrderedDict
+
+from pygame_menu.locals import ALIGN_CENTER
 from Character import Character
 from Item import *
 from Boss import Boss
@@ -51,8 +53,8 @@ class InfiniteGame:
         self.mob_gen_rate = 0.01
         self.item_gen_rate = 0.004
         self.mob_image = "./Image/Catus.png"
-        self.background_image = "./Image/Antarctic_modified_v1.jpg"
-        self.background_music = "./Sound/Rien.mp3"
+        self.background_image = "./Image/Space_modified_v1.jpg"
+        self.background_music = "./Sound/Space.mp3"
         self.SB = 0
         self.dy = 2
         self.mob_velocity = 2
@@ -72,21 +74,12 @@ class InfiniteGame:
             self.character.fire_interval = self.character.org_fire_interval
             self.character.is_boosted = False
 
-        self.score_db = pymysql.connect(
-        user = 'admin',
-        passwd = 'the-journey',
-        # port = 3306,
-        host = 'the-journey-db.cvfqry6l19ls.ap-northeast-2.rds.amazonaws.com',
-        db = 'sys',
-        charset = 'utf8'
-        )
-
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(0.5)
         background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
@@ -284,32 +277,56 @@ class InfiniteGame:
 
     def to_menu(self):
         self.menu.disable()
+        pygame.mixer.music.stop()
 
     #랭킹 등록 화면
     def show_ranking_register_screen(self):
-        self.menu = pygame_menu.Menu('Game Over!!', self.size[0]*0.7, self.size[1]*0.8,
+        self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
                             theme=pygame_menu.themes.THEME_BLUE)
-
-        self.menu.add.label("Record : {}".format(self.score))
-        self.text_input = self.menu.add.text_input('Name: ', default='ABC')
-        self.menu.add.label("")
-        self.menu.add.button('Register Ranking', self.register_ranking)
-        self.menu.add.button('to Menu', self.to_menu)
+        self.register_frame = self.menu.add.frame_v(600, 400, align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=25),align=ALIGN_CENTER)
+        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.vertical_margin(20))
+        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = 20), align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = 20), align=ALIGN_CENTER)
+        self.result_frame = self.menu.add.frame_v(500, 200, align=ALIGN_CENTER, background_color = (255,255,255))
         self.menu.mainloop(self.screen)
         
     #랭킹 서버에 등록
     def register_ranking(self):
-
+        self.result_frame = self.menu.add.frame_v(500, 200, align=ALIGN_CENTER, background_color = (255,255,255))
         name = self.text_input.get_value()
         rank = Rank()
         if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
-            rank.add_data('current','easy',name,self.score)
+            if(name == ''):
+                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            elif(rank.check_ID('easy', name) == 0):
+                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            else:
+                self.menu.clear()
+                rank.add_data('current','easy',name,self.score)
+                self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=20)
+                self.menu.add.vertical_margin(20)
+                self.menu.add.button('to Menu', self.to_menu)
+
         else: # 그 외 ( 하드모드인 경우)
-            rank.add_data('current','hard',name,self.score)
+            if(name == ''):
+                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            elif(rank.check_ID('hard', name) == 0):
+                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
+            else:
+                self.menu.clear()
+                rank.add_data('current','hard',name,self.score)
+                self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=20)
+                self.menu.add.vertical_margin(20)
+                self.menu.add.button('to Menu', self.to_menu)
+
+
+    def show_register_result(self):
+        self.menu.remove_widget(self.result_frame)
+        self.register_ranking()
         
-        self.menu.clear()
-        self.menu.add.label("Score Registered!")
-        self.menu.add.button('to Menu', self.to_menu)
 
     #재시도 버튼 클릭 시 실행
     def retry(self):

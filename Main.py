@@ -96,6 +96,8 @@ menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
 
 if __name__ == '__main__':
+    rank = Rank()
+    rank.check_update()
     while True:
         events = pygame.event.get()
         for event in events:
