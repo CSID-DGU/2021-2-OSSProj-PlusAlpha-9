@@ -9,7 +9,7 @@
 				"./Sound/ariant.mp3",
 				0,
 				1,
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				[],
 				"",
 				""
@@ -22,7 +22,7 @@
 				"./Sound/ariant.mp3",
 				0,
 				1,
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				[],
 				"",
 				""
@@ -35,13 +35,13 @@
 				"./Sound/ariant.mp3",
 				1,
 				1,
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				[
 					"Image/tutankhamun_1.png",
 					"Image/tutankhamun_2.png",
 					"Image/tutankhamun_3.png"
 				],
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				"UFO"
 			]
 		},

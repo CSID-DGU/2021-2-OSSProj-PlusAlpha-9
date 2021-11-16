@@ -111,7 +111,9 @@ class PowerUp(Item):
             fire_count = game.character.fire_count + 1
             n_min = game.character.min_fire_count
             n_max = game.character.max_fire_count
-            game.character.fire_count  = max(n_min, min(fire_count, n_max)) 
+            if game.character.fire_count > n_max:
+                game.character.auto_target = True
+            game.character.fire_count  = Utils.clamp(fire_count, n_min, n_max)
             self.is_collidable = False
             game.item_list.remove(self)
 

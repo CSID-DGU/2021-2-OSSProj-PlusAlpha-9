@@ -67,6 +67,7 @@ class InfiniteGame:
         self.character.fire_count = self.character.min_fire_count
         self.character.missiles_fired = []
         self.character.bomb_count = 0
+        self.character.auto_target = False
         if self.character.is_boosted == True:
             self.character.velocity = self.character.org_velocity
             self.character.fire_interval = self.character.org_fire_interval
@@ -137,7 +138,7 @@ class InfiniteGame:
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,{"x":100, "y":100},self.mob_velocity,0)
+                newMob = Mob(self.mob_image,{"x":50, "y":50},self.mob_velocity,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
             
@@ -313,7 +314,7 @@ class InfiniteGame:
 
     #재시도 버튼 클릭 시 실행
     def retry(self):
-        InfiniteGame(selected_character,self.attr).main()
+        InfiniteGame(self.character,self.attr).main()
         self.menu.disable()
     
 

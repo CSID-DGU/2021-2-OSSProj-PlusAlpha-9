@@ -1,4 +1,6 @@
 import enum
+import math
+from sys import version
 
 class Images(enum.Enum):
     start = "./Image/StartImage.png"
@@ -12,9 +14,10 @@ class Images(enum.Enum):
     # background_desert = "./Image/DESERT.jpeg"
     background_desert = "./Image/DESERT_modified_v3.jpg"
     background_antarctic = "./Image/Antarctic_modified_v2.jpg"
-    enemy_scrophion = "./Image/Scorphion.png"
+    enemy_scrophion = "./Image/scorphion1-1.png"
     enemy_cactus = "./Image/Catus.png"
     missile_missile2 = "./Image/MISSILE_2.png"
+    weapon_target_missile = "./Image/Weapon/spaceMissiles_012.png"
 
     item_bomb = [
         "./Image/Items/Bomb/frame-1.png", 
@@ -108,3 +111,7 @@ class Utils():
     @classmethod
     def clamp(cls, val, n_min, n_max):
         return max(n_min, min(val, n_max)) 
+
+    @classmethod
+    def get_distance(cls, a, b):
+        return math.sqrt((b["x"] - a["x"])**2 + (b["y"] - a["y"])**2)
