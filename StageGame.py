@@ -136,7 +136,7 @@ class StageGame:
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
-            if(random.random()<self.item_gen_rate):
+            if(random.random()<0.01):
                 new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)

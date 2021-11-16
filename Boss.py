@@ -279,3 +279,6 @@ class Boss():
             gun.y *= h_ratio
         self.bullet_size["x"] *= w_ratio
         self.bullet_size["y"] *= h_ratio
+
+    def get_pos(self):
+        return (self.x + (self.sx/2), self.y + (self.sy/2))

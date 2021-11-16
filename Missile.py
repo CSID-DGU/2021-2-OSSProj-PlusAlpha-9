@@ -1,4 +1,5 @@
 import pygame
+from pymysql import NULL
 from Object import Object
 from Defs import *
 from pygame.math import Vector2
@@ -29,7 +30,11 @@ class TargetedMissile(Missile):
             self.vel = direction.normalize() * self.velocity
 
     def find_target(self, game):
-        if len(game.mobList) > 0:
+        if game.stage.is_boss_stage:
+            target = game.boss
+            min = Utils.get_distance({"x":game.boss.x,"y":game.boss.y},{"x":game.character.x,"y":game.character.y}) 
+            return target
+        elif len(game.mobList) > 0:
             target = game.mobList[0]
             min = Utils.get_distance({"x":game.mobList[0].x,"y":game.mobList[0].y},{"x":game.character.x,"y":game.character.y}) 
             for enemy in game.mobList:
@@ -41,7 +46,13 @@ class TargetedMissile(Missile):
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game.size)
-        if self.target in game.mobList:
+        if game.boss != NULL:
+            direction = Vector2(self.target.get_pos()) - self.position
+            self.put_img(self.img_path)
+            radius, angle = direction.as_polar()
+            self.vel = direction.normalize() * self.velocity
+            self.img = pygame.transform.rotozoom(self.img, -angle - 90.0, 1)
+        elif self.target in game.mobList:
             direction = Vector2(self.target.get_pos()) - self.position
             self.put_img(self.img_path)
             radius, angle = direction.as_polar()
