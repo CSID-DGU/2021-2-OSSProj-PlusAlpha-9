@@ -6,15 +6,10 @@ from pygame_menu.widgets.core.widget import Widget
 from Rank import *
 from LeaderBoardScrollMenu import *
 
-# # global_size = [0,0]
-# global_screen = pygame.display.set_mode([0,0],pygame.RESIZABLE)
-
 class LeaderBoardMenu:
     def __init__(self,screen):
-        # pygame.init()
         self.size = screen.get_size()
         self.screen = screen
-        # global_screen = screen
 
         self.menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/RankPage_v2.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         self.mytheme = pygame_menu.themes.THEME_SOLARIZED.copy()
@@ -29,21 +24,6 @@ class LeaderBoardMenu:
 
     def to_menu(self):
         self.menu.disable()
-
-    # def on_resize(self):
-    #     width, height = max(event.w,300), max(event.h,390)
-
-    #     #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
-    #     if(width<=height):
-    #         height = int(width * (13/10))
-    #     else:
-    #         width = int(height * (10/13))
-        
-    #     w_ratio = width/self.size[0]
-    #     h_ratio = height/self.size[1]
-
-    #     self.size =[width,height] #게임의 size 속성 변경
-    #     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
 
     def rank(self):
         self.menu.clear()
@@ -62,7 +42,6 @@ class LeaderBoardMenu:
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
         self.menu.add.button('     rank search     ', self.show_current_rank_search)
         self.menu.add.button('         back         ', self.rank)
-        # self.menu.draw(self.screen)
 
     def past_rank(self):
         self.menu.clear()
@@ -230,13 +209,3 @@ class LeaderBoardMenu:
     def get_past_hard_rank_from_scroll(self):
         ScrollMenu = LeaderBoardScrollMenu(self.screen)
         ScrollMenu.get_past_rank('hard')
-
-# LeaderBoard = LeaderBoardMenu(global_screen)
-# while True:
-#      for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
-#         if event.type == pygame.QUIT:
-#             pygame.quit()
-#             break
-#         if event.type == pygame.VIDEORESIZE:
-    
-#             LeaderBoard.on_resize()
