@@ -109,3 +109,6 @@ class Object:
         x = int(self.boundary[0] * x_scale)
         y = int(self.boundary[1] * y_scale)
         self.set_XY((x, y))
+    
+    def get_pos(self):
+        return (self.x + (self.sx/2), self.y + (self.sy/2))

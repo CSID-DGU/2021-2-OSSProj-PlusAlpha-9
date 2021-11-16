@@ -1,7 +1,7 @@
 import pygame
 import time
 from Object import Object 
-from Missile import Missile
+from Missile import *
 from Defs import *
 from Effect import *
 
@@ -44,6 +44,8 @@ class Character(Object):
         self.bomb_count = 0
         self.bomb_radius = {"x":500, "y":500}
 
+        self.auto_target = False
+
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game.size)
@@ -67,6 +69,9 @@ class Character(Object):
         if key_pressed[pygame.K_SPACE]:
             if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
+                if self.auto_target:
+                    if len(game.mobList) > 0:
+                        self.shoot_targeted(game)
         if key_pressed[pygame.K_a]:
             if self.bomb_count > 0:
                 if time.time() - self.last_bomb > self.bomb_interval:
@@ -105,12 +110,18 @@ class Character(Object):
     def shoot(self):
         self.last_fired = time.time()
         self.missile_sfx.play()
+        fire_count = Utils.clamp(self.fire_count, 1, 5)
         for num in range(1, self.fire_count+1):
             missile = Missile(self.missile_img, self.missile_size, self.missile_velocity, self.fire_interval)
             missile.change_size()
             div_factor = self.fire_count + 1
             missile.x = round((self.x + (num * (self.sx / div_factor))) - missile.sx / 2) 
             missile.y = self.y - missile.sy - 1
+            self.missiles_fired.append(missile)
+
+    def shoot_targeted(self, game):
+        for num in range(1, 2):
+            missile = TargetedMissile(self, game)
             self.missiles_fired.append(missile)
 
     def use_bomb(self, game):
