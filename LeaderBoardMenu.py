@@ -3,34 +3,51 @@ import pygame
 import pygame_menu
 from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.widgets.core.widget import Widget
-
-
-from StageGame import StageGame
-from Stage import Stage
-from StageDataManager import *
-from CharacterDataManager import *
-from CharacterSelectMenu import *
 from Rank import *
+from LeaderBoardScrollMenu import *
+
+# # global_size = [0,0]
+# global_screen = pygame.display.set_mode([0,0],pygame.RESIZABLE)
 
 class LeaderBoardMenu:
     def __init__(self,screen):
-        
+        # pygame.init()
         self.size = screen.get_size()
         self.screen = screen
+        # global_screen = screen
 
-        menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/DESERT_modified_v3.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        mytheme = pygame_menu.themes.THEME_ORANGE.copy()
-        mytheme.background_color = menu_image 
+        self.menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/RankPage_v2.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+        self.mytheme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
+        self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        self.mytheme.title_font_color = (255, 255, 255)
+        self.mytheme.background_color = self.menu_image
         
-        self.menu = pygame_menu.Menu('-- LeaderBoard --', self.size[0], self.size[1],
-                            theme=mytheme)
+        self.menu = pygame_menu.Menu('', self.size[0], self.size[1],
+                            theme=self.mytheme)
         self.tens = 0
 
     def to_menu(self):
         self.menu.disable()
 
+    # def on_resize(self):
+    #     width, height = max(event.w,300), max(event.h,390)
+
+    #     #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
+    #     if(width<=height):
+    #         height = int(width * (13/10))
+    #     else:
+    #         width = int(height * (10/13))
+        
+    #     w_ratio = width/self.size[0]
+    #     h_ratio = height/self.size[1]
+
+    #     self.size =[width,height] #게임의 size 속성 변경
+    #     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
+
     def rank(self):
         self.menu.clear()
+        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - RANKING -   ", selectable=False)
         self.menu.add.button('     current ranking     ', self.current_rank)
         self.menu.add.button('     past ranking     ', self.past_rank)
@@ -39,18 +56,20 @@ class LeaderBoardMenu:
 
     def current_rank(self):
         self.menu.clear()
+        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - Current Rank -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
         self.menu.add.button('     rank search     ', self.show_current_rank_search)
         self.menu.add.button('         back         ', self.rank)
-        self.menu.draw(self.screen)
+        # self.menu.draw(self.screen)
 
     def past_rank(self):
         self.menu.clear()
+        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - Past Rank -   ", selectable=False)
-        self.menu.add.button('     easy mode     ', self.show_past_easy_rank)
-        self.menu.add.button('     hard mode     ', self.show_past_hard_rank)
+        self.menu.add.button('     easy mode     ', self.get_past_easy_rank_from_scroll)
+        self.menu.add.button('     hard mode     ', self.get_past_hard_rank_from_scroll)
         self.menu.add.button('         back         ', self.rank)
 
     def show_current_easy_rank(self):
@@ -62,7 +81,6 @@ class LeaderBoardMenu:
     def get_current_rank(self, mode):
             rank = Rank()
             self.menu.clear()
-            self.menu.add.image("./Image/Catus.png", angle=-10, scale=(0.15, 0.15))
             self.tens = 0
 
             if(mode == 'easy'):
@@ -77,6 +95,7 @@ class LeaderBoardMenu:
 
     def get_current_easy_rank_page(self, tens):
         self.menu.clear()
+        self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Easy Rank--",selectable=False,font_size=30)
         if(len(easy_data) == 0):
             self.menu.add.vertical_margin(100)
@@ -119,6 +138,7 @@ class LeaderBoardMenu:
 
     def get_current_hard_rank_page(self, tens):
         self.menu.clear()
+        self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Hard Rank--",selectable=False,font_size=30)
         if(len(hard_data) == 0):
             self.menu.add.vertical_margin(100)
@@ -160,6 +180,7 @@ class LeaderBoardMenu:
 
     def show_current_rank_search(self):
         self.menu.clear()
+        self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Rank Search--",selectable=False,font_size=30)
         self.search_frame = self.menu.add.frame_v(600, 300, align=ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.label('search your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
@@ -174,22 +195,27 @@ class LeaderBoardMenu:
         self.search_frame.pack(self.menu.add.vertical_margin(40))
         self.search_frame.pack(self.menu.add.button('search',self.current_rank_search_result,font_size=20), align=ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.button('back', self.current_rank, font_size=20), align=ALIGN_CENTER)
-        self.result_frame = self.menu.add.frame_v(500, 100, background_color = (255,255,255),align=ALIGN_CENTER)
+        self.result_frame = self.menu.add.frame_v(500, 180, background_color = (254,254,237),align=ALIGN_CENTER)
+        self.result_frame.pack(self.menu.add.label('----------------------result-------------------------',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
 
     def get_current_rank_search_result(self, ID):
         rank = Rank()
-        self.result_frame = self.menu.add.frame_v(500, 100, background_color = (255,255,255), align=ALIGN_CENTER)
+        self.result_frame = self.menu.add.frame_v(500, 180, background_color = (254,254,237), align=ALIGN_CENTER)
         if(self.selector.get_index() == 0):
             rank_result = rank.search_data('current', 'easy', ID)
             if(rank_result == 0):
+                self.result_frame.pack(self.menu.add.label('----------------------result-------------------------',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
                 self.result_frame.pack(self.menu.add.label('Rank not found. Please search again.',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
             else:
+                self.result_frame.pack(self.menu.add.label('----------------------result-------------------------',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
                 self.result_frame.pack(self.menu.add.label('Rank : '+str(rank_result),selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
         if(self.selector.get_index() == 1):
             rank_result = rank.search_data('current', 'hard', ID)
             if(rank_result == 0):
+                self.result_frame.pack(self.menu.add.label('----------------------result-------------------------',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
                 self.result_frame.pack(self.menu.add.label('Rank not found. Please search again.',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
             else:
+                self.result_frame.pack(self.menu.add.label('----------------------result-------------------------',selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
                 self.result_frame.pack(self.menu.add.label('Current Rank : '+str(rank_result),selectable=False, font_size=25), align=ALIGN_CENTER, margin=(0,20))
 
     def current_rank_search_result(self):
@@ -197,52 +223,20 @@ class LeaderBoardMenu:
         self.menu.remove_widget(self.result_frame)
         self.get_current_rank_search_result(ID)
 
-    def show_past_easy_rank(self):
-        self.get_past_rank('easy')
+    def get_past_easy_rank_from_scroll(self):
+        ScrollMenu = LeaderBoardScrollMenu(self.screen)
+        ScrollMenu.get_past_rank('easy')
 
-    def show_past_hard_rank(self):
-        self.get_past_rank('hard')
+    def get_past_hard_rank_from_scroll(self):
+        ScrollMenu = LeaderBoardScrollMenu(self.screen)
+        ScrollMenu.get_past_rank('hard')
 
-    def get_past_rank(self, mode):
-            rank = Rank()
-            self.menu.clear()
-            self.menu.add.image("./Image/Catus.png", angle=-10, scale=(0.15, 0.15))
-
-            if(mode == 'easy'):
-                past_easy_data = rank.load_data('past','easy')
-                self.menu.add.label("--Past Easy Rank--",selectable=False,font_size=30)
-                if(len(past_easy_data) == 0):
-                    self.menu.add.vertical_margin(100)
-                    self.menu.add.label('No Ranking Information.')
-                    self.menu.add.vertical_margin(100)
-                else:
-                    id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-                    self.menu.add.label(id_score_bar,selectable=False, font_size=20)
-                    for i in range(100):
-                        if (i == len(past_easy_data)): break
-                        name = str(past_easy_data[i]['ID'])
-                        score = '{0:>05s}'.format(str(past_easy_data[i]['score']))
-                        date = str(past_easy_data[i]['date'])
-                        r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(i+1), name, score, date)
-                        self.menu.add.label(r,selectable=False, font_size=20)
-
-            elif(mode == 'hard'):
-                past_hard_data = rank.load_data('past','hard')
-                self.menu.add.label("--Past Hard Rank--",selectable=False,font_size=30)
-                if(len(past_hard_data) == 0):
-                    self.menu.add.vertical_margin(100)
-                    self.menu.add.label('No Ranking Information.')
-                    self.menu.add.vertical_margin(100)
-                else:
-                    id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-                    self.menu.add.label(id_score_bar,selectable=False, font_size=20)
-                    for i in range(100):
-                        if (i == len(past_hard_data)): break
-                        name = str(past_hard_data[i]['ID'])
-                        score = '{0:>05s}'.format(str(past_hard_data[i]['score']))
-                        date = str(past_hard_data[i]['date'])
-                        r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(i+1), name, score, date)
-                        self.menu.add.label(r,selectable=False, font_size=20)
-
-            self.menu.add.button('back', self.past_rank)
-            self.menu.mainloop(self.screen)
+# LeaderBoard = LeaderBoardMenu(global_screen)
+# while True:
+#      for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
+#         if event.type == pygame.QUIT:
+#             pygame.quit()
+#             break
+#         if event.type == pygame.VIDEORESIZE:
+    
+#             LeaderBoard.on_resize()
