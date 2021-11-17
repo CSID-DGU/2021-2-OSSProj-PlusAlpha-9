@@ -30,23 +30,34 @@ class TargetedMissile(Missile):
             self.vel = direction.normalize() * self.velocity
 
     def find_target(self, game):
-        if game.stage.is_boss_stage:
-            target = game.boss
-            min = Utils.get_distance({"x":game.boss.x,"y":game.boss.y},{"x":game.character.x,"y":game.character.y}) 
-            return target
-        elif len(game.mobList) > 0:
-            target = game.mobList[0]
-            min = Utils.get_distance({"x":game.mobList[0].x,"y":game.mobList[0].y},{"x":game.character.x,"y":game.character.y}) 
-            for enemy in game.mobList:
-                if min > Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character.x,"y":game.character.y}):
-                    min = Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character.x,"y":game.character.y})
-                    target = enemy
-            return target
+        if hasattr(game, "stage"): 
+            if game.stage.is_boss_stage:
+                self.target_type = "BOSS"
+                return game.boss
+            elif len(game.mobList) > 0:
+                target = game.mobList[0]
+                min = Utils.get_distance({"x":game.mobList[0].x,"y":game.mobList[0].y},{"x":game.character.x,"y":game.character.y}) 
+                for enemy in game.mobList:
+                    if min > Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character.x,"y":game.character.y}):
+                        min = Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character.x,"y":game.character.y})
+                        target = enemy
+                self.target_type = "MOB"
+                return target
+        else:
+            if len(game.mobList) > 0:
+                target = game.mobList[0]
+                min = Utils.get_distance({"x":game.mobList[0].x,"y":game.mobList[0].y},{"x":game.character.x,"y":game.character.y}) 
+                for enemy in game.mobList:
+                    if min > Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character.x,"y":game.character.y}):
+                        min = Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character.x,"y":game.character.y})
+                        target = enemy
+                self.target_type = "MOB"
+                return target
 
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game.size)
-        if game.boss != NULL:
+        if self.target_type == "BOSS":
             direction = Vector2(self.target.get_pos()) - self.position
             self.put_img(self.img_path)
             radius, angle = direction.as_polar()
