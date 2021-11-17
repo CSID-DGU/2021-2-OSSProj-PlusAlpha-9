@@ -75,6 +75,7 @@ def on_resize() -> None:
     window_size = surface.get_size()
     new_w, new_h = 1 * window_size[0], 1 * window_size[1]
     menu.resize(new_w, new_h)
+    size = window_size
     print(f'New menu size: {menu.get_size()}')
 
 def show_difficulty_select_menu():
@@ -108,8 +109,9 @@ if __name__ == '__main__':
                 # Update the surface (min size : 300,500)
                 surface = pygame.display.set_mode((max(event.w,300), max(event.h,500)),
                                                   pygame.RESIZABLE)
-                # Call the menu event
-                on_resize()
+                
+        if (size != surface.get_size()):
+            on_resize()
 
         # Draw the menu
         surface.fill((25, 0, 50))

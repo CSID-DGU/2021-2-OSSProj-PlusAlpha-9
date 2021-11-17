@@ -15,6 +15,7 @@ class StageSelectMenu:
         
         self.size = screen.get_size()
         self.screen = screen
+        self.mainloop = True
 
         menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         mytheme = pygame_menu.themes.THEME_ORANGE.copy()
@@ -29,7 +30,7 @@ class StageSelectMenu:
         self.selectedStage = ["1"]
 
     def to_menu(self):
-        self.menu.disable()
+        self.mainloop = False
 
     #Selector 위젯에는 아이템을 튜플 형태로 넣어줘야하므로 변환 함수
     def toTuple(self,str):
@@ -57,7 +58,7 @@ class StageSelectMenu:
         self.menu.add.button("Start",self.start_stage_game)
         self.menu.add.button("BACK",self.to_menu)
 
-        self.menu.mainloop(self.screen)
+        self.resizable_mainloop()
 
     def print_var(self):
         print(self.stageSelector.get_value())
@@ -78,3 +79,36 @@ class StageSelectMenu:
         if Stage(self.stage_data["chapter"][chapter][stage]).is_unlocked == 1 :
             return True
         return False
+
+    def resizable_mainloop(self):
+        while self.mainloop:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    break
+                if event.type == pygame.VIDEORESIZE:
+                    # Update the surface (min size : 300,500)
+                    self.screen = pygame.display.set_mode((max(event.w,300), max(event.h,500)),
+                                                    pygame.RESIZABLE)
+                    
+
+            #이전의 창크기와 다르다면 창크기가 변한것으로 인식하고 on_resize 실행
+            if (self.size != self.screen.get_size()):
+                self.on_resize()
+
+            # Draw the menu
+            self.menu.update(events)
+            self.menu.draw(self.screen)
+
+            pygame.display.flip()
+
+    def on_resize(self):
+        """
+        Function checked if the window is resized.
+        """
+        window_size = self.screen.get_size()
+        new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+        self.menu.resize(new_w, new_h)
+        self.size = window_size
+        print(f'New menu size: {self.menu.get_size()}')
