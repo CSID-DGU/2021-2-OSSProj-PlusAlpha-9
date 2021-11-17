@@ -42,7 +42,7 @@
 					"Image/tutankhamun_3.png"
 				],
 				"./Image/scorphion1-1.png",
-				"UFO"
+				"F5S1"
 			]
 		},
 		"Ice": {
@@ -87,7 +87,7 @@
 					"Image/penguin_boss_3.png"
 				],
 				"./Image/penguin_boss_3.png",
-				""
+				"F5S4"
 			]
 		}
 	}
