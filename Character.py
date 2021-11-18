@@ -70,8 +70,7 @@ class Character(Object):
             if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
                 if self.auto_target:
-                    if len(game.mobList) > 0:
-                        self.shoot_targeted(game)
+                    self.shoot_targeted(game)
         if key_pressed[pygame.K_a]:
             if self.bomb_count > 0:
                 if time.time() - self.last_bomb > self.bomb_interval:
@@ -116,14 +115,21 @@ class Character(Object):
             missile.change_size()
             div_factor = self.fire_count + 1
             missile.x = round((self.x + (num * (self.sx / div_factor))) - missile.sx / 2) 
-            missile.y = self.y - missile.sy - 1
+            missile.y = self.y - missile.sy
             self.missiles_fired.append(missile)
 
     def shoot_targeted(self, game):
         targets = self.check_for_targets(game)
         if len(targets) > 0:
-            for num in range(1, 2):
-                missile = TargetedMissile(self, game)
+            x = round(self.x + (self.sx / 2)) 
+            y = self.y
+            missile = TargetedMissile((x,y), game)
+            self.missiles_fired.append(missile)
+        elif hasattr(game, "stage"):
+            if game.stage.is_boss_stage:
+                x = round(self.x + (self.sx / 2)) 
+                y = self.y
+                missile = TargetedMissile((x,y), game)
                 self.missiles_fired.append(missile)
 
     def check_for_targets(self, game):

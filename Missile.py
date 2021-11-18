@@ -17,11 +17,11 @@ class Missile(Object):
         self.y -= self.velocity
 
 class TargetedMissile(Missile):
-    def __init__(self, character, game):
+    def __init__(self, position, game):
         super().__init__(Images.weapon_target_missile.value, {"x":15, "y":25}, 20, 0.5)
         self.game = game
         self.vel = Vector2(0,0)
-        self.position = Vector2((character.x-(self.sx/2)), (character.y - self.sy -1 ))  # The position of the bullet.
+        self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)  # The position of the bullet.
         self.target = self.find_target(game)
         self.locked_on = True
         self.crosshair = Crosshair(self.target)
@@ -30,6 +30,12 @@ class TargetedMissile(Missile):
             radius, angle = direction.as_polar()
             self.img = pygame.transform.rotozoom(self.img, -angle - 90.0, 1)
             self.vel = direction.normalize() * self.velocity
+        if hasattr(game, "stage"):
+            if game.stage.is_boss_stage:
+                direction = Vector2(self.target.get_pos()) - self.position
+                radius, angle = direction.as_polar()
+                self.img = pygame.transform.rotozoom(self.img, -angle - 90.0, 1)
+                self.vel = direction.normalize() * self.velocity
 
     def find_target(self, game):
         if hasattr(game, "stage"): 
@@ -70,6 +76,7 @@ class TargetedMissile(Missile):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game.size)
         if self.target_type == "BOSS":
+            self.crosshair.move(game)
             direction = Vector2(self.target.get_pos()) - self.position
             self.put_img(self.img_path)
             radius, angle = direction.as_polar()
@@ -99,3 +106,6 @@ class Crosshair(Object):
             self.on_resize(game.size)
         if self.target in game.mobList: 
             self.set_XY((self.target.get_pos()[0]-self.sx/2, self.target.get_pos()[1]-self.sy/2))
+        elif hasattr(game, "stage"):
+            if game.stage.is_boss_stage:
+                self.set_XY((self.target.get_pos()[0]-self.sx/2, self.target.get_pos()[1]-self.sy/2))
