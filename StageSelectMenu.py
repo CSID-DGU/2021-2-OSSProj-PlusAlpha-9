@@ -15,7 +15,6 @@ class StageSelectMenu:
         
         self.size = screen.get_size()
         self.screen = screen
-        self.mainloop = True
 
         menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         mytheme = pygame_menu.themes.THEME_ORANGE.copy()
@@ -30,7 +29,7 @@ class StageSelectMenu:
         self.selectedStage = ["1"]
 
     def to_menu(self):
-        self.mainloop = False
+        self.menu.disable()
 
     #Selector 위젯에는 아이템을 튜플 형태로 넣어줘야하므로 변환 함수
     def toTuple(self,str):
@@ -58,11 +57,8 @@ class StageSelectMenu:
         self.menu.add.button("Start",self.start_stage_game)
         self.menu.add.button("BACK",self.to_menu)
 
-        self.resizable_mainloop()
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
-    def print_var(self):
-        print(self.stageSelector.get_value())
-        print(self.chapterSelector.get_value())
 
     def start_stage_game(self):
         # 현재 selector가 선택하고 있는 항목을 get_value로 가져오고, 그것의 키를 [0][0]을 통해 가져온다.
@@ -80,35 +76,20 @@ class StageSelectMenu:
             return True
         return False
 
-    def resizable_mainloop(self):
-        while self.mainloop:
-            events = pygame.event.get()
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    break
-                if event.type == pygame.VIDEORESIZE:
-                    # Update the surface (min size : 300,500)
-                    self.screen = pygame.display.set_mode((max(event.w,300), max(event.h,500)),
+
+    #menu mainloop에서 매번 체크 실행
+    def check_resize(self):
+        if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = self.screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            self.screen = pygame.display.set_mode(ratio_screen_size,
                                                     pygame.RESIZABLE)
-                    
-
-            #이전의 창크기와 다르다면 창크기가 변한것으로 인식하고 on_resize 실행
-            if (self.size != self.screen.get_size()):
-                self.on_resize()
-
-            # Draw the menu
-            self.menu.update(events)
-            self.menu.draw(self.screen)
-
-            pygame.display.flip()
-
-    def on_resize(self):
-        """
-        Function checked if the window is resized.
-        """
-        window_size = self.screen.get_size()
-        new_w, new_h = 1 * window_size[0], 1 * window_size[1]
-        self.menu.resize(new_w, new_h)
-        self.size = window_size
-        print(f'New menu size: {self.menu.get_size()}')
+            window_size = self.screen.get_size()
+            new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+            self.menu.resize(new_w, new_h)
+            self.size = window_size
+            print(f'New menu size: {self.menu.get_size()}')
