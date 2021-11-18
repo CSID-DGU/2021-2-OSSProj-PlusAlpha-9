@@ -20,7 +20,6 @@ class CharacterSelectMenu:
         # 화면 받고 화면 크기 값 받기
         self.screen = screen
         self.size = screen.get_size()
-        self.mainloop = True
         
         menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         mytheme = pygame_menu.themes.THEME_ORANGE.copy()
@@ -36,7 +35,7 @@ class CharacterSelectMenu:
         self.character_data = CharacterDataManager.load()
 
     def to_menu(self):
-        self.mainloop = False
+        self.menu.disable()
 
     #메뉴 구성하고 보이기
     def show(self):  
@@ -79,7 +78,7 @@ class CharacterSelectMenu:
         self.menu.add.button("PLAY",self.start_game)
         self.menu.add.button("BACK",self.to_menu)
         self._update_from_selection(int(self.character_selector.get_value()[0][1]))
-        self.menu.mainloop(self.screen)
+        self.menu.mainloop(self.screen,self.check_resize)
 
 
     def start_game(self): #게임 시작 함수
@@ -98,38 +97,22 @@ class CharacterSelectMenu:
         else:
             print("character locked")
 
-
-    def resizable_mainloop(self):
-        while self.mainloop:
-            events = pygame.event.get()
-            for event in events:
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    break
-                if event.type == pygame.VIDEORESIZE:
-                    # Update the surface (min size : 300,500)
-                    self.screen = pygame.display.set_mode((max(event.w,300), max(event.h,500)),
+    #menu mainloop에서 매번 체크 실행
+    def check_resize(self):
+        if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = self.screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            self.screen = pygame.display.set_mode(ratio_screen_size,
                                                     pygame.RESIZABLE)
-                    
-            #이전의 창크기와 다르다면 창크기가 변한것으로 인식하고 on_resize 실행
-            if (self.size != self.screen.get_size()):
-                self.on_resize()
-
-            # Draw the menu
-            self.menu.update(events)
-            self.menu.draw(self.screen)
-
-            pygame.display.flip()
-
-    def on_resize(self):
-        """
-        Function checked if the window is resized.
-        """
-        window_size = self.screen.get_size()
-        new_w, new_h = 1 * window_size[0], 1 * window_size[1]
-        self.menu.resize(new_w, new_h)
-        self.size = window_size
-        print(f'New menu size: {self.menu.get_size()}')
+            window_size = self.screen.get_size()
+            new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+            self.menu.resize(new_w, new_h)
+            self.size = window_size
+            print(f'New menu size: {self.menu.get_size()}')
 
     def _on_selector_change(self, selected, value: int) -> None:
         """
