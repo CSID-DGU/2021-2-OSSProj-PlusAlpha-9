@@ -6,11 +6,6 @@ class Images(enum.Enum):
     start = "./Image/StartImage.png"
     how_to_play = "./Image/howtoplay.png"
 
-    character_car = "./Image/DesrtCar.png"
-    char_battleship = "./Image/bgbattleship.png"
-    char_speedship= "./Image/bgspeedship.png"
-    char_medship = "./Image/medfrighter.png"
-
     # background_desert = "./Image/DESERT.jpeg"
     background_desert = "./Image/DESERT_modified_v3.jpg"
     background_antarctic = "./Image/Antarctic_modified_v2.jpg"
@@ -76,6 +71,8 @@ class Images(enum.Enum):
         "./Image/Effects/Bomb/frame-14.png", 
         "./Image/Effects/Bomb/frame-15.png"
     ]
+
+    effect_crossair = "./Image/Effects/Crosshair.png"
     
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.mp3"

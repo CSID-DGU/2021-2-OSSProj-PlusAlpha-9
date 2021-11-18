@@ -81,13 +81,11 @@ def on_resize() -> None:
 def show_difficulty_select_menu():
     DifficultySelectMenu(screen).show()
     
-
 def show_stage_select_menu():
     StageSelectMenu(screen).show()
 
 def show_rank():
     LeaderBoardMenu(screen).rank()
-
 
 #메인 메뉴 구성
 menu.add.button('Select mode', show_mode)
@@ -97,8 +95,11 @@ menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
 
 if __name__ == '__main__':
-    rank = Rank()
-    rank.check_update()
+    try:
+        rank = Rank()
+        rank.check_update()
+    except:
+        pass
     while True:
         events = pygame.event.get()
         for event in events:

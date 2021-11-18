@@ -1,11 +1,11 @@
 {
     "Characters": [
         {
-            "name": "PlayerShip1",
-            "img_path": "./Image/bgbattleship.png",
+            "name": "Battleship",
+            "img_path": "./Image/Characters/Players/Battleship.png",
             "size": {
                 "x": 100,
-                "y": 110
+                "y": 100
             },
             "velocity": 10,
             "missile_img": "./Image/MISSILE_2.png",
@@ -15,20 +15,41 @@
             },
             "missile_velocity": 20,
             "missile_sfx": "./Sound/weapon-sound8.ogg",
-            "fire_interval": 1.0,
+            "fire_interval": 0.8,
+            "min_fire_count": 1,
+            "max_fire_count": 5,
+            "invincibility_period": 4.0,
+            "is_unlocked": true
+        },
+        {
+            "name": "Speedship",
+            "img_path": "./Image/Characters/Players/Speedship.png",
+            "size": {
+                "x": 100,
+                "y": 100
+            },
+            "velocity": 15,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 50,
+                "y": 70
+            },
+            "missile_velocity": 25,
+            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "fire_interval": 1.3,
             "min_fire_count": 1,
             "max_fire_count": 5,
             "invincibility_period": 2.0,
             "is_unlocked": true
         },
         {
-            "name": "PlayerShip2",
-            "img_path": "./Image/bgspeedship.png",
+            "name": "Car",
+            "img_path": "./Image/Characters/Players/Car.png",
             "size": {
                 "x": 100,
-                "y": 110
+                "y": 100
             },
-            "velocity": 10,
+            "velocity": 20,
             "missile_img": "./Image/MISSILE_2.png",
             "missile_size": {
                 "x": 50,
@@ -36,52 +57,73 @@
             },
             "missile_velocity": 20,
             "missile_sfx": "./Sound/weapon-sound8.ogg",
-            "fire_interval": 1.0,
+            "fire_interval": 2.0,
             "min_fire_count": 1,
             "max_fire_count": 5,
-            "invincibility_period": 2.0,
+            "invincibility_period": 6.0,
             "is_unlocked": true
         },
         {
-            "name": "PlayerShip3",
-            "img_path": "./Image/medfrighter.png",
+            "name": "F5S1",
+            "img_path": "./Image/Characters/Players/F5S1.png",
             "size": {
                 "x": 100,
-                "y": 110
+                "y": 100
             },
-            "velocity": 10,
-            "missile_img": "./Image/MISSILE_2.png",
-            "missile_size": {
-                "x": 50,
-                "y": 70
-            },
-            "missile_velocity": 20,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
-            "fire_interval": 1.0,
-            "min_fire_count": 1,
-            "max_fire_count": 5,
-            "invincibility_period": 2.0,
-            "is_unlocked": true
-        },
-        {
-            "name": "UFO",
-            "img_path": "./Image/F5S1.png",
-            "size": {
-                "x": 100,
-                "y": 110
-            },
-            "velocity": 10,
+            "velocity": 20,
             "missile_img": "./Image/MISSILE_2.png",
             "missile_size": {
                 "x": 90,
                 "y": 70
             },
-            "missile_velocity": 20,
+            "missile_velocity": 30,
             "missile_sfx": "./Sound/weapon-sound8.ogg",
-            "fire_interval": 1.0,
+            "fire_interval": 0.6,
             "min_fire_count": 1,
             "max_fire_count": 5,
-            "invincibility_period": 2.0,
+            "invincibility_period": 3.0,
+            "is_unlocked": true
+        },
+        {
+            "name": "F5S4",
+            "img_path": "./Image/Characters/Players/F5S4.png",
+            "size": {
+                "x": 100,
+                "y": 100
+            },
+            "velocity": 25,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 90,
+                "y": 70
+            },
+            "missile_velocity": 30,
+            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "fire_interval": 0.4,
+            "min_fire_count": 1,
+            "max_fire_count": 5,
+            "invincibility_period": 5.0,
+            "is_unlocked": true
+        },
+        {
+            "name": "Tank",
+            "img_path": "./Image/Characters/Players/Tank.png",
+            "size": {
+                "x": 100,
+                "y": 100
+            },
+            "velocity": 6,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 100,
+                "y": 120
+            },
+            "missile_velocity": 40,
+            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "fire_interval": 0.3,
+            "min_fire_count": 1,
+            "max_fire_count": 2,
+            "invincibility_period": 6.0,
             "is_unlocked": true
         }
     ]
