@@ -15,6 +15,7 @@ from Character import Character
 from Item import *
 from Effect import Effect
 from Boss import Boss
+from Missile import Crosshair
 from Mob import Mob
 from Bullet import Bullet
 from Defs import *
@@ -243,6 +244,9 @@ class StageGame:
             #플레이어 발사체 그리기
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
 
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, self.size[0]//40)

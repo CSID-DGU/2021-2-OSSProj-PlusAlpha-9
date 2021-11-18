@@ -71,6 +71,8 @@ class Images(enum.Enum):
         "./Image/Effects/Bomb/frame-14.png", 
         "./Image/Effects/Bomb/frame-15.png"
     ]
+
+    effect_crossair = "./Image/Effects/Crosshair.png"
     
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.mp3"

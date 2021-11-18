@@ -120,9 +120,18 @@ class Character(Object):
             self.missiles_fired.append(missile)
 
     def shoot_targeted(self, game):
-        for num in range(1, 2):
-            missile = TargetedMissile(self, game)
-            self.missiles_fired.append(missile)
+        targets = self.check_for_targets(game)
+        if len(targets) > 0:
+            for num in range(1, 2):
+                missile = TargetedMissile(self, game)
+                self.missiles_fired.append(missile)
+
+    def check_for_targets(self, game):
+        targets = []
+        for enemy in game.mobList:
+            if enemy.is_targeted == False:
+                targets.append(enemy)
+        return targets
 
     def use_bomb(self, game):
         self.last_bomb = time.time()

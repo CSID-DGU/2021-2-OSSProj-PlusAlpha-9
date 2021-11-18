@@ -19,6 +19,7 @@ from Item import *
 from Boss import Boss
 from Mob import Mob
 from Bullet import Bullet
+from Missile import Crosshair
 from Effect import *
 from Defs import *
 from StageDataManager import *
@@ -231,11 +232,14 @@ class InfiniteGame:
             for mob in self.mobList:
                 mob.show(self.screen)
 
-            for i in self.character.get_missiles_fired():
-                i.show(self.screen)
-
             for item in list(self.item_list):
                 item.show(self.screen)
+
+            for i in self.character.get_missiles_fired():
+                i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
             
             #점수와 목숨 표시
             font = pygame.font.Font(Fonts.font_default.value, self.size[0]//40)
