@@ -1,9 +1,9 @@
 import pygame
 import time
 from Object import Object 
-from Missile import Missile
+from Missile import *
 from Defs import *
-from Effect import Effect
+from Effect import *
 
 class Character(Object):
     def __init__(self, name, img_path, size, velocity, 
@@ -11,7 +11,6 @@ class Character(Object):
                 fire_interval, min_fire_count, max_fire_count, 
                 invincibility_period, is_unlocked):
         super().__init__(img_path, size, velocity)
-
 
         self.name = name
         self.last_fired = 0.0
@@ -35,7 +34,6 @@ class Character(Object):
         self.is_unlocked = is_unlocked
 
         self.blink_count = 0.0
-        self.is_blinking = False
 
         self.is_boosted = False
         self.powerup_duration = 10.0
@@ -46,8 +44,11 @@ class Character(Object):
         self.bomb_count = 0
         self.bomb_radius = {"x":500, "y":500}
 
+        self.auto_target = False
+
     def update(self, game):
-        self.boundary = pygame.display.get_surface().get_size()
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game.size)
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
             self.x -= self.velocity
@@ -68,6 +69,8 @@ class Character(Object):
         if key_pressed[pygame.K_SPACE]:
             if time.time() - self.last_fired > self.fire_interval:
                 self.shoot()
+                if self.auto_target:
+                    self.shoot_targeted(game)
         if key_pressed[pygame.K_a]:
             if self.bomb_count > 0:
                 if time.time() - self.last_bomb > self.bomb_interval:
@@ -83,37 +86,62 @@ class Character(Object):
             self.blink_count += Misc.blinking_step.value
             if game.life > 0:
                 if(self.blink_count >= Misc.blinking_speed.value):
-                    if(self.is_blinking == False):
+                    if(self.is_transparent == False):
                         self.img = self.img_trans
                         self.blink_count = 0.0
-                        self.is_blinking = True
+                        self.is_transparent = True
                     else:
                         self.img = self.img_copy
                         self.blink_count = 0.0
-                        self.is_blinking = False
+                        self.is_transparent = False
                 if time_passed > self.invincibility_period:
                     self.is_collidable = True
-                    if(self.is_blinking):
+                    if(self.is_transparent):
                         self.img = self.img_copy
+        else:
+            self.img = self.img_copy
         for missile in list(self.missiles_fired):
-            missile.update()
+            missile.update(game)
             if missile.y < -missile.sy:
-                self.missiles_fired.remove(missile)
+                if missile in self.missiles_fired:
+                    self.missiles_fired.remove(missile)
             
     def shoot(self):
         self.last_fired = time.time()
         self.missile_sfx.play()
+        fire_count = Utils.clamp(self.fire_count, 1, 5)
         for num in range(1, self.fire_count+1):
             missile = Missile(self.missile_img, self.missile_size, self.missile_velocity, self.fire_interval)
             missile.change_size()
             div_factor = self.fire_count + 1
             missile.x = round((self.x + (num * (self.sx / div_factor))) - missile.sx / 2) 
-            missile.y = self.y - missile.sy - 1
+            missile.y = self.y - missile.sy
             self.missiles_fired.append(missile)
+
+    def shoot_targeted(self, game):
+        targets = self.check_for_targets(game)
+        if len(targets) > 0:
+            x = round(self.x + (self.sx / 2)) 
+            y = self.y
+            missile = TargetedMissile((x,y), game)
+            self.missiles_fired.append(missile)
+        elif hasattr(game, "stage"):
+            if game.stage.is_boss_stage:
+                x = round(self.x + (self.sx / 2)) 
+                y = self.y
+                missile = TargetedMissile((x,y), game)
+                self.missiles_fired.append(missile)
+
+    def check_for_targets(self, game):
+        targets = []
+        for enemy in game.mobList:
+            if enemy.is_targeted == False:
+                targets.append(enemy)
+        return targets
 
     def use_bomb(self, game):
         self.last_bomb = time.time()
-        explosion = Effect(Images.anim_explosion.value[0], self.bomb_radius, 2)
+        explosion = Explosion(self.bomb_radius)
         player_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
         explosion.set_XY((player_location["x"] - explosion.sx/2, player_location["y"]- explosion.sy/2))
         game.effect_list.append(explosion)

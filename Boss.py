@@ -34,6 +34,7 @@ class Boss():
     
     def __init__(self, screen,image_path_list,bullet_image_path):
         #image and position
+        self.image_path_list = image_path_list
         self.load_images(image_path_list)
         self.x = screen[0]*0.5
         self.y = 0
@@ -251,9 +252,7 @@ class Boss():
             self.phase = 1
             self.img = self.orig_imgs[self.phase]
             self.random_pos_gun_on_outline()
-            
-            
-            
+              
 
     def load_images(self,image_path_list):
         self.orig_imgs = []
@@ -266,3 +265,20 @@ class Boss():
         for tu in random.sample(mask.outline(10),4):
             random_pos.append(Gun(tu[0]+self.x,tu[1]+self.y))
         self.gun_pos = random_pos
+
+    #크기 조정 함수
+    def on_resize(self, w_ratio, h_ratio):
+        self.x *= w_ratio
+        self.y *= h_ratio
+        self.sx *= w_ratio
+        self.sy *= h_ratio
+        self.load_images(self.image_path_list)
+        self.change_img_size(self.sx,self.sy)
+        for gun in self.gun_pos:
+            gun.x *= w_ratio
+            gun.y *= h_ratio
+        self.bullet_size["x"] *= w_ratio
+        self.bullet_size["y"] *= h_ratio
+
+    def get_pos(self):
+        return (self.x + (self.sx/2), self.y + (self.sy/2))

@@ -6,10 +6,10 @@
 				1,
 				300,
 				"./Image/DESERT_modified_v3.jpg",
-				"./Sound/ariant.mp3",
+				"./Sound/ariant.wav",
 				0,
 				1,
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				[],
 				"",
 				""
@@ -19,10 +19,10 @@
 				2,
 				450,
 				"./Image/DESERT_modified_v3.jpg",
-				"./Sound/ariant.mp3",
+				"./Sound/ariant.wav",
 				0,
 				1,
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				[],
 				"",
 				""
@@ -32,17 +32,17 @@
 				3,
 				450,
 				"./Image/DESERT_modified_v3.jpg",
-				"./Sound/ariant.mp3",
+				"./Sound/ariant.wav",
 				1,
 				1,
-				"./Image/Scorphion.png",
+				"./Image/scorphion1-1.png",
 				[
-					"Image/santa.png",
-					"./Image/Scorphion.png",
-					"Image/santa.png"
+					"Image/tutankhamun_1.png",
+					"Image/tutankhamun_2.png",
+					"Image/tutankhamun_3.png"
 				],
-				"./Image/Scorphion.png",
-				"UFO"
+				"./Image/scorphion1-1.png",
+				"F5S1"
 			]
 		},
 		"Ice": {
@@ -50,8 +50,8 @@
 				"Ice",
 				1,
 				300,
-				"./Image/Antarctic_modified_v1.jpg",
-				"./Sound/Rien.mp3",
+				"./Image/Antarctic_modified_v3.jpg",
+				"./Sound/Rien.wav",
 				0,
 				1,
 				"./Image/Catus.png",
@@ -63,8 +63,8 @@
 				"Ice",
 				2,
 				450,
-				"./Image/Antarctic_modified_v1.jpg",
-				"./Sound/Rien.mp3",
+				"./Image/Antarctic_modified_v3.jpg",
+				"./Sound/Rien.wav",
 				0,
 				1,
 				"./Image/Catus.png",
@@ -76,18 +76,63 @@
 				"Ice",
 				3,
 				450,
-				"./Image/Antarctic_modified_v1.jpg",
-				"./Sound/Rien.mp3",
+				"./Image/Antarctic_modified_v3.jpg",
+				"./Sound/Rien.wav",
 				1,
-				0,
+				1,
 				"./Image/Catus.png",
 				[
-					"Image/santa.png",
-					"Image/santa.png",
-					"Image/santa.png"
+					"Image/penguin_boss_1.png",
+					"Image/penguin_boss_2.png",
+					"Image/penguin_boss_3.png"
 				],
-				"./Image/Scorphion.png",
+				"./Image/penguin_boss_3.png",
+				"F5S4"
+			]
+		},
+		"Space": {
+			"1": [
+				"Space",
+				1,
+				300,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				0,
+				1,
+				"./Image/scorphion1-1.png",
+				[],
+				"",
 				""
+			],
+			"2": [
+				"Space",
+				2,
+				450,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				0,
+				1,
+				"./Image/scorphion1-1.png",
+				[],
+				"",
+				""
+			],
+			"3": [
+				"Space",
+				3,
+				450,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				1,
+				1,
+				"./Image/scorphion1-1.png",
+				[
+					"Image/tutankhamun_1.png",
+					"Image/tutankhamun_2.png",
+					"Image/tutankhamun_3.png"
+				],
+				"./Image/scorphion1-1.png",
+				"F5S1"
 			]
 		}
 	}

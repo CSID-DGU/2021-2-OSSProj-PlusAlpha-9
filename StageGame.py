@@ -15,6 +15,7 @@ from Character import Character
 from Item import *
 from Effect import Effect
 from Boss import Boss
+from Missile import Crosshair
 from Mob import Mob
 from Bullet import Bullet
 from Defs import *
@@ -64,10 +65,15 @@ class StageGame:
         self.enemyBullets =[]
 
         # 5. 캐릭터 위치 초기화
-        self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
+        self.character.set_XY((self.size[0]/2-(character.sx/2),self.size[1]-character.sy))
         self.character.fire_count = self.character.min_fire_count
         self.character.missiles_fired = []
         self.character.bomb_count = 0
+        self.character.auto_target = False
+        if self.character.is_boosted == True:
+            self.character.velocity = self.character.org_velocity
+            self.character.fire_interval = self.character.org_fire_interval
+            self.character.is_boosted = False
         
     def main(self):
         # 메인 이벤트
@@ -101,25 +107,37 @@ class StageGame:
                 if event.type ==pygame.QUIT:
                     self.SB=1 # SB 가 1이되면 while 문을 벗어나오게 됨
                 if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
-                    '''
-                    각 키가 눌러지면 플레이어 캐릭터 객체의 값 수정 (현재는 종료를 위해 왼쪽키를 종료로 둠)
-                    '''
                     if event.key == pygame.K_x:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
-                elif event.type == pygame.KEYUP: # 키를 뗐을때
-                    if event.key == pygame.K_LEFT:
-                        pass
+                if event.type == pygame.VIDEORESIZE: #화면이 리사이즈 되면
+                    #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
+                    width, height = max(event.w,300), max(event.h,390)
+
+                    #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
+                    if(width<=height):
+                        height = int(width * (13/10))
+                    else:
+                        width = int(height * (10/13))
+                    
+                    w_ratio = width/self.size[0]
+                    h_ratio = height/self.size[1]
+
+                    if(self.is_boss_stage): #보스 스테이지라면 보스 리사이징
+                        self.boss.on_resize(w_ratio,h_ratio)
+
+                    self.size =[width,height] #게임의 size 속성 변경
+                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
 
             #몹을 확률적으로 발생시키기
 
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,{"x":100, "y":100},2,0)
+                newMob = Mob(self.mob_image,{"x":50, "y":50},2,0)
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
-            if(random.random()<self.item_gen_rate):
+            if(random.random()<0.01):
                 new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
@@ -197,7 +215,8 @@ class StageGame:
                 for mob in list(self.mobList):
                     if self.check_crash(missile,mob):
                         self.score += 10
-                        self.character.missiles_fired.remove(missile)
+                        if missile in self.character.missiles_fired:
+                            self.character.missiles_fired.remove(missile)
                         self.mobList.remove(mob)
 
             #몹과 플레이어 충돌 감지
@@ -225,16 +244,19 @@ class StageGame:
             #플레이어 발사체 그리기
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
 
             #점수와 목숨 표시
-            font = pygame.font.Font(Fonts.font_default.value, sum(self.size)//85)
+            font = pygame.font.Font(Fonts.font_default.value, self.size[0]//40)
             score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             playTime = (time.time() - self.startTime)
             time_text = font.render("Time : {:.2f}".format(playTime), True, (255,255,0))
-            self.screen.blit(time_text,(350,5))
+            self.screen.blit(time_text,(self.size[0]//2,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
@@ -274,10 +296,16 @@ class StageGame:
         #다음 스테이지 해제
         StageDataManager.unlockNextStage(self.stage)
         #화면 표시
-        menu = pygame_menu.Menu('Stage Clear!', self.size[0]*0.7, self.size[1]*0.8,
-                            theme=pygame_menu.themes.THEME_BLUE)
-        menu.add.label(f"{self.stage.chapter} - {self.stage.stage} clear!!")
-        menu.add.label("Congratulation!")
+        stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stageclear_theme.title_font_color = (255, 255, 255)
+        menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
+                            theme=stageclear_theme)
+
+        menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51)
+        # menu.add.label("Congratulation!") # clear!!
+        menu.add.image("./Image/Stageclear_v1.jpg", scale=(1, 1))
         menu.add.label("")
         if self.stage.unlock_char != "":
             for character in self.character_data:
@@ -286,21 +314,21 @@ class StageGame:
                         character.is_unlocked = True
                         CharacterDataManager.save(self.character_data)
                         print(type(self.character_data), type(character))
-                        menu.add.label(self.stage.unlock_char, "해금되었습니다.")
-
-            
+                        menu.add.label("{} unlocked".format(self.stage.unlock_char))
 
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)
 
     #실패 화면
     def showGameOverScreen(self):
-        menu = pygame_menu.Menu('Failed!!', self.size[0]*0.7, self.size[1]*0.8,
-                            theme=pygame_menu.themes.THEME_BLUE)
-        menu.add.label(":(",font_size=250)
+        gameover_theme = pygame_menu.themes.THEME_DARK.copy()
+        gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        gameover_theme.title_font_color = (255, 255, 255)
+        menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
+                            theme=gameover_theme) # *0.7, *0.8
+        # menu.add.label(":(",font_size=250)
+        menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
         menu.add.label("")
         menu.add.button('to Menu', self.toMenu,menu)
         menu.mainloop(self.screen)
-        
-
-    
