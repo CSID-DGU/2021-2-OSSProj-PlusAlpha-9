@@ -37,11 +37,11 @@
 				1,
 				"./Image/scorphion1-1.png",
 				[
-					"Image/tutankhamun_1.png",
-					"Image/tutankhamun_2.png",
-					"Image/tutankhamun_3.png"
+					"Image/Boss/Body/tutankhamun_1.png",
+					"Image/Boss/Body/tutankhamun_2.png",
+					"Image/Boss/Body/tutankhamun_3.png"
 				],
-				"./Image/scorphion1-1.png",
+				"./Image/Boss/Bullet/scorphion1-1.png",
 				"F5S1"
 			]
 		},
@@ -86,7 +86,7 @@
 					"Image/Boss/Body/penguin_boss_2.png",
 					"Image/Boss/Body/penguin_boss_3.png"
 				],
-				"./Image/penguin_boss_3.png",
+				"./Image/Boss/Bullet/penguin_boss_3.png",
 				"F5S4"
 			]
 		},
