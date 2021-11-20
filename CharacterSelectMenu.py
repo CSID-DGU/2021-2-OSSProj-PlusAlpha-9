@@ -12,7 +12,7 @@ from StageDataManager import *
 from CharacterDataManager import *
 from InfiniteGame import *
 
-class CharacterSelectMenu:
+class CharacterSelectMenu(pygame_menu.menu.Menu):
     image_widget: 'pygame_menu.widgets.Image'
     item_description_widget: 'pygame_menu.widgets.Label'
 
@@ -20,12 +20,12 @@ class CharacterSelectMenu:
         # 화면 받고 화면 크기 값 받기
         self.screen = screen
         self.size = screen.get_size()
-        
+
         menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         mytheme = pygame_menu.themes.THEME_ORANGE.copy()
         mytheme.background_color = menu_image 
-        
-        self.menu = pygame_menu.Menu('Select Character...', self.size[0], self.size[1],
+
+        super().__init__('Select Character...', self.size[0], self.size[1],
                             theme=mytheme)
 
         #선택된 스테이지
@@ -34,14 +34,14 @@ class CharacterSelectMenu:
         #캐릭터 데이터를 json에서 불러온다.
         self.character_data = CharacterDataManager.load()
 
+        self.show()
+
     def to_menu(self):
-        self.menu.disable()
+        self.disable()
 
     #메뉴 구성하고 보이기
     def show(self):  
         #캐릭터 선택 메뉴 구성
-
-
         characters = []
         for idx in range(len(self.character_data)):
             characters.append((self.character_data[idx].name, idx))
@@ -52,33 +52,32 @@ class CharacterSelectMenu:
             ).scale(0.5, 0.5)
             self.character_imgs.append(default_image.copy())
         
-        self.character_selector = self.menu.add.selector(
+        self.character_selector = self.add.selector(
             title='Character :\t',
             items=characters,
             onchange=self._on_selector_change
         )
-        self.image_widget = self.menu.add.image(
+        self.image_widget = self.add.image(
             image_path=self.character_imgs[0],
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
-        self.item_description_widget = self.menu.add.label(title='')
-        self.fire_rate = self.menu.add.progress_bar(
+        self.item_description_widget = self.add.label(title='')
+        self.fire_rate = self.add.progress_bar(
             title="FireRate",
             default=int((0.3/self.character_data[0].org_fire_interval)*100),
             progress_text_enabled = False,
             box_progress_color =(200,60,50,255)
             
         )
-        self.velocity = self.menu.add.progress_bar(
+        self.velocity = self.add.progress_bar(
             title="Mobility",
             default=int((self.character_data[0].org_velocity/25)*100),
             progress_text_enabled = False,
             box_progress_color = (50,200,50,255)
         )
-        self.menu.add.button("PLAY",self.start_game)
-        self.menu.add.button("BACK",self.to_menu)
+        self.add.button("PLAY",self.start_game)
+        self.add.button("BACK",pygame_menu.events.BACK)
         self._update_from_selection(int(self.character_selector.get_value()[0][1]))
-        self.menu.mainloop(self.screen,self.check_resize)
 
 
     def start_game(self): #게임 시작 함수
@@ -110,9 +109,9 @@ class CharacterSelectMenu:
                                                     pygame.RESIZABLE)
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
-            self.menu.resize(new_w, new_h)
+            self.resize(new_w, new_h)
             self.size = window_size
-            print(f'New menu size: {self.menu.get_size()}')
+            print(f'New menu size: {self.get_size()}')
 
     def _on_selector_change(self, selected, value: int) -> None:
         """

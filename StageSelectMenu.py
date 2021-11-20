@@ -66,7 +66,7 @@ class StageSelectMenu:
         selected_stage = self.stageSelector.get_value()[0][0]
         #스테이지 언락되었는지 확인하고, 언락되었으면 캐릭터 선택 메뉴에 스테이지 넘겨주고 실행
         if (self.check_stage_unlock(selected_chapter,selected_stage)):
-            CharacterSelectMenu(self.screen,Stage(self.stage_data["chapter"][selected_chapter][selected_stage])).show()
+            self.menu._open(CharacterSelectMenu(self.screen,Stage(self.stage_data["chapter"][selected_chapter][selected_stage])))
         else:
             print("stage locked")
         
@@ -91,5 +91,6 @@ class StageSelectMenu:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
+            self.menu.get_current().resize(new_w,new_h)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')

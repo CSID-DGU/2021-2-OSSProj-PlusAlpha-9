@@ -36,15 +36,16 @@ class DifficultySelectMenu:
         self.mode_selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
         self.menu.add.button("Character Select ->",self.to_character_select_menu)
         self.menu.add.button("BACK",self.to_menu)
-        
-        
+
         self.menu.mainloop(self.screen, self.check_resize)
 
 
     def to_character_select_menu(self): #캐릭터 메뉴 시작 함수
         selected_mode = self.mode_selector.get_value()[0][1]
-        CharacterSelectMenu(self.screen,selected_mode).show()
-
+        self.menu._open(CharacterSelectMenu(self.screen,selected_mode))
+        
+        
+    
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
@@ -59,5 +60,6 @@ class DifficultySelectMenu:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
+            self.menu.get_current().resize(new_w, new_h)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
