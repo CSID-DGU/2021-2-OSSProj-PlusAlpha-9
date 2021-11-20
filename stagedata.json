@@ -89,6 +89,51 @@
 				"./Image/penguin_boss_3.png",
 				"F5S4"
 			]
+		},
+		"Space": {
+			"1": [
+				"Space",
+				1,
+				300,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				0,
+				1,
+				"./Image/scorphion1-1.png",
+				[],
+				"",
+				""
+			],
+			"2": [
+				"Space",
+				2,
+				450,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				0,
+				1,
+				"./Image/scorphion1-1.png",
+				[],
+				"",
+				""
+			],
+			"3": [
+				"Space",
+				3,
+				450,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				1,
+				1,
+				"./Image/scorphion1-1.png",
+				[
+					"Image/tutankhamun_1.png",
+					"Image/tutankhamun_2.png",
+					"Image/tutankhamun_3.png"
+				],
+				"./Image/scorphion1-1.png",
+				"F5S1"
+			]
 		}
 	}
 }

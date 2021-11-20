@@ -36,7 +36,6 @@ class DifficultySelectMenu:
         self.mode_selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
         self.menu.add.button("Character Select ->",self.to_character_select_menu)
         self.menu.add.button("BACK",self.to_menu)
-        self.menu.add.button("char",self.to_character_select_menu)
 
         self.menu.mainloop(self.screen, self.check_resize)
 
