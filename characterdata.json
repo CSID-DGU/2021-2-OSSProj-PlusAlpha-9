@@ -14,7 +14,7 @@
                 "y": 70
             },
             "missile_velocity": 20,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "missile_sfx": "./Sound/weapon-sound8.wav",
             "fire_interval": 0.8,
             "min_fire_count": 1,
             "max_fire_count": 5,
@@ -35,7 +35,7 @@
                 "y": 70
             },
             "missile_velocity": 25,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "missile_sfx": "./Sound/weapon-sound8.wav",
             "fire_interval": 1.3,
             "min_fire_count": 1,
             "max_fire_count": 5,
@@ -56,7 +56,7 @@
                 "y": 70
             },
             "missile_velocity": 20,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "missile_sfx": "./Sound/weapon-sound8.wav",
             "fire_interval": 2.0,
             "min_fire_count": 1,
             "max_fire_count": 5,
@@ -77,12 +77,12 @@
                 "y": 70
             },
             "missile_velocity": 30,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "missile_sfx": "./Sound/weapon-sound8.wav",
             "fire_interval": 0.6,
             "min_fire_count": 1,
             "max_fire_count": 5,
             "invincibility_period": 3.0,
-            "is_unlocked": true
+            "is_unlocked": false
         },
         {
             "name": "F5S4",
@@ -98,12 +98,12 @@
                 "y": 70
             },
             "missile_velocity": 30,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "missile_sfx": "./Sound/weapon-sound8.wav",
             "fire_interval": 0.4,
             "min_fire_count": 1,
             "max_fire_count": 5,
             "invincibility_period": 5.0,
-            "is_unlocked": true
+            "is_unlocked": false
         },
         {
             "name": "Tank",
@@ -119,7 +119,7 @@
                 "y": 120
             },
             "missile_velocity": 40,
-            "missile_sfx": "./Sound/weapon-sound8.ogg",
+            "missile_sfx": "./Sound/weapon-sound8.wav",
             "fire_interval": 0.3,
             "min_fire_count": 1,
             "max_fire_count": 2,

@@ -55,7 +55,7 @@ class InfiniteGame:
         self.item_gen_rate = 0.004
         self.mob_image = "./Image/Catus.png"
         self.background_image = "./Image/Space_modified_v1.jpg"
-        self.background_music = "./Sound/Space.mp3"
+        self.background_music = "./Sound/Space.wav"
         self.SB = 0
         self.dy = 2
         self.mob_velocity = 2
