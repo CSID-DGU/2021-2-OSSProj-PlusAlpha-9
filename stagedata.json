@@ -30,7 +30,7 @@
 			"3": [
 				"Oasis",
 				3,
-				450,
+				9999999999,
 				"./Image/DESERT_modified_v3.jpg",
 				"./Sound/ariant.wav",
 				1,
@@ -75,7 +75,7 @@
 			"3": [
 				"Ice",
 				3,
-				450,
+				9999999999,
 				"./Image/Antarctic_modified_v3.jpg",
 				"./Sound/Rien.wav",
 				1,
@@ -120,7 +120,7 @@
 			"3": [
 				"Space",
 				3,
-				450,
+				9999999999,
 				"./Image/Space_modified_v1.jpg",
 				"./Sound/Space.wav",
 				1,
