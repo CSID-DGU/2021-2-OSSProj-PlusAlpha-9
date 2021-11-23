@@ -111,6 +111,7 @@ class StageGame:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
+                        self.life +=1
                 if event.type == pygame.VIDEORESIZE: #화면이 리사이즈 되면
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
