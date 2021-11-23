@@ -3,6 +3,7 @@ import pygame_menu
 from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.widgets.core.widget import Widget
 from Rank import *
+from pygame_menu.utils import make_surface
 
 
 class LeaderBoardScrollMenu:
@@ -88,5 +89,6 @@ class LeaderBoardScrollMenu:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
+            self.menu._current._widgets_surface = make_surface(0,0)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
