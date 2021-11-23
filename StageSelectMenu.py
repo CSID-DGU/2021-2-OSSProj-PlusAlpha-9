@@ -8,6 +8,7 @@ from Stage import Stage
 from StageDataManager import *
 from CharacterDataManager import *
 from CharacterSelectMenu import *
+from pygame_menu.utils import make_surface
 
 class StageSelectMenu:
 
@@ -22,7 +23,7 @@ class StageSelectMenu:
         
         self.menu = pygame_menu.Menu('Select Stage...', self.size[0], self.size[1],
                             theme=mytheme)
-
+        
         self.stage_data = StageDataManager.loadStageData()
 
         self.selectedChapter = [list(self.stage_data["chapter"].keys())[0]]
@@ -36,7 +37,7 @@ class StageSelectMenu:
         return (str,str)
 
     #스테이지 선택화면
-    def show(self):  
+    def show(self):
         #스테이지 메뉴 구성
         #json에서 읽어온 스테이지 데이터에서 챕터 이름들을 가져오고 chapters에 할당
         self.chapters = list(map(self.toTuple,list(self.stage_data["chapter"].keys())))
@@ -68,6 +69,9 @@ class StageSelectMenu:
         if (self.check_stage_unlock(selected_chapter,selected_stage)):
             self.menu._open(CharacterSelectMenu(self.screen,Stage(self.stage_data["chapter"][selected_chapter][selected_stage])))
         else:
+            self.showStageLockedScreen(selected_chapter, selected_stage)
+            print(selected_chapter)
+            print(selected_stage)
             print("stage locked")
         
 
@@ -76,6 +80,25 @@ class StageSelectMenu:
             return True
         return False
 
+    def showStageLockedScreen(self, chapter, stage):
+        self.menu.disable()
+        stagelocked_theme = pygame_menu.themes.THEME_DARK.copy()
+        stagelocked_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stagelocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stagelocked_theme.title_font_color = (255, 255, 255)
+        self.menu = pygame_menu.Menu(chapter+'-'+stage, self.size[0], self.size[1],
+                            theme=stagelocked_theme) # *0.7, *0.8
+        # menu.add.label(":(",font_size=250)
+        self.menu.add.image("./Image/StageLocked_v1.jpg", scale=(1, 1))
+        self.menu.add.label("")
+        self.menu.add.button('back', self.back_from_locked)
+        #self.menu.mainloop(self.screen)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+
+    def back_from_locked(self):
+        self.menu.disable()
+        StageSelectMenu(self.screen).show()
+        # self.show()
 
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
@@ -94,3 +117,5 @@ class StageSelectMenu:
             self.menu.get_current().resize(new_w,new_h)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
+            self.menu._current._widgets_surface = make_surface(0,0)
+            # print(self.menu._current._widgets_surface)
