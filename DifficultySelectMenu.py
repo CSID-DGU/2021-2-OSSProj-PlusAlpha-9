@@ -6,6 +6,8 @@ import pygame_menu
 
 from InfiniteGame import *
 from CharacterSelectMenu import *
+from pygame_menu.utils import make_surface
+
 
 class DifficultySelectMenu:
 
@@ -36,7 +38,6 @@ class DifficultySelectMenu:
         self.mode_selector.add_self_to_kwargs()  # Callbacks will receive widget as parameter
         self.menu.add.button("Character Select ->",self.to_character_select_menu)
         self.menu.add.button("BACK",self.to_menu)
-
         self.menu.mainloop(self.screen, self.check_resize)
 
 
@@ -48,6 +49,7 @@ class DifficultySelectMenu:
     
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
+        # self.menu._build_widget_surface()
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
             ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
@@ -62,4 +64,5 @@ class DifficultySelectMenu:
             self.menu.resize(new_w, new_h)
             self.menu.get_current().resize(new_w, new_h)
             self.size = window_size
+            self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')

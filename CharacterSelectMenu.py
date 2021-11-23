@@ -110,6 +110,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.resize(new_w, new_h)
+            self._build_widget_surface()
             self.size = window_size
             print(f'New menu size: {self.get_size()}')
 

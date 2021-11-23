@@ -21,6 +21,7 @@ from Bullet import Bullet
 from Defs import *
 from StageDataManager import *
 from CharacterDataManager import *
+from pygame_menu.utils import make_surface
 
 class StageGame:
 
@@ -35,6 +36,10 @@ class StageGame:
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
+
+        mytheme = pygame_menu.themes.THEME_ORANGE.copy()
+        self.menu = pygame_menu.Menu('Select Stage...', self.size[0], self.size[1],
+                            theme=mytheme)
         
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
@@ -264,6 +269,14 @@ class StageGame:
 
             #점수가 목표점수 이상이면 스테이지 클리어 화면
             if(self.score>=self.goal_score or self.stage_cleared):
+                StageDataManager.unlockNextStage(self.stage)
+                if self.stage.unlock_char != "":
+                    for character in self.character_data:
+                        if character.name == self.stage.unlock_char:
+                            if character.is_unlocked == False:
+                                character.is_unlocked = True
+                                CharacterDataManager.save(self.character_data)
+                                print(type(self.character_data), type(character))
                 self.showStageClearScreen()
                 return
 
@@ -301,13 +314,13 @@ class StageGame:
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         stageclear_theme.title_font_color = (255, 255, 255)
-        menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
+        self.menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
                             theme=stageclear_theme)
 
-        menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51)
+        self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51)
         # menu.add.label("Congratulation!") # clear!!
-        menu.add.image("./Image/Stageclear_v1.jpg", scale=(1, 1))
-        menu.add.label("")
+        self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1, 1))
+        self.menu.add.label("")
         if self.stage.unlock_char != "":
             for character in self.character_data:
                 if character.name == self.stage.unlock_char:
@@ -315,10 +328,11 @@ class StageGame:
                         character.is_unlocked = True
                         CharacterDataManager.save(self.character_data)
                         print(type(self.character_data), type(character))
-                        menu.add.label("{} unlocked".format(self.stage.unlock_char))
+                        self.menu.add.label("{} unlocked".format(self.stage.unlock_char))
 
-        menu.add.button('to Menu', self.toMenu,menu)
-        menu.mainloop(self.screen)
+        self.menu.add.button('to Menu', self.toMenu,self.menu)
+        #menu.mainloop(self.screen)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     #실패 화면
     def showGameOverScreen(self):
@@ -326,10 +340,30 @@ class StageGame:
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         gameover_theme.title_font_color = (255, 255, 255)
-        menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
+        self.menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
                             theme=gameover_theme) # *0.7, *0.8
         # menu.add.label(":(",font_size=250)
-        menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
-        menu.add.label("")
-        menu.add.button('to Menu', self.toMenu,menu)
-        menu.mainloop(self.screen)
+        self.menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
+        self.menu.add.label("")
+        self.menu.add.button('to Menu', self.toMenu,self.menu)
+        #self.menu.mainloop(self.screen)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+
+
+    def check_resize(self):
+        if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = self.screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            self.screen = pygame.display.set_mode(ratio_screen_size,
+                                                    pygame.RESIZABLE)
+            window_size = self.screen.get_size()
+            new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+            self.menu.resize(new_w, new_h)
+            # self.menu._build_widget_surface()
+            self.size = window_size
+            self.menu._current._widgets_surface = make_surface(0,0)
+            print(f'New menu size: {self.menu.get_size()}')
