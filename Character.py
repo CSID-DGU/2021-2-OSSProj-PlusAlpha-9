@@ -122,7 +122,7 @@ class Character(Object):
             if game.stage.is_boss_stage:
                 x = round(self.x + (self.sx / 2)) 
                 y = self.y
-                missile = TargetedMissile((x,y), game)
+                missile = TargetedMissile((x,y), game, self.missile_power)
                 self.missiles_fired.append(missile)
 
     def check_for_targets(self, game):
