@@ -24,7 +24,6 @@ import random
 import pygame
 import time
 from sys import *
-from math import *
 from Bullet import Bullet
 from Defs import *
 from Gun import Gun
