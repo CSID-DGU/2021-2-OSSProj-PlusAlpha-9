@@ -82,7 +82,7 @@
             "min_fire_count": 1,
             "max_fire_count": 5,
             "invincibility_period": 3.0,
-            "is_unlocked": false
+            "is_unlocked": true
         },
         {
             "name": "F5S4",
