@@ -143,27 +143,27 @@ class StageGame:
                 newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
                 
-            if(random.random()<0.01):
+            if random.random() < Default.item.value["powerup"]["spawn_rate"]:
                 new_item = PowerUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
-            if(random.random()<self.item_gen_rate):
+            if random.random() < Default.item.value["bomb"]["spawn_rate"]:
                 new_item = Bomb()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
-            if(random.random()<self.item_gen_rate):
+            if random.random() < Default.item.value["health"]["spawn_rate"]:
                 new_item = Health()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
-            if(random.random()<self.item_gen_rate):
+            if random.random() < Default.item.value["coin"]["spawn_rate"]:
                 new_item = Coin()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
-            if(random.random()<self.item_gen_rate):
+            if random.random()< Default.item.value["speedup"]["spawn_rate"]:
                 new_item = SpeedUp()
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)

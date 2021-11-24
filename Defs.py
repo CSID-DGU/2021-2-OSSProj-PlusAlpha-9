@@ -96,9 +96,6 @@ class Color(enum.Enum):
     BLUE = (0,0,255)
     GREEN = (0,255,0)
 
-class Misc(enum.Enum):
-    org_size = {"x":0, "y":0}
-
 class Default(enum.Enum):
     game = {
         "size": {
@@ -115,7 +112,7 @@ class Default(enum.Enum):
         "missile":{
             "min":1,
             "max":4,
-            "speed":25,
+            "speed":20,
             "volume":0.1
             },
     }
@@ -126,15 +123,27 @@ class Default(enum.Enum):
             "y":50
         },
         "speed":5,
+        "speedup":{
+            "spawn_rate": 0.004
+        },
         "powerup":{
+            "spawn_rate": 0.004,
             "duration":10.0
             },
         "bomb":{
+            "spawn_rate": 0.004,
             "interval":1.0,
             "size":{
                 "x":500, 
                 "y":500
-            }
+            },
+            "power":1000
+        },
+        "health":{
+            "spawn_rate": 0.002
+        },
+        "coin":{
+            "spawn_rate": 0.002
         }
     }
     animation = {

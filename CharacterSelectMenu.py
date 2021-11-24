@@ -62,19 +62,28 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
         self.item_description_widget = self.add.label(title='')
-        self.fire_rate = self.add.progress_bar(
-            title="FireRate",
-            default=int((0.3/self.character_data[0].org_fire_interval)*100),
+
+        self.f1 = self.add.frame_v(350, 180, margin=(10, 0))
+        self.power = self.f1.pack(self.add.progress_bar(
+            title="Power",
+            default=int((self.character_data[0].missile_power/500)*100),
             progress_text_enabled = False,
             box_progress_color =(200,60,50,255)
-            
-        )
-        self.velocity = self.add.progress_bar(
+        ), ALIGN_RIGHT)
+        self.fire_rate = self.f1.pack(self.add.progress_bar(
+            title="Fire Rate",
+            default=int((0.3/self.character_data[0].org_fire_interval)*100),
+            progress_text_enabled = False,
+            box_progress_color =(0,60,200,255)
+        ), ALIGN_RIGHT)
+        self.velocity = self.f1.pack(self.add.progress_bar(
             title="Mobility",
             default=int((self.character_data[0].org_velocity/25)*100),
             progress_text_enabled = False,
             box_progress_color = (50,200,50,255)
-        )
+        ), ALIGN_RIGHT)
+
+
         self.add.button("PLAY",self.start_game)
         self.add.button("BACK",pygame_menu.events.BACK)
         self._update_from_selection(int(self.character_selector.get_value()[0][1]))
@@ -132,6 +141,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         """
         self.current = selected_value
         self.image_widget.set_image(self.character_imgs[selected_value])
+        self.power.set_value(int((self.character_data[selected_value].missile_power/500)*100))
         self.fire_rate.set_value(int((0.3/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/25)*100))
         self.item_description_widget.set_title(self.character_data[selected_value].name)
