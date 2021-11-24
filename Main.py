@@ -127,8 +127,6 @@ if __name__ == '__main__':
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             menu.resize(new_w, new_h)
             size = window_size
-            Misc.org_size.value["x"] = size[0]
-            Misc.org_size.value["y"] = size[1]
             print(f'New menu size: {menu.get_size()}')
              
 
