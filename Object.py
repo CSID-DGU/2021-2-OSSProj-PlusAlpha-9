@@ -5,7 +5,7 @@ from Defs import *
 class Object:
     def __init__(self, img_path, size, velocity, anim_path = []):
         self.boundary = pygame.display.get_surface().get_size()
-        self.org_boundary = [Misc.org_size.value["x"],Misc.org_size.value["y"]] 
+        self.org_boundary = [Default.game.value["size"]["x"],Default.game.value["size"]["y"]]
         self.x =0
         self.y=0
         self.img_path = img_path

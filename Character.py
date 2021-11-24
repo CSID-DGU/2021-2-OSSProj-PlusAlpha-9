@@ -7,7 +7,7 @@ from Effect import *
 
 class Character(Object):
     def __init__(self, name, img_path, velocity, 
-                missile_img, missile_size, missile_sfx, 
+                missile_img, missile_size, missile_sfx, missile_power,
                 fire_interval,
                 is_unlocked):
         super().__init__(img_path, Default.character.value["size"], velocity)
@@ -18,6 +18,7 @@ class Character(Object):
         self.missiles_fired = []
         self.missile_img = missile_img
         self.missile_size = missile_size
+        self.missile_power = missile_power
         self.missile_sfx_path = missile_sfx
         self.missile_sfx =  pygame.mixer.Sound(missile_sfx)
         self.missile_sfx.set_volume(Default.character.value["missile"]["volume"])
@@ -103,7 +104,7 @@ class Character(Object):
         self.last_fired = time.time()
         self.missile_sfx.play()
         for num in range(1, self.fire_count+1):
-            missile = Missile(self.missile_img, self.missile_size, self.fire_interval)
+            missile = Missile(self.missile_img, self.missile_size, self.missile_power)
             missile.change_size()
             div_factor = self.fire_count + 1
             missile.x = round((self.x + (num * (self.sx / div_factor))) - missile.sx / 2) 
@@ -115,7 +116,7 @@ class Character(Object):
         if len(targets) > 0:
             x = round(self.x + (self.sx / 2)) 
             y = self.y
-            missile = TargetedMissile((x,y), game)
+            missile = TargetedMissile((x,y), game, self.missile_power)
             self.missiles_fired.append(missile)
         elif hasattr(game, "stage"):
             if game.stage.is_boss_stage:
@@ -158,7 +159,8 @@ class Character(Object):
             "velocity": self.org_velocity,
             "missile_img": self.missile_img,
             "missile_size": self.missile_size,
-            "missile_sfx":self.missile_sfx_path,
+            "missile_sfx": self.missile_sfx_path,
+            "missile_power": self.missile_power,
             "fire_interval": self.org_fire_interval,
             "is_unlocked": self.is_unlocked
         }
