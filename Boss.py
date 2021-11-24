@@ -23,6 +23,7 @@ SOFTWARE.'''
 import random
 import pygame
 import time
+from math import *
 from sys import *
 from Bullet import Bullet
 from Defs import *
@@ -232,13 +233,13 @@ class Boss():
     def check(self,player,game):
         for bullet in player.missiles_fired:
             if(bullet.check_crash(self)):
-                self.health -= 1000
+                self.health -= bullet.power
                 player.missiles_fired.remove(bullet)
         for effect in game.effect_list:
             if effect.check_crash(self):
                 if time.time()-self.last_bombed > self.hit_interval:
                     self.last_bombed = time.time()
-                    self.health -= 2000
+                    self.health -= Default.item.value["bomb"]["power"]
         # checks if it is supposed to die
         if self.health <= 0:
             game.stage_cleared = True

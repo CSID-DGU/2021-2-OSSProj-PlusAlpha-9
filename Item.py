@@ -14,11 +14,8 @@ class Item(Object):
 
         self.spawned = time.time()
         self.blink_count = 0.0
-
         self.inc = 0.0
-        self.delay = 10.0
         self.inc_delay = 0.0
-        self.anim_speed = 0.5
 
     def move(self, game): 
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
@@ -40,11 +37,11 @@ class Item(Object):
         elif self.y >= self.boundary[1] - self.sy:
             self.y_inv = True
         
-        self.inc += self.anim_speed
+        self.inc += Default.animation.value["speed"]
         self.inc = Utils.clamp(self.inc, 0.0, self.anim_count-1)
         if self.inc >= self.anim_count-1:
-            self.inc_delay += self.anim_speed
-            if self.inc_delay >= self.delay:
+            self.inc_delay += Default.animation.value["speed"]
+            if self.inc_delay >= Default.animation.value["interval"]:
                 self.inc = 0.0
                 self.inc_delay = 0.0
 
