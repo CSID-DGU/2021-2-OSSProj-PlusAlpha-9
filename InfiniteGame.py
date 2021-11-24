@@ -67,7 +67,7 @@ class InfiniteGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
-        self.character.fire_count = self.character.min_fire_count
+        self.character.fire_count = Default.character.value["missile"]["min"]
         self.character.missiles_fired = []
         self.character.bomb_count = 0
         self.character.auto_target = False

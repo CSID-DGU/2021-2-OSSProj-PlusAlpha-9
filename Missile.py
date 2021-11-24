@@ -5,10 +5,10 @@ from Defs import *
 from pygame.math import Vector2
 
 class Missile(Object):
-    def __init__(self, img_path, size, velocity, interval):
+    def __init__(self, img_path, size, interval):
         self.boundary = pygame.display.get_surface().get_size()
         
-        super().__init__(img_path, size, velocity)
+        super().__init__(img_path, size, Default.character.value["missile"]["speed"])
         self.interval = interval
 
     def update(self, game):
@@ -18,7 +18,7 @@ class Missile(Object):
 
 class TargetedMissile(Missile):
     def __init__(self, position, game):
-        super().__init__(Images.weapon_target_missile.value, {"x":15, "y":25}, 20, 0.5)
+        super().__init__(Images.weapon_target_missile.value, {"x":15, "y":25}, 0.5)
         self.game = game
         self.vel = Vector2(0,0)
         self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)  # The position of the bullet.
