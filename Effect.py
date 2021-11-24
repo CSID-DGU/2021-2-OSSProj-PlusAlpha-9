@@ -12,8 +12,8 @@ class Effect(Object):
         self.anim_speed = 0.4
 
 class Explosion(Effect):
-    def __init__(self, radius):
-        super().__init__(Images.anim_explosion.value, radius, 5)
+    def __init__(self):
+        super().__init__(Images.anim_explosion.value, Default.item.value["bomb"]["size"], 5)
     
     def move(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):

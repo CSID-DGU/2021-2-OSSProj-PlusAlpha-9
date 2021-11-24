@@ -6,11 +6,11 @@ from Defs import *
 from Effect import *
 
 class Character(Object):
-    def __init__(self, name, img_path, size, velocity, 
-                missile_img, missile_size, missile_velocity, missile_sfx, 
-                fire_interval, min_fire_count, max_fire_count, 
-                invincibility_period, is_unlocked):
-        super().__init__(img_path, size, velocity)
+    def __init__(self, name, img_path, velocity, 
+                missile_img, missile_size, missile_sfx, 
+                fire_interval,
+                is_unlocked):
+        super().__init__(img_path, Default.character.value["size"], velocity)
 
         self.name = name
         self.last_fired = 0.0
@@ -18,31 +18,24 @@ class Character(Object):
         self.missiles_fired = []
         self.missile_img = missile_img
         self.missile_size = missile_size
-        self.missile_velocity = missile_velocity
         self.missile_sfx_path = missile_sfx
         self.missile_sfx =  pygame.mixer.Sound(missile_sfx)
-        self.missile_sfx.set_volume(0.1)
+        self.missile_sfx.set_volume(Default.character.value["missile"]["volume"])
 
         self.org_fire_interval = fire_interval
         self.fire_interval = fire_interval
-        self.min_fire_count = min_fire_count
-        self.max_fire_count = max_fire_count
-        self.fire_count = self.min_fire_count
+        self.fire_count = Default.character.value["missile"]["min"]
 
         self.last_crashed = 0.0
-        self.invincibility_period = invincibility_period
         self.is_unlocked = is_unlocked
 
         self.blink_count = 0.0
 
         self.is_boosted = False
-        self.powerup_duration = 10.0
         self.org_velocity = velocity
         self.org_fire_interval = fire_interval
-        self.bomb_interval = 1.0
 
         self.bomb_count = 0
-        self.bomb_radius = {"x":500, "y":500}
 
         self.auto_target = False
 
@@ -73,19 +66,19 @@ class Character(Object):
                     self.shoot_targeted(game)
         if key_pressed[pygame.K_a]:
             if self.bomb_count > 0:
-                if time.time() - self.last_bomb > self.bomb_interval:
+                if time.time() - self.last_bomb > Default.item.value["bomb"]["interval"]:
                     self.use_bomb(game)
                     self.bomb_count-=1
         if self.is_boosted == True:
-            if time.time() - self.boosted > self.powerup_duration:
+            if time.time() - self.boosted > Default.item.value["powerup"]["duration"]:
                 self.velocity = self.org_velocity
                 self.fire_interval = self.org_fire_interval
                 self.is_boosted = False
         if self.is_collidable == False:
             time_passed = time.time() - self.last_crashed
-            self.blink_count += Misc.blinking_step.value
+            self.blink_count += Default.animation.value["blink"]["speed"]
             if game.life > 0:
-                if(self.blink_count >= Misc.blinking_speed.value):
+                if(self.blink_count >= Default.animation.value["blink"]["frame"]):
                     if(self.is_transparent == False):
                         self.img = self.img_trans
                         self.blink_count = 0.0
@@ -94,7 +87,7 @@ class Character(Object):
                         self.img = self.img_copy
                         self.blink_count = 0.0
                         self.is_transparent = False
-                if time_passed > self.invincibility_period:
+                if time_passed > Default.character.value["invincible_period"]:
                     self.is_collidable = True
                     if(self.is_transparent):
                         self.img = self.img_copy
@@ -109,9 +102,8 @@ class Character(Object):
     def shoot(self):
         self.last_fired = time.time()
         self.missile_sfx.play()
-        fire_count = Utils.clamp(self.fire_count, 1, 5)
         for num in range(1, self.fire_count+1):
-            missile = Missile(self.missile_img, self.missile_size, self.missile_velocity, self.fire_interval)
+            missile = Missile(self.missile_img, self.missile_size, self.fire_interval)
             missile.change_size()
             div_factor = self.fire_count + 1
             missile.x = round((self.x + (num * (self.sx / div_factor))) - missile.sx / 2) 
@@ -141,7 +133,7 @@ class Character(Object):
 
     def use_bomb(self, game):
         self.last_bomb = time.time()
-        explosion = Explosion(self.bomb_radius)
+        explosion = Explosion()
         player_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
         explosion.set_XY((player_location["x"] - explosion.sx/2, player_location["y"]- explosion.sy/2))
         game.effect_list.append(explosion)
@@ -163,15 +155,10 @@ class Character(Object):
         return {
             "name": self.name,
             "img_path": self.img_path,
-            "size": self.size,
             "velocity": self.org_velocity,
             "missile_img": self.missile_img,
             "missile_size": self.missile_size,
-            "missile_velocity":self.missile_velocity,
             "missile_sfx":self.missile_sfx_path,
             "fire_interval": self.org_fire_interval,
-            "min_fire_count": self.min_fire_count,
-            "max_fire_count": self.max_fire_count,
-            "invincibility_period": self.invincibility_period,
             "is_unlocked": self.is_unlocked
         }
