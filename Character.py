@@ -6,39 +6,41 @@ from Defs import *
 from Effect import *
 
 class Character(Object):
-    def __init__(self, name, img_path, velocity, 
-                missile_img, missile_size, missile_sfx, missile_power,
-                fire_interval,
-                is_unlocked):
+    def __init__(self, name, img_path, velocity, missile_img, missile_size, 
+                missile_sfx, missile_power, fire_interval, is_unlocked):
         super().__init__(img_path, Default.character.value["size"], velocity)
-
         self.name = name
-        self.last_fired = 0.0
-        self.last_bomb = 0.0
-        self.missiles_fired = []
+        self.org_velocity = velocity
         self.missile_img = missile_img
         self.missile_size = missile_size
-        self.missile_power = missile_power
         self.missile_sfx_path = missile_sfx
         self.missile_sfx =  pygame.mixer.Sound(missile_sfx)
         self.missile_sfx.set_volume(Default.character.value["missile"]["volume"])
-
+        self.missile_power = missile_power
         self.org_fire_interval = fire_interval
         self.fire_interval = fire_interval
-        self.fire_count = Default.character.value["missile"]["min"]
-
-        self.last_crashed = 0.0
         self.is_unlocked = is_unlocked
 
-        self.blink_count = 0.0
-
-        self.is_boosted = False
-        self.org_velocity = velocity
-        self.org_fire_interval = fire_interval
-
+    def reinitialize(self, size):
+        # 캐릭터 사이즈/위치 초기화
+        self.on_resize(size)
+        self.set_XY((size[0]/2-(self.sx/2),size[1]-self.sy))
+        # 폭탄/발사체 초기화
         self.bomb_count = 0
-
+        self.fire_count = Default.character.value["missile"]["min"]
+        self.missiles_fired = []
+        # 마지막 발사/폭탄/충돌 시간 초기화
+        self.last_fired = 0.0
+        self.last_bomb = 0.0
+        self.last_crashed = 0.0
+        # 깜빡임 애니메이션 카운터 초기화
+        self.blink_count = 0.0
+        # 유도탄 발사 여부 초기화
         self.auto_target = False
+        # 이동/발사 속도 초기화
+        self.is_boosted = False
+        self.velocity = self.org_velocity
+        self.fire_interval = self.org_fire_interval
 
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
