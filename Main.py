@@ -1,16 +1,9 @@
 import pygame
-import random
-import time
-import json
 import pymysql
 from collections import OrderedDict
 from datetime import datetime
 import pygame_menu 
 from os import system
-from InfiniteGame import InfiniteGame
-from Missile import Missile
-from StageGame import StageGame
-from Stage import Stage
 from Character import *
 from Defs import *
 from StageDataManager import *
@@ -67,16 +60,6 @@ def show_help():
     menu.clear()
     menu.add.button('Back',back)
     menu.add.image(image_path='./Image/howtoplay.png', angle=Display.angle, scale=Display.help_scale)
-
-def on_resize() -> None:
-    """
-    Function checked if the window is resized.
-    """
-    window_size = surface.get_size()
-    new_w, new_h = 1 * window_size[0], 1 * window_size[1]
-    menu.resize(new_w, new_h)
-    size = window_size
-    # print(f'New menu size: {menu.get_size()}')
 
 def show_difficulty_select_menu():
     DifficultySelectMenu(screen).show()

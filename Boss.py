@@ -193,7 +193,7 @@ class Boss():
             pygame.draw.circle(screen, (255,0,0), (int(gun.x),int(gun.y)), 10)
 
         #체력 표시
-        font = pygame.font.Font(Fonts.font_default.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
+        font = pygame.font.Font(Default.font.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
         boss_health_text = font.render("HP : %i/%i" %(self.health, self.max_health), True, self.colors[self.phase]) # 폰트렌더링(문자열,안티앨리어싱,컬러)
         screen.blit(boss_health_text,(self.x,self.y-20))
 
