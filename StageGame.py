@@ -79,7 +79,7 @@ class StageGame:
             self.clock.tick(30)
             
             #화면 흰색으로 채우기
-            self.screen.fill((255,255,255))
+            self.screen.fill(Color.WHITE.value)
             # 배경 크기 변경 처리 및 그리기
             # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
             background1 =  pygame.image.load(self.background_image)
@@ -210,7 +210,7 @@ class StageGame:
                         self.score += 10
                         if missile in self.character.missiles_fired:
                             self.character.missiles_fired.remove(missile)
-                        self.mobList.remove(mob)
+                        mob.destroy(self)
 
             #몹과 플레이어 충돌 감지
             for mob in list(self.mobList):
@@ -220,7 +220,7 @@ class StageGame:
                         self.character.is_collidable = False
                         print("crash!")
                         self.life -= 1
-                        self.mobList.remove(mob)
+                        mob.destroy(self)
                    
             #화면 그리기
             #효과 그리기(폭탄 아이템)
@@ -242,13 +242,13 @@ class StageGame:
                         i.crosshair.show(self.screen)
 
             #점수와 목숨 표시
-            font = pygame.font.Font(Fonts.font_default.value, self.size[0]//40)
-            score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, (255,255,0)) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            font = pygame.font.Font(Default.font.value, self.size[0]//40)
+            score_life_text = font.render("Score : {} Life: {} Bomb: {}".format(self.score,self.life,self.character.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
             playTime = (time.time() - self.startTime)
-            time_text = font.render("Time : {:.2f}".format(playTime), True, (255,255,0))
+            time_text = font.render("Time : {:.2f}".format(playTime), True, Color.YELLOW.value)
             self.screen.blit(time_text,(self.size[0]//2,5))
 
             # 화면갱신
@@ -300,7 +300,7 @@ class StageGame:
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-        stageclear_theme.title_font_color = (255, 255, 255)
+        stageclear_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
                             theme=stageclear_theme)
 
@@ -326,7 +326,7 @@ class StageGame:
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-        gameover_theme.title_font_color = (255, 255, 255)
+        gameover_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
                             theme=gameover_theme) # *0.7, *0.8
         # menu.add.label(":(",font_size=250)
