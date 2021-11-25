@@ -8,7 +8,7 @@ import random
 
 class Item(Object):
     def __init__(self, img_arr):
-        super().__init__(img_arr[0], Default.item.value["size"], Default.item.value["speed"], img_arr)
+        super().__init__(img_arr[0], Default.item.value["size"], Default.item.value["velocity"], img_arr)
         self.x_inv = random.choice([True, False])
         self.y_inv = False
 
@@ -69,7 +69,7 @@ class Item(Object):
 
 class Bomb(Item):
     def __init__(self):
-        super().__init__(Images.item_bomb.value)
+        super().__init__(Default.item.value["bomb"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -79,7 +79,7 @@ class Bomb(Item):
 
 class Coin(Item):
     def __init__(self):
-        super().__init__(Images.item_coin.value)
+        super().__init__(Default.item.value["coin"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -89,7 +89,7 @@ class Coin(Item):
 
 class Health(Item):
     def __init__(self):
-        super().__init__(Images.item_health.value)
+        super().__init__(Default.item.value["health"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -99,7 +99,7 @@ class Health(Item):
 
 class PowerUp(Item):
     def __init__(self):
-        super().__init__(Images.item_powerup.value)
+        super().__init__(Default.item.value["powerup"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -114,7 +114,7 @@ class PowerUp(Item):
 
 class SpeedUp(Item):
     def __init__(self):
-        super().__init__(Images.item_speedup.value)
+        super().__init__(Default.item.value["speedup"]["frames"])
         
     def use(self, game):
         if self.is_collidable == True:

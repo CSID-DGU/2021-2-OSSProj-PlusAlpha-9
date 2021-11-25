@@ -43,8 +43,10 @@ class Character(Object):
         self.fire_interval = self.org_fire_interval
 
     def update(self, game):
+        # 게임 실행 중 화면 크기 변경 감지
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game.size)
+        # 키 입력 감지
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
             self.x -= self.velocity
@@ -96,6 +98,7 @@ class Character(Object):
                         self.img = self.img_copy
         else:
             self.img = self.img_copy
+        # 화면 밖으로 나간 미사일 삭제
         for missile in list(self.missiles_fired):
             missile.update(game)
             if missile.y < -missile.sy:
