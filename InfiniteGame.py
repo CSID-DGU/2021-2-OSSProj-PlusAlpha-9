@@ -9,17 +9,12 @@ from typing import Sized
 import pygame
 import random
 import pygame_menu
-import pymysql
-import json
 from collections import OrderedDict
-
 from pygame_menu.locals import ALIGN_CENTER
-from Character import Character
 from Item import *
 from Boss import Boss
 from Mob import Mob
 from Bullet import Bullet
-from Missile import Crosshair
 from Effect import *
 from Defs import *
 from StageDataManager import *
@@ -52,7 +47,6 @@ class InfiniteGame:
         self.life = 3
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
-        self.item_gen_rate = 0.004
         self.mob_image = "./Image/Catus.png"
         self.background_image = "./Image/Space_modified_v1.jpg"
         self.background_music = "./Sound/Space.wav"
@@ -65,16 +59,8 @@ class InfiniteGame:
         # self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
         self.enemyBullets =[]
 
-        # 5. 캐릭터 위치 초기화
-        self.character.set_XY((self.size[0]/2-character.sx/2,self.size[1]-character.sy))
-        self.character.fire_count = Default.character.value["missile"]["min"]
-        self.character.missiles_fired = []
-        self.character.bomb_count = 0
-        self.character.auto_target = False
-        if self.character.is_boosted == True:
-            self.character.velocity = self.character.org_velocity
-            self.character.fire_interval = self.character.org_fire_interval
-            self.character.is_boosted = False
+        # 5. 캐릭터 초기화
+        self.character.reinitialize(self.size)
 
     def main(self):
         # 메인 이벤트

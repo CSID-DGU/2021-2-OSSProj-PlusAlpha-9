@@ -9,13 +9,9 @@ from typing import Sized
 import pygame
 import random
 import pygame_menu
-import json
 from collections import OrderedDict
-from Character import Character
 from Item import *
-from Effect import Effect
 from Boss import Boss
-from Missile import Crosshair
 from Mob import Mob
 from Bullet import Bullet
 from Defs import *
@@ -56,7 +52,6 @@ class StageGame:
         self.life = 3
         self.startTime = time.time()
         self.mob_gen_rate = 0.01
-        self.item_gen_rate = 0.004
         self.mob_image = stage.mob_image
         self.background_image = stage.background_image
         self.background_music = stage.background_music
@@ -69,16 +64,8 @@ class StageGame:
             self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
         self.enemyBullets =[]
 
-        # 5. 캐릭터 위치 초기화
-        self.character.set_XY((self.size[0]/2-(character.sx/2),self.size[1]-character.sy))
-        self.character.fire_count = Default.character.value["missile"]["min"]
-        self.character.missiles_fired = []
-        self.character.bomb_count = 0
-        self.character.auto_target = False
-        if self.character.is_boosted == True:
-            self.character.velocity = self.character.org_velocity
-            self.character.fire_interval = self.character.org_fire_interval
-            self.character.is_boosted = False
+        # 5. 캐릭터 초기화
+        self.character.reinitialize(self.size)
         
     def main(self):
         # 메인 이벤트
