@@ -13,7 +13,7 @@ class About:
         self.size = screen.get_size()
         self.screen = screen
 
-        self.menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+        self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.about.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         self.mytheme = pygame_menu.themes.THEME_SOLARIZED.copy()
         self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
         self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
@@ -29,7 +29,7 @@ class About:
     def show(self):
         self.menu.clear()
         self.menu.add.vertical_margin(80)
-        self.frame_v = self.menu.add.frame_v(400, 350, margin=(10, 0), background_color = Color.WHITE.value)
+        self.frame_v = self.menu.add.frame_v(400, 350, margin=(10, 0))
         self.frame_v.pack(self.menu.add.label("   - AUTHORS -   ", selectable=False), ALIGN_CENTER)
         for label in Default.about.value["authors"]:
             self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
