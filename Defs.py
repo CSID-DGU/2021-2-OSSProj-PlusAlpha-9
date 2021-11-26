@@ -29,9 +29,9 @@ class Sounds(enum.Enum):
     sfx_hit = "./Sound/puck.wav"
 
 class Color(enum.Enum):
-    RED = (255,0,0)
-    BLUE = (0,0,255)
-    GREEN = (0,255,0)
+    RED = (200,60,50)
+    BLUE = (0,60,200)
+    GREEN = (50,200,50)
     YELLOW = (255,255,0)
     WHITE = (255,255,255)
     TRANSPARENT = (255,255,255,128)
@@ -181,6 +181,16 @@ class Default(enum.Enum):
         },
         "interval":10.0,
         "speed":0.5
+    }
+    about = {
+        "authors": [
+            "Jibmin Jung",
+            "Heesu Ju", 
+            "Seyeong Lee",
+        ],
+        "sprites": [
+            "MillionthVector"
+        ]
     }
 
 class Utils():
