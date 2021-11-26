@@ -5,6 +5,7 @@ from sys import version
 class Images(enum.Enum):
     start = "./Image/StartImage.png"
     how_to_play = "./Image/howtoplay.png"
+    about = "./Image/AboutPage.jpg"
     background_desert = "./Image/DESERT_modified_v3.jpg"
     background_antarctic = "./Image/Antarctic_modified_v2.jpg"
     enemy_scrophion = "./Image/scorphion1-1.png"
