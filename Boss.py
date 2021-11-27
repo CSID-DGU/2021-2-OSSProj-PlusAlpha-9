@@ -23,6 +23,7 @@ SOFTWARE.'''
 import random
 import pygame
 import time
+from math import *
 from sys import *
 from Bullet import Bullet
 from Defs import *
@@ -192,7 +193,7 @@ class Boss():
             pygame.draw.circle(screen, (255,0,0), (int(gun.x),int(gun.y)), 10)
 
         #체력 표시
-        font = pygame.font.Font(Fonts.font_default.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
+        font = pygame.font.Font(Default.font.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
         boss_health_text = font.render("HP : %i/%i" %(self.health, self.max_health), True, self.colors[self.phase]) # 폰트렌더링(문자열,안티앨리어싱,컬러)
         screen.blit(boss_health_text,(self.x,self.y-20))
 
@@ -232,13 +233,13 @@ class Boss():
     def check(self,player,game):
         for bullet in player.missiles_fired:
             if(bullet.check_crash(self)):
-                self.health -= 1000
+                self.health -= bullet.power
                 player.missiles_fired.remove(bullet)
         for effect in game.effect_list:
             if effect.check_crash(self):
                 if time.time()-self.last_bombed > self.hit_interval:
                     self.last_bombed = time.time()
-                    self.health -= 2000
+                    self.health -= Default.item.value["bomb"]["power"]
         # checks if it is supposed to die
         if self.health <= 0:
             game.stage_cleared = True

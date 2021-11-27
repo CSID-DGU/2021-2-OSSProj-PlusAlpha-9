@@ -5,7 +5,7 @@ from Defs import *
 class Object:
     def __init__(self, img_path, size, velocity, anim_path = []):
         self.boundary = pygame.display.get_surface().get_size()
-        self.org_boundary = [Misc.org_size.value["x"],Misc.org_size.value["y"]] 
+        self.org_boundary = [Default.game.value["size"]["x"],Default.game.value["size"]["y"]]
         self.x =0
         self.y=0
         self.img_path = img_path
@@ -44,7 +44,7 @@ class Object:
             img = pygame.image.load(self.anim_path[idx]).convert_alpha()
             img = pygame.transform.scale(img,(x,y))
             img_copy = img.copy()
-            img_copy.fill((255,255,255,128), None, pygame.BLEND_RGBA_MULT)
+            img_copy.fill(Color.TRANSPARENT.value, None, pygame.BLEND_RGBA_MULT)
             if len(self.anim_list) < len(self.anim_path):
                 self.anim_list.append(img)
                 self.anim_trans_list.append(img_copy)
@@ -70,7 +70,7 @@ class Object:
         self.img = pygame.transform.scale(self.img,(x,y)) # 그림의 크기를 조정한다.
         self.img_copy = self.img.copy()
         self.img_trans = self.img.copy()
-        self.img_trans.fill((255,255,255,128), None, pygame.BLEND_RGBA_MULT)
+        self.img_trans.fill(Color.TRANSPARENT.value, None, pygame.BLEND_RGBA_MULT)
         self.sx, self.sy = self.img.get_size()
         if self.is_transparent:
             self.img = self.img_trans

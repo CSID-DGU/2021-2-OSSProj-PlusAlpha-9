@@ -5,11 +5,10 @@ from Defs import *
 from pygame.math import Vector2
 
 class Missile(Object):
-    def __init__(self, img_path, size, interval):
+    def __init__(self, img_path, size, power):
         self.boundary = pygame.display.get_surface().get_size()
-        
         super().__init__(img_path, size, Default.character.value["missile"]["speed"])
-        self.interval = interval
+        self.power = power
 
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
@@ -17,8 +16,8 @@ class Missile(Object):
         self.y -= self.velocity
 
 class TargetedMissile(Missile):
-    def __init__(self, position, game):
-        super().__init__(Images.weapon_target_missile.value, {"x":15, "y":25}, 0.5)
+    def __init__(self, position, game, power):
+        super().__init__(Images.weapon_target_missile.value, {"x":15, "y":25}, power)
         self.game = game
         self.vel = Vector2(0,0)
         self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)  # The position of the bullet.
@@ -97,8 +96,8 @@ class TargetedMissile(Missile):
 
 
 class Crosshair(Object):
-    def __init__(self, target, radius = {"x":100, "y":100}):
-        super().__init__(Images.effect_crossair.value, radius, 5)
+    def __init__(self, target):
+        super().__init__(Default.effect.value["crosshair"]["image"], Default.effect.value["crosshair"]["size"], Default.effect.value["crosshair"]["velocity"])
         self.target = target
     
     def move(self, game):

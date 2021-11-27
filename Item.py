@@ -8,17 +8,14 @@ import random
 
 class Item(Object):
     def __init__(self, img_arr):
-        super().__init__(img_arr[0], Default.item.value["size"], Default.item.value["speed"], img_arr)
+        super().__init__(img_arr[0], Default.item.value["size"], Default.item.value["velocity"], img_arr)
         self.x_inv = random.choice([True, False])
         self.y_inv = False
 
         self.spawned = time.time()
         self.blink_count = 0.0
-
         self.inc = 0.0
-        self.delay = 10.0
         self.inc_delay = 0.0
-        self.anim_speed = 0.5
 
     def move(self, game): 
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
@@ -40,11 +37,11 @@ class Item(Object):
         elif self.y >= self.boundary[1] - self.sy:
             self.y_inv = True
         
-        self.inc += self.anim_speed
+        self.inc += Default.animation.value["speed"]
         self.inc = Utils.clamp(self.inc, 0.0, self.anim_count-1)
         if self.inc >= self.anim_count-1:
-            self.inc_delay += self.anim_speed
-            if self.inc_delay >= self.delay:
+            self.inc_delay += Default.animation.value["speed"]
+            if self.inc_delay >= Default.animation.value["interval"]:
                 self.inc = 0.0
                 self.inc_delay = 0.0
 
@@ -72,7 +69,7 @@ class Item(Object):
 
 class Bomb(Item):
     def __init__(self):
-        super().__init__(Images.item_bomb.value)
+        super().__init__(Default.item.value["bomb"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -82,7 +79,7 @@ class Bomb(Item):
 
 class Coin(Item):
     def __init__(self):
-        super().__init__(Images.item_coin.value)
+        super().__init__(Default.item.value["coin"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -92,7 +89,7 @@ class Coin(Item):
 
 class Health(Item):
     def __init__(self):
-        super().__init__(Images.item_health.value)
+        super().__init__(Default.item.value["health"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -102,7 +99,7 @@ class Health(Item):
 
 class PowerUp(Item):
     def __init__(self):
-        super().__init__(Images.item_powerup.value)
+        super().__init__(Default.item.value["powerup"]["frames"])
 
     def use(self, game):
         if self.is_collidable == True:
@@ -117,7 +114,7 @@ class PowerUp(Item):
 
 class SpeedUp(Item):
     def __init__(self):
-        super().__init__(Images.item_speedup.value)
+        super().__init__(Default.item.value["speedup"]["frames"])
         
     def use(self, game):
         if self.is_collidable == True:

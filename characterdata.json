@@ -10,6 +10,7 @@
                 "y": 70
             },
             "missile_sfx": "./Sound/weapon-sound8.wav",
+            "missile_power": 350,
             "fire_interval": 0.8,
             "is_unlocked": true
         },
@@ -23,6 +24,7 @@
                 "y": 70
             },
             "missile_sfx": "./Sound/weapon-sound8.wav",
+            "missile_power": 300,
             "fire_interval": 1.3,
             "is_unlocked": true
         },
@@ -36,6 +38,7 @@
                 "y": 70
             },
             "missile_sfx": "./Sound/weapon-sound8.wav",
+            "missile_power": 350,
             "fire_interval": 2.0,
             "is_unlocked": true
         },
@@ -49,8 +52,9 @@
                 "y": 70
             },
             "missile_sfx": "./Sound/weapon-sound8.wav",
+            "missile_power": 450,
             "fire_interval": 0.6,
-            "is_unlocked": true
+            "is_unlocked": false
         },
         {
             "name": "F5S4",
@@ -62,6 +66,7 @@
                 "y": 70
             },
             "missile_sfx": "./Sound/weapon-sound8.wav",
+            "missile_power": 480,
             "fire_interval": 0.4,
             "is_unlocked": false
         },
@@ -75,8 +80,9 @@
                 "y": 120
             },
             "missile_sfx": "./Sound/weapon-sound8.wav",
+            "missile_power": 500,
             "fire_interval": 0.3,
-            "is_unlocked": true
+            "is_unlocked": false
         }
     ]
 }
