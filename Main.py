@@ -11,6 +11,7 @@ from CharacterDataManager import *
 from Rank import Rank
 from StageSelectMenu import *
 from LeaderBoardMenu import *
+from About import *
 from DifficultySelectMenu import *
 
 class Display:
@@ -50,6 +51,7 @@ def back():
     menu.clear()
     menu.add.button('Select mode', show_mode)
     menu.add.button('Help',show_help)
+    menu.add.button('About',show_info_menu)
     menu.add.button('Rank',show_rank)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
@@ -60,6 +62,9 @@ def show_help():
     menu.clear()
     menu.add.button('Back',back)
     menu.add.image(image_path='./Image/howtoplay.png', angle=Display.angle, scale=Display.help_scale)
+
+def show_info_menu():
+    About(screen).show()
 
 def show_difficulty_select_menu():
     DifficultySelectMenu(screen).show()
@@ -73,6 +78,7 @@ def show_rank():
 #메인 메뉴 구성
 menu.add.button('Select mode', show_mode)
 menu.add.button('Help',show_help)
+menu.add.button('About',show_info_menu)
 menu.add.button('Rank',show_rank)
 menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
