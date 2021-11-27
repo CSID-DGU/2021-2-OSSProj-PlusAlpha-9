@@ -21,7 +21,7 @@
 				"./Image/DESERT_modified_v3.jpg",
 				"./Sound/ariant.wav",
 				0,
-				0,
+				1,
 				"./Image/scorphion1-1.png",
 				[],
 				"",
@@ -34,7 +34,7 @@
 				"./Image/DESERT_modified_v3.jpg",
 				"./Sound/ariant.wav",
 				1,
-				0,
+				1,
 				"./Image/scorphion1-1.png",
 				[
 					"Image/Boss/Body/tutankhamun_1.png",

@@ -36,6 +36,8 @@ class Color(enum.Enum):
     YELLOW = (255,255,0)
     WHITE = (255,255,255)
     TRANSPARENT = (255,255,255,128)
+    GRAY = (220,220,220)
+    BLACK = (0,0,0)
 
 class Default(enum.Enum):
     game = {
