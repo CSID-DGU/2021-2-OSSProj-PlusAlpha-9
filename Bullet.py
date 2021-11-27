@@ -1,5 +1,6 @@
 import pygame
 from Object import Object
+from pygame.math import Vector2
 
 from math import *
 class Bullet(Object):
@@ -16,6 +17,9 @@ class Bullet(Object):
                             (sqrt((target_loc[0] - fire_loc[0]) ** 2 +
                                         (target_loc[1] - fire_loc[1]) ** 2)))
 
+        direction = Vector2(self.dx,self.dy)
+        radius, angle = direction.as_polar()
+        self.img = pygame.transform.rotozoom(self.img, -angle - 90.0, 1)
         self.x = fire_loc[0]
         self.y = fire_loc[1]
 

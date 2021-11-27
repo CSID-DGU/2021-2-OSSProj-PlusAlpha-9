@@ -71,7 +71,7 @@ class StageGame:
 
         # 5. 캐릭터 위치 초기화
         self.character.set_XY((self.size[0]/2-(character.sx/2),self.size[1]-character.sy))
-        self.character.fire_count = self.character.min_fire_count
+        self.character.fire_count = Default.character.value["missile"]["min"]
         self.character.missiles_fired = []
         self.character.bomb_count = 0
         self.character.auto_target = False
@@ -116,6 +116,7 @@ class StageGame:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
+                        self.life +=1
                 if event.type == pygame.VIDEORESIZE: #화면이 리사이즈 되면
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)

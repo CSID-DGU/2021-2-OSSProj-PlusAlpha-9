@@ -5,8 +5,6 @@ from sys import version
 class Images(enum.Enum):
     start = "./Image/StartImage.png"
     how_to_play = "./Image/howtoplay.png"
-
-    # background_desert = "./Image/DESERT.jpeg"
     background_desert = "./Image/DESERT_modified_v3.jpg"
     background_antarctic = "./Image/Antarctic_modified_v2.jpg"
     enemy_scrophion = "./Image/scorphion1-1.png"
@@ -100,9 +98,54 @@ class Color(enum.Enum):
 
 class Misc(enum.Enum):
     org_size = {"x":0, "y":0}
-    missile_volume = 0.1
-    blinking_step = 0.05
-    blinking_speed = 0.2
+
+class Default(enum.Enum):
+    game = {
+        "size": {
+            "x":0, 
+            "y":0
+            }
+    }
+    character = {
+        "size": {
+            "x":100, 
+            "y":100
+            },
+        "invincible_period": 4.0,
+        "missile":{
+            "min":1,
+            "max":4,
+            "speed":25,
+            "volume":0.1
+            },
+    }
+    item = {
+        "duration":10.0,
+        "size":{
+            "x":50, 
+            "y":50
+        },
+        "speed":5,
+        "powerup":{
+            "duration":10.0
+            },
+        "bomb":{
+            "interval":1.0,
+            "size":{
+                "x":500, 
+                "y":500
+            }
+        }
+    }
+    animation = {
+        "blink":{
+            "speed":0.05,
+            "frame":0.2,
+            "duration":4.0
+        },
+        "interval":10.0,
+        "speed":0.5
+    }
 
 class Utils():
     @classmethod
