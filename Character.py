@@ -21,9 +21,10 @@ class Character(Object):
         self.fire_interval = fire_interval
         self.is_unlocked = is_unlocked
 
-    def reinitialize(self, size):
+    def reinitialize(self, game):
         # 캐릭터 사이즈/위치 초기화
-        self.on_resize(size)
+        size = game.size
+        self.on_resize(game)
         self.set_XY((size[0]/2-(self.sx/2),size[1]-self.sy))
         # 폭탄/발사체 초기화
         self.bomb_count = 0
@@ -45,7 +46,7 @@ class Character(Object):
     def update(self, game):
         # 게임 실행 중 화면 크기 변경 감지
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
-            self.on_resize(game.size)
+            self.on_resize(game)
         # 키 입력 감지
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_LEFT]:
@@ -139,7 +140,7 @@ class Character(Object):
 
     def use_bomb(self, game):
         self.last_bomb = time.time()
-        explosion = Explosion()
+        explosion = Explosion(game.animation.animations["bomb_effect"])
         player_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
         explosion.set_XY((player_location["x"] - explosion.sx/2, player_location["y"]- explosion.sy/2))
         game.effect_list.append(explosion)

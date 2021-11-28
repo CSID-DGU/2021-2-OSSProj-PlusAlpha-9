@@ -3,7 +3,7 @@ from pygame.sysfont import SysFont
 from Defs import *
 
 class Object:
-    def __init__(self, img_path, size, velocity, anim_path = []):
+    def __init__(self, img_path, size, velocity, frames=[], frames_trans=[], anim_id=""):
         self.boundary = pygame.display.get_surface().get_size()
         self.org_boundary = [Default.game.value["size"]["x"],Default.game.value["size"]["y"]]
         self.x =0
@@ -13,18 +13,25 @@ class Object:
         self.sx = size["x"]
         self.sy = size["y"]
         self.velocity = velocity
-        self.anim_path = anim_path
+        self.frames = frames
+        self.frames_trans = frames_trans
+        self.frame_count = len(frames)
         self.is_collidable = True
         self.is_transparent = False
-        if len(anim_path) > 0:
-            self.anim_list = []
-            self.anim_trans_list = []
-            self.anim_count = len(self.anim_path)
+        if self.frame_count > 0:
+            self.anim_id = anim_id
             self.current_frame = 0 
             self.put_imgs()
         else:
             self.put_img(img_path)
             self.change_size()
+
+    def reload_frames(self, game):
+        for key, value in game.animation.animations.items():
+            if self.anim_id == key:
+                self.frames = value.frames
+                self.frames_trans = value.frames_trans
+                self.put_imgs()
 
     def put_img(self,address):
         # png파일 일때
@@ -36,25 +43,10 @@ class Object:
         self.change_size()
 
     def put_imgs(self):
-        x_scale = self.boundary[0]/self.org_boundary[0]
-        y_scale = self.boundary[1]/self.org_boundary[1]
-        x = int(self.size["x"]*x_scale)
-        y = int(self.size["y"]*y_scale)
-        for idx in range(len(self.anim_path)):
-            img = pygame.image.load(self.anim_path[idx]).convert_alpha()
-            img = pygame.transform.scale(img,(x,y))
-            img_copy = img.copy()
-            img_copy.fill(Color.TRANSPARENT.value, None, pygame.BLEND_RGBA_MULT)
-            if len(self.anim_list) < len(self.anim_path):
-                self.anim_list.append(img)
-                self.anim_trans_list.append(img_copy)
-            else:
-                self.anim_list[idx] = img
-                self.anim_trans_list[idx] = img_copy
         if self.is_transparent:
-            self.img = self.anim_trans_list[self.current_frame]
+            self.img = self.frames_trans[self.current_frame]
         else:
-            self.img = self.anim_list[self.current_frame]
+            self.img = self.frames[self.current_frame]
         self.sx, self.sy = self.img.get_size()
 
     def set_XY(self,loc):
@@ -94,11 +86,11 @@ class Object:
             return False
 
     #크기 조정 함수
-    def on_resize(self, size):
+    def on_resize(self, game):
         old_boundary = self.boundary
-        self.boundary = size
-        if len(self.anim_path) > 0:
-            self.put_imgs()
+        self.boundary = game.size
+        if self.frame_count > 0:
+            self.reload_frames(game)
         else: 
             self.put_img(self.img_path)
         self.reposition(old_boundary)

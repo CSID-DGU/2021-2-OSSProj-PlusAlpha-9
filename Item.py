@@ -7,8 +7,8 @@ import time
 import random
 
 class Item(Object):
-    def __init__(self, img_arr):
-        super().__init__(img_arr[0], Default.item.value["size"], Default.item.value["velocity"], img_arr)
+    def __init__(self, frames, frames_trans, anim_id):
+        super().__init__("", Default.item.value["size"], Default.item.value["velocity"], frames, frames_trans, anim_id)
         self.x_inv = random.choice([True, False])
         self.y_inv = False
 
@@ -19,7 +19,7 @@ class Item(Object):
 
     def move(self, game): 
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
-            self.on_resize(game.size)
+            self.on_resize(game)
         if self.x_inv == False:
             self.x += self.velocity
         else:
@@ -38,17 +38,17 @@ class Item(Object):
             self.y_inv = True
         
         self.inc += Default.animation.value["speed"]
-        self.inc = Utils.clamp(self.inc, 0.0, self.anim_count-1)
-        if self.inc >= self.anim_count-1:
+        self.inc = Utils.clamp(self.inc, 0.0, self.frame_count-1)
+        if self.inc >= self.frame_count-1:
             self.inc_delay += Default.animation.value["speed"]
             if self.inc_delay >= Default.animation.value["interval"]:
                 self.inc = 0.0
                 self.inc_delay = 0.0
-
+        self.current_frame = int(self.inc)
         if self.is_transparent == False:
-            self.img = self.anim_list[int(self.inc)]
+            self.img = self.frames[int(self.inc)]
         else:
-            self.img = self.anim_trans_list[int(self.inc)]
+            self.img = self.frames_trans[int(self.inc)]
 
         time_passed = time.time() - self.spawned
         time_left = Default.item.value["duration"] - time_passed 
@@ -57,19 +57,19 @@ class Item(Object):
                 self.blink_count += Default.animation.value["blink"]["speed"]
                 if(self.blink_count >= Default.animation.value["blink"]["frame"]):
                     if self.is_transparent == False:
-                        self.img = self.anim_trans_list[int(self.inc)]
+                        self.img = self.frames_trans[int(self.inc)]
                         self.blink_count = 0.0
                         self.is_transparent = True
                     else:
-                        self.img = self.anim_list[int(self.inc)]
+                        self.img = self.frames[int(self.inc)]
                         self.blink_count = 0.0
                         self.is_transparent = False
         else:
             game.item_list.remove(self)
 
 class Bomb(Item):
-    def __init__(self):
-        super().__init__(Default.item.value["bomb"]["frames"])
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "bomb")
 
     def use(self, game):
         if self.is_collidable == True:
@@ -78,8 +78,8 @@ class Bomb(Item):
             game.item_list.remove(self)
 
 class Coin(Item):
-    def __init__(self):
-        super().__init__(Default.item.value["coin"]["frames"])
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "coin")
 
     def use(self, game):
         if self.is_collidable == True:
@@ -88,8 +88,8 @@ class Coin(Item):
             game.item_list.remove(self)
 
 class Health(Item):
-    def __init__(self):
-        super().__init__(Default.item.value["health"]["frames"])
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "health")
 
     def use(self, game):
         if self.is_collidable == True:
@@ -98,8 +98,8 @@ class Health(Item):
             game.item_list.remove(self)
 
 class PowerUp(Item):
-    def __init__(self):
-        super().__init__(Default.item.value["powerup"]["frames"])
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "powerup")
 
     def use(self, game):
         if self.is_collidable == True:
@@ -113,8 +113,8 @@ class PowerUp(Item):
             game.item_list.remove(self)
 
 class SpeedUp(Item):
-    def __init__(self):
-        super().__init__(Default.item.value["speedup"]["frames"])
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "speedup")
         
     def use(self, game):
         if self.is_collidable == True:
