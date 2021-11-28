@@ -4,6 +4,7 @@ from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.widgets.core.widget import Widget
 from Rank import *
 from pygame_menu.utils import make_surface
+from Defs import *
 
 
 class LeaderBoardScrollMenu:
@@ -20,11 +21,11 @@ class LeaderBoardScrollMenu:
 
             if(mode == 'easy'):
                 easy_scroll_image = pygame_menu.baseimage.BaseImage(image_path='./Image/RankPage_scroll_easy_v1.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-                easy_scroll_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+                easy_scroll_theme = pygame_menu.themes.THEME_DEFAULT.copy()
                 easy_scroll_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
                 easy_scroll_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-                easy_scroll_theme.title_font_color = (255, 255, 255)
-                easy_scroll_theme.background_color = easy_scroll_image
+                easy_scroll_theme.title_font_color = Color.WHITE.value
+                # easy_scroll_theme.background_color = easy_scroll_image
                 self.menu = pygame_menu.Menu('', self.size[0], self.size[1],
                                     theme=easy_scroll_theme)
                 self.menu.clear()
@@ -47,11 +48,11 @@ class LeaderBoardScrollMenu:
 
             elif(mode == 'hard'):
                 hard_scroll_image = pygame_menu.baseimage.BaseImage(image_path='./Image/RankPage_scroll_hard_v1.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-                hard_scroll_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+                hard_scroll_theme = pygame_menu.themes.THEME_DEFAULT.copy()
                 hard_scroll_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
                 hard_scroll_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-                hard_scroll_theme.title_font_color = (255, 255, 255)
-                hard_scroll_theme.background_color = hard_scroll_image
+                hard_scroll_theme.title_font_color = Color.WHITE.value
+                # hard_scroll_theme.background_color = hard_scroll_image
                 self.menu = pygame_menu.Menu('', self.size[0], self.size[1],
                                     theme=hard_scroll_theme)
                 self.menu.clear()

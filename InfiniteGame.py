@@ -19,6 +19,7 @@ from Effect import *
 from Defs import *
 from StageDataManager import *
 from Rank import *
+from pygame_menu.utils import make_surface
 
 class InfiniteGame:
 
@@ -101,34 +102,20 @@ class InfiniteGame:
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
                 if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
-                    # #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
-                    # width, height = max(event.w,300), max(event.h,390)
+                    #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
+                    width, height = max(event.w,300), max(event.h,390)
 
-                    # #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
-                    # if(width<=height):
-                    #     height = int(width * (13/10))
-                    # else:
-                    #     width = int(height * (10/13))
+                    #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
+                    if(width<=height):
+                        height = int(width * (13/10))
+                    else:
+                        width = int(height * (10/13))
                     
-                    # w_ratio = width/self.size[0]
-                    # h_ratio = height/self.size[1]
+                    w_ratio = width/self.size[0]
+                    h_ratio = height/self.size[1]
 
-                    # self.size =[width,height] #게임의 size 속성 변경
-                    # self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
-
-                    changed_screen_size = self.screen.get_size() #변경된 사이즈
-                    ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
-                    if(ratio_screen_size[0]<320): #최소 x길이 제한
-                        ratio_screen_size = (494,537)
-                    if(ratio_screen_size[1]>783): #최대 y길이 제한
-                        ratio_screen_size = (720,783)
-                    self.screen = pygame.display.set_mode(ratio_screen_size,
-                                                            pygame.RESIZABLE)
-                    window_size = self.screen.get_size()
-                    new_w, new_h = 1 * window_size[0], 1 * window_size[1]
-                    # self.menu.resize(new_w, new_h)
-                    self.size = window_size
-                    #print(f'New menu size: {self.menu.get_size()}')
+                    self.size =[width,height] #게임의 size 속성 변경
+                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
@@ -286,8 +273,8 @@ class InfiniteGame:
 
     def show_ranking_register_screen(self):
         self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
-                            theme=pygame_menu.themes.THEME_BLUE)
-        self.register_frame = self.menu.add.frame_v(600, 400, align=ALIGN_CENTER)
+                            theme=pygame_menu.themes.THEME_DEFAULT)
+        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=25),align=ALIGN_CENTER)
         self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
@@ -295,34 +282,39 @@ class InfiniteGame:
         self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = 20), align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.button('Retry', self.retry, font_size = 20), align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = 20), align=ALIGN_CENTER)
-        self.result_frame = self.menu.add.frame_v(500, 200, align=ALIGN_CENTER, background_color = Color.WHITE.value)
-        #self.menu.mainloop(self.screen)
+        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         
     def register_ranking(self):
-        self.result_frame = self.menu.add.frame_v(500, 200, align=ALIGN_CENTER, background_color = Color.WHITE.value)
+        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value)
         name = self.text_input.get_value()
         rank = Rank()
         if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
             if(name == ''):
+                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
                 self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
             elif(rank.check_ID('easy', name) == 0):
+                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
                 self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
             else:
                 self.menu.clear()
                 rank.add_data('current','easy',name,self.score)
+                self.menu.add.image("./Image/Award.jpg", scale=(2, 2))
                 self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=20)
                 self.menu.add.vertical_margin(20)
                 self.menu.add.button('to Menu', self.to_menu)
 
         else: # 그 외 ( 하드모드인 경우)
             if(name == ''):
+                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
                 self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
             elif(rank.check_ID('hard', name) == 0):
+                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
                 self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
             else:
                 self.menu.clear()
                 rank.add_data('current','hard',name,self.score)
+                self.menu.add.image("./Image/Award.jpg", scale=(2, 2))
                 self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=20)
                 self.menu.add.vertical_margin(20)
                 self.menu.add.button('to Menu', self.to_menu)
@@ -345,8 +337,8 @@ class InfiniteGame:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
-            self.menu._build_widget_surface()
             self.size = window_size
+            self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
         
 

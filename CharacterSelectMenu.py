@@ -11,6 +11,7 @@ from Stage import Stage
 from StageDataManager import *
 from CharacterDataManager import *
 from InfiniteGame import *
+from pygame_menu.utils import make_surface
 
 class CharacterSelectMenu(pygame_menu.menu.Menu):
     image_widget: 'pygame_menu.widgets.Image'
@@ -35,6 +36,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         self.character_data = CharacterDataManager.load()
 
         self.show()
+        self.mainloop(self.screen,bgfun = self.check_resize)
 
     def to_menu(self):
         self.disable()
@@ -85,7 +87,8 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
 
 
         self.add.button("PLAY",self.start_game)
-        self.add.button("BACK",pygame_menu.events.BACK)
+        # self.add.button("BACK",pygame_menu.events.BACK)
+        self.add.button("BACK",self.to_menu)
         self._update_from_selection(int(self.character_selector.get_value()[0][1]))
 
 
@@ -104,6 +107,46 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
 
         else:
             print("character locked")
+            print(self.character_data[selected_idx].name)
+            self.showCharactereLockedScreen(self.character_data[selected_idx].name)
+
+    def showCharactereLockedScreen(self, character):
+        # self.disable()
+        characterlocked_theme = pygame_menu.themes.THEME_DARK.copy()
+        characterlocked_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        characterlocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        characterlocked_theme.title_font_color = (255, 255, 255)
+        # self.menu = pygame_menu.Menu('Character Locked!', self.size[0], self.size[1],
+        #                     theme=characterlocked_theme) # *0.7, *0.8
+        self.size = self.screen.get_size()
+        super().__init__('Character Locked!', self.size[0], self.size[1],
+                            theme=characterlocked_theme)
+        # menu.add.label(":(",font_size=250)
+        # self.menu.add.image("./Image/StageLocked_v1.jpg", scale=(1, 1))
+        if(character == 'F5S1'):
+            self.add.image("./Image/CharacterLocked_F5S1.jpg", scale=(1, 1))
+        elif(character == 'F5S4'):
+            self.add.image("./Image/CharacterLocked_F5S4.jpg", scale=(1, 1))
+        elif(character == 'Tank'):
+            self.add.image("./Image/CharacterLocked_Tank.jpg", scale=(1, 1))
+
+        self.add.label("")
+        self.add.button('back', self.back_from_locked)
+        #self.menu.mainloop(self.screen)
+        self.mainloop(self.screen,bgfun = self.check_resize)
+
+    def back_from_locked(self):
+        # self.disable()
+        # self.enable()
+        self.disable()
+        # CharacterSelectMenu(self.screen, self.attr)
+        self.__init__(self.screen, self.attr)
+        # print(self._enabled)
+        # self._open(CharacterSelectMenu(self.screen, self.attr))
+        # self._open(self.show())
+        #._open(CharacterSelectMenu(self.screen, self.attr))
+        # self.mainloop(self.screen,bgfun = self.check_resize)
+        # self.show()
 
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
@@ -119,8 +162,8 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.resize(new_w, new_h)
-            self._build_widget_surface()
             self.size = window_size
+            self._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.get_size()}')
 
     def _on_selector_change(self, selected, value: int) -> None:
