@@ -18,8 +18,8 @@ class Mob(Object):
 
         self.x += self.direction.y
         self.y += self.direction.x
-        self.rad+=0.05
-        self.direction.from_polar((self.velocity*3,math.sin(self.rad)*70))
+        self.rad+=0.08*self.velocity
+        self.direction.from_polar((self.velocity*4,math.sin(self.rad)*90))
 
         if self.y >= boundary[1] - self.sy:
             game.mobList.remove(self)
