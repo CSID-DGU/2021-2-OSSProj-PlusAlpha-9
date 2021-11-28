@@ -96,8 +96,8 @@ class TargetedMissile(Missile):
 
 
 class Crosshair(Object):
-    def __init__(self, target, radius = {"x":100, "y":100}):
-        super().__init__(Images.effect_crossair.value, radius, 5)
+    def __init__(self, target):
+        super().__init__(Default.effect.value["crosshair"]["image"], Default.effect.value["crosshair"]["size"], Default.effect.value["crosshair"]["velocity"])
         self.target = target
     
     def move(self, game):

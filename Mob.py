@@ -1,6 +1,7 @@
 import pygame
 from Object import Object 
 from pygame.math import Vector2
+from Effect import Boom
 import math
 
 class Mob(Object):
@@ -22,5 +23,14 @@ class Mob(Object):
 
         if self.y >= boundary[1] - self.sy:
             game.mobList.remove(self)
+
+    def destroy(self, game):
+        boom = Boom()
+        mob_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
+        boom.set_XY((mob_location["x"] - boom.sx/2, mob_location["y"]- boom.sy/2))
+        game.effect_list.append(boom)
+        if self in game.mobList:
+            game.mobList.remove(self)
+                        
 
         
