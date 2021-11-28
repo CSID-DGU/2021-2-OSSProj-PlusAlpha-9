@@ -30,12 +30,16 @@ class About:
         self.menu.clear()
         self.menu.add.vertical_margin(80)
         self.frame_v = self.menu.add.frame_v(400, 350, margin=(10, 0))
+        self.frame_v._relax = True
         self.frame_v.pack(self.menu.add.label("   - AUTHORS -   ", selectable=False), ALIGN_CENTER)
         for label in Default.about.value["authors"]:
             self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
         self.frame_v.pack(self.menu.add.label("   - SPRITES -   ", selectable=False), ALIGN_CENTER)
         for label in Default.about.value["sprites"]:
             self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
+    
+        self.frame_v.pack(self.menu.add.url('https://www.freepik.com', 'Icons made by Freepik',font_size=18), ALIGN_CENTER)
+        self.frame_v.pack(self.menu.add.url('https://www.flaticon.com/', 'Flaticon',font_size=18), ALIGN_CENTER)
         self.frame_v.pack(self.menu.add.vertical_margin(20))
         self.frame_v.pack(self.menu.add.button('         back         ', self.to_menu), ALIGN_CENTER)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
