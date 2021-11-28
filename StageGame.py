@@ -309,28 +309,12 @@ class StageGame:
                         elif(character.name == 'Tank'):
                             self.menu.add.image("./Image/ChapterClear_Space.jpg", scale=(1,1))
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        menu.add.button('to Menu', self.toMenu,menu)
-        # menu.mainloop(self.screen)
-=======
-        self.menu.add.button('to Menu', self.toMenu,self.menu)
-        #menu.mainloop(self.screen)
->>>>>>> 93e5fda (리사이즈 버그 픽스 후 적용  및 스테이지 잠겼을 때 화면 추가)
-=======
-=======
->>>>>>> e6253e3b651b6be1986d41a7ae3dd211f16347d8
         else:
             self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51, font_color=Color.BLACK.value)
             self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1,1))
             self.menu.add.label("")
         
         self.menu.add.button('to Menu', self.toMenu,self.menu)
-<<<<<<< HEAD
->>>>>>> 31ebc54 (챕터 클리어 시 캐릭터 해금 화면 추가)
-=======
->>>>>>> e6253e3b651b6be1986d41a7ae3dd211f16347d8
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     #실패 화면
@@ -341,31 +325,12 @@ class StageGame:
         gameover_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
                             theme=gameover_theme) # *0.7, *0.8
-<<<<<<< HEAD
-<<<<<<< HEAD
-        # menu.add.label(":(",font_size=250)
-<<<<<<< HEAD
-        menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
-        menu.add.label("")
-        menu.add.button('to Menu', self.toMenu,menu)
-        # menu.mainloop(self.screen)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
-
-=======
-=======
->>>>>>> 31ebc54 (챕터 클리어 시 캐릭터 해금 화면 추가)
-=======
->>>>>>> e6253e3b651b6be1986d41a7ae3dd211f16347d8
         self.menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
         self.menu.add.label("")
         self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
 
-<<<<<<< HEAD
->>>>>>> 93e5fda (리사이즈 버그 픽스 후 적용  및 스테이지 잠겼을 때 화면 추가)
-=======
->>>>>>> e6253e3b651b6be1986d41a7ae3dd211f16347d8
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
@@ -379,23 +344,6 @@ class StageGame:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            self.size = window_size
-            print(f'New menu size: {self.menu.get_size()}')
-
-    
-=======
-            # self.menu._build_widget_surface()
-=======
->>>>>>> 31ebc54 (챕터 클리어 시 캐릭터 해금 화면 추가)
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
->>>>>>> 93e5fda (리사이즈 버그 픽스 후 적용  및 스테이지 잠겼을 때 화면 추가)
-=======
-            self.size = window_size
-            self.menu._current._widgets_surface = make_surface(0,0)
-            print(f'New menu size: {self.menu.get_size()}')
->>>>>>> e6253e3b651b6be1986d41a7ae3dd211f16347d8
