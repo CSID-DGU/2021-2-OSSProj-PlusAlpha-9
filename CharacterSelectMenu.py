@@ -57,7 +57,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         self.character_selector = self.add.selector(
             title='Character :\t',
             items=characters,
-            onchange=self._on_selector_change
+            onchange=self.on_selector_change
         )
         self.image_widget = self.add.image(
             image_path=self.character_imgs[0],
@@ -68,19 +68,19 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         self.frame_v = self.add.frame_v(350, 160, margin=(10, 0))
         self.power = self.frame_v.pack(self.add.progress_bar(
             title="Power",
-            default=int((self.character_data[0].missile_power/500)*100),
+            default=int((self.character_data[0].missile_power/Default.character.value["max_stats"]["power"])*100),
             progress_text_enabled = False,
             box_progress_color = Color.RED.value
         ), ALIGN_RIGHT)
         self.fire_rate = self.frame_v.pack(self.add.progress_bar(
             title="Fire Rate",
-            default=int((0.3/self.character_data[0].org_fire_interval)*100),
+            default=int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[0].org_fire_interval)*100),
             progress_text_enabled = False,
             box_progress_color =Color.BLUE.value
         ), ALIGN_RIGHT)
         self.velocity = self.frame_v.pack(self.add.progress_bar(
             title="Mobility",
-            default=int((self.character_data[0].org_velocity/25)*100),
+            default=int((self.character_data[0].org_velocity/Default.character.value["max_stats"]["mobility"])*100),
             progress_text_enabled = False,
             box_progress_color = Color.GREEN.value
         ), ALIGN_RIGHT)
@@ -89,7 +89,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         self.add.button("PLAY",self.start_game)
         # self.add.button("BACK",pygame_menu.events.BACK)
         self.add.button("BACK",self.to_menu)
-        self._update_from_selection(int(self.character_selector.get_value()[0][1]))
+        self.update_from_selection(int(self.character_selector.get_value()[0][1]))
 
 
     def start_game(self): #게임 시작 함수
@@ -167,25 +167,13 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             self._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.get_size()}')
 
-    def _on_selector_change(self, selected, value: int) -> None:
-        """
-        Function executed if selector changes.
-        :param selected: Selector data containing text and index
-        :param value: Value from the selected option
-        :return: None
-        """
-        print('Selected data:', selected)
-        self._update_from_selection(value)
+    def on_selector_change(self, selected, value: int) -> None:
+        self.update_from_selection(value)
 
-    def _update_from_selection(self, selected_value, **kwargs) -> None:
-        """
-        Change widgets depending on index.
-        :param index: Index
-        :return: None
-        """
+    def update_from_selection(self, selected_value, **kwargs) -> None:
         self.current = selected_value
         self.image_widget.set_image(self.character_imgs[selected_value])
-        self.power.set_value(int((self.character_data[selected_value].missile_power/500)*100))
-        self.fire_rate.set_value(int((0.3/self.character_data[selected_value].org_fire_interval)*100))
-        self.velocity.set_value(int((self.character_data[selected_value].org_velocity/25)*100))
+        self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
+        self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
+        self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
         self.item_description_widget.set_title(title = "Unlocked" if self.character_data[selected_value].is_unlocked == True else "Locked")
