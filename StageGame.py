@@ -287,8 +287,6 @@ class StageGame:
 
     #클리어 화면
     def showStageClearScreen(self):
-        #다음 스테이지 해제
-        # StageDataManager.unlockNextStage(self.stage)
         #화면 표시
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -321,8 +319,8 @@ class StageGame:
 >>>>>>> 93e5fda (리사이즈 버그 픽스 후 적용  및 스테이지 잠겼을 때 화면 추가)
 =======
         else:
-            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51, font_color=(0,0,0))
-            self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1, 1))
+            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51, font_color=Color.BLACK.value)
+            self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1,1))
             self.menu.add.label("")
         
         self.menu.add.button('to Menu', self.toMenu,self.menu)
