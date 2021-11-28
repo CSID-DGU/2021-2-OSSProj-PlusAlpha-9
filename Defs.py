@@ -57,8 +57,9 @@ class Default(enum.Enum):
             "min":1,
             "max":4,
             "speed":20,
-            "volume":0.1
-            },
+            "volume":0.1,
+            "speed_inc":1
+            }
     }
     item = {
         "duration":10.0,

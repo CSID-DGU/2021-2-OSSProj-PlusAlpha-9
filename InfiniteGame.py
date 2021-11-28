@@ -10,6 +10,7 @@ import pygame
 import random
 import pygame_menu
 from collections import OrderedDict
+from Animation import AnimationManager
 from pygame_menu.locals import ALIGN_CENTER
 from Item import *
 from Boss import Boss
@@ -39,6 +40,7 @@ class InfiniteGame:
         self.mode = mode
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
+        self.animation = AnimationManager()
         self.mobList = []
         self.item_list = []
         self.effect_list = []
@@ -61,7 +63,7 @@ class InfiniteGame:
         self.enemyBullets =[]
 
         # 5. 캐릭터 초기화
-        self.character.reinitialize(self.size)
+        self.character.reinitialize(self)
 
     def main(self):
         # 메인 이벤트
@@ -116,6 +118,7 @@ class InfiniteGame:
 
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
+                    self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
@@ -124,27 +127,27 @@ class InfiniteGame:
                 self.mobList.append(newMob)
             
             if random.random() < Default.item.value["powerup"]["spawn_rate"]:
-                new_item = PowerUp()
+                new_item = PowerUp(self.animation.animations["powerup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random() < Default.item.value["bomb"]["spawn_rate"]:
-                new_item = Bomb()
+                new_item = Bomb(self.animation.animations["bomb"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random() < Default.item.value["health"]["spawn_rate"]:
-                new_item = Health()
+                new_item = Health(self.animation.animations["health"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random() < Default.item.value["coin"]["spawn_rate"]:
-                new_item = Coin()
+                new_item = Coin(self.animation.animations["coin"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random()< Default.item.value["speedup"]["spawn_rate"]:
-                new_item = SpeedUp()
+                new_item = SpeedUp(self.animation.animations["speedup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
             

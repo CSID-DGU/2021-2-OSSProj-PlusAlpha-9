@@ -12,7 +12,7 @@ class Missile(Object):
 
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
-            self.on_resize(game.size)
+            self.on_resize(game)
         self.y -= self.velocity
 
 class TargetedMissile(Missile):
@@ -73,7 +73,7 @@ class TargetedMissile(Missile):
 
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
-            self.on_resize(game.size)
+            self.on_resize(game)
         if self.target_type == "BOSS":
             self.crosshair.move(game)
             direction = Vector2(self.target.get_pos()) - self.position
@@ -91,6 +91,7 @@ class TargetedMissile(Missile):
         else:
             self.locked_on = False
         self.position += self.vel 
+        self.velocity += Default.character.value["missile"]["speed_inc"]
         self.x = self.position[0] 
         self.y = self.position[1]
 
@@ -102,7 +103,7 @@ class Crosshair(Object):
     
     def move(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
-            self.on_resize(game.size)
+            self.on_resize(game)
         if self.target in game.mobList: 
             self.set_XY((self.target.get_pos()[0]-self.sx/2, self.target.get_pos()[1]-self.sy/2))
         elif hasattr(game, "stage"):
