@@ -72,4 +72,21 @@ class LeaderBoardScrollMenu:
                         self.menu.add.label(r,selectable=False, font_size=20)
 
             self.menu.add.button('back', self.to_menu)
-            self.menu.mainloop(self.screen)
+            #self.menu.mainloop(self.screen)
+            self.menu.mainloop(self.screen,bgfun = self.check_resize)
+
+    def check_resize(self):
+        if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = self.screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            self.screen = pygame.display.set_mode(ratio_screen_size,
+                                                    pygame.RESIZABLE)
+            window_size = self.screen.get_size()
+            new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+            self.menu.resize(new_w, new_h)
+            self.size = window_size
+            print(f'New menu size: {self.menu.get_size()}')
