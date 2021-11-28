@@ -10,6 +10,7 @@ import pygame
 import random
 import pygame_menu
 from collections import OrderedDict
+from Animation import AnimationManager
 from Item import *
 from Boss import Boss
 from Mob import Mob
@@ -41,6 +42,7 @@ class StageGame:
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
+        self.animation = AnimationManager()
         self.mobList = []
         self.item_list = []
         self.effect_list = []
@@ -65,7 +67,7 @@ class StageGame:
         self.enemyBullets =[]
 
         # 5. 캐릭터 초기화
-        self.character.reinitialize(self.size)
+        self.character.reinitialize(self)
         
     def main(self):
         # 메인 이벤트
@@ -122,6 +124,7 @@ class StageGame:
 
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
+                    self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기
 
@@ -131,27 +134,27 @@ class StageGame:
                 self.mobList.append(newMob)
                 
             if random.random() < Default.item.value["powerup"]["spawn_rate"]:
-                new_item = PowerUp()
+                new_item = PowerUp(self.animation.animations["powerup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random() < Default.item.value["bomb"]["spawn_rate"]:
-                new_item = Bomb()
+                new_item = Bomb(self.animation.animations["bomb"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random() < Default.item.value["health"]["spawn_rate"]:
-                new_item = Health()
+                new_item = Health(self.animation.animations["health"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random() < Default.item.value["coin"]["spawn_rate"]:
-                new_item = Coin()
+                new_item = Coin(self.animation.animations["coin"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
             if random.random()< Default.item.value["speedup"]["spawn_rate"]:
-                new_item = SpeedUp()
+                new_item = SpeedUp(self.animation.animations["speedup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
@@ -257,13 +260,6 @@ class StageGame:
             #점수가 목표점수 이상이면 스테이지 클리어 화면
             if(self.score>=self.goal_score or self.stage_cleared):
                 StageDataManager.unlockNextStage(self.stage)
-                if self.stage.unlock_char != "":
-                    for character in self.character_data:
-                        if character.name == self.stage.unlock_char:
-                            if character.is_unlocked == False:
-                                character.is_unlocked = True
-                                CharacterDataManager.save(self.character_data)
-                                print(type(self.character_data), type(character))
                 self.showStageClearScreen()
                 return
 
@@ -294,8 +290,6 @@ class StageGame:
 
     #클리어 화면
     def showStageClearScreen(self):
-        #다음 스테이지 해제
-        StageDataManager.unlockNextStage(self.stage)
         #화면 표시
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -303,11 +297,6 @@ class StageGame:
         stageclear_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
                             theme=stageclear_theme)
-
-        self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51)
-        # menu.add.label("Congratulation!") # clear!!
-        self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1, 1))
-        self.menu.add.label("")
         if self.stage.unlock_char != "":
             for character in self.character_data:
                 if character.name == self.stage.unlock_char:
@@ -315,10 +304,20 @@ class StageGame:
                         character.is_unlocked = True
                         CharacterDataManager.save(self.character_data)
                         print(type(self.character_data), type(character))
-                        self.menu.add.label("{} unlocked".format(self.stage.unlock_char))
+                        print(character.name)
+                        if(character.name == 'F5S1'):
+                            self.menu.add.image("./Image/ChapterClear_Oasis.jpg", scale=(1,1))
+                        elif(character.name == 'F5S4'):
+                            self.menu.add.image("./Image/ChapterClear_Ice.jpg", scale=(1,1))
+                        elif(character.name == 'Tank'):
+                            self.menu.add.image("./Image/ChapterClear_Space.jpg", scale=(1,1))
 
+        else:
+            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51, font_color=Color.BLACK.value)
+            self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1,1))
+            self.menu.add.label("")
+        
         self.menu.add.button('to Menu', self.toMenu,self.menu)
-        #menu.mainloop(self.screen)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     #실패 화면
@@ -329,11 +328,9 @@ class StageGame:
         gameover_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
                             theme=gameover_theme) # *0.7, *0.8
-        # menu.add.label(":(",font_size=250)
         self.menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
         self.menu.add.label("")
         self.menu.add.button('to Menu', self.toMenu,self.menu)
-        #self.menu.mainloop(self.screen)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
 
@@ -350,7 +347,6 @@ class StageGame:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
-            # self.menu._build_widget_surface()
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
