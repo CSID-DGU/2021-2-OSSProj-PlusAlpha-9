@@ -43,7 +43,8 @@ class DifficultySelectMenu:
 
     def to_character_select_menu(self): #캐릭터 메뉴 시작 함수
         selected_mode = self.mode_selector.get_value()[0][1]
-        self.menu._open(CharacterSelectMenu(self.screen,selected_mode))
+        # self.menu._open(CharacterSelectMenu(self.screen,selected_mode))
+        CharacterSelectMenu(self.screen,selected_mode).show()
         
         
     

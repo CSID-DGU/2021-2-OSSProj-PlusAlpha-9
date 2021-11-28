@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
 	"chapter": {
 		"Oasis": {
@@ -136,4 +137,144 @@
 			]
 		}
 	}
+=======
+{
+	"chapter": {
+		"Oasis": {
+			"1": [
+				"Oasis",
+				1,
+				300,
+				"./Image/DESERT_modified_v3.jpg",
+				"./Sound/ariant.wav",
+				0,
+				1,
+				"./Image/scorphion1-1.png",
+				[],
+				"",
+				""
+			],
+			"2": [
+				"Oasis",
+				2,
+				450,
+				"./Image/DESERT_modified_v3.jpg",
+				"./Sound/ariant.wav",
+				0,
+				1,
+				"./Image/scorphion1-1.png",
+				[],
+				"",
+				""
+			],
+			"3": [
+				"Oasis",
+				3,
+				9999999999,
+				"./Image/DESERT_modified_v3.jpg",
+				"./Sound/ariant.wav",
+				1,
+				1,
+				"./Image/scorphion1-1.png",
+				[
+					"Image/Boss/Body/tutankhamun_1.png",
+					"Image/Boss/Body/tutankhamun_2.png",
+					"Image/Boss/Body/tutankhamun_3.png"
+				],
+				"./Image/Boss/Bullet/scorphion1-1.png",
+				"F5S1"
+			]
+		},
+		"Ice": {
+			"1": [
+				"Ice",
+				1,
+				300,
+				"./Image/Antarctic_modified_v3.jpg",
+				"./Sound/Rien.wav",
+				0,
+				1,
+				"./Image/Catus.png",
+				[],
+				"",
+				""
+			],
+			"2": [
+				"Ice",
+				2,
+				450,
+				"./Image/Antarctic_modified_v3.jpg",
+				"./Sound/Rien.wav",
+				0,
+				1,
+				"./Image/Catus.png",
+				[],
+				"",
+				""
+			],
+			"3": [
+				"Ice",
+				3,
+				9999999999,
+				"./Image/Antarctic_modified_v3.jpg",
+				"./Sound/Rien.wav",
+				1,
+				1,
+				"./Image/Catus.png",
+				[
+					"Image/Boss/Body/penguin_boss_1.png",
+					"Image/Boss/Body/penguin_boss_2.png",
+					"Image/Boss/Body/penguin_boss_3.png"
+				],
+				"./Image/Boss/Bullet/penguin_boss_3.png",
+				"F5S4"
+			]
+		},
+		"Space": {
+			"1": [
+				"Space",
+				1,
+				300,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				0,
+				1,
+				"./Image/F5S3N.png",
+				[],
+				"",
+				""
+			],
+			"2": [
+				"Space",
+				2,
+				450,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				0,
+				1,
+				"./Image/F5S3N.png",
+				[],
+				"",
+				""
+			],
+			"3": [
+				"Space",
+				3,
+				9999999999,
+				"./Image/Space_modified_v1.jpg",
+				"./Sound/Space.wav",
+				1,
+				1,
+				"./Image/F5S3N.png",
+				[
+					"Image/Boss/Body/spacestation_1.png",
+					"Image/Boss/Body/spacestation_2.png",
+					"Image/Boss/Body/spacestation_3.png"
+				],
+				"Image/Boss/Bullet/F5S3N.png",
+				"Tank"
+			]
+		}
+	}
+>>>>>>> 31ebc54 (챕터 클리어 시 캐릭터 해금 화면 추가)
 }
