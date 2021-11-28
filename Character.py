@@ -52,7 +52,7 @@ class Character(Object):
         if key_pressed[pygame.K_LEFT]:
             self.x -= self.velocity
             if self.x < 0:
-                self.x = 0
+                self.x = 0        
         if key_pressed[pygame.K_RIGHT]:
             self.x += self.velocity
             if self.x >= self.boundary[0] - self.sx:
@@ -99,6 +99,7 @@ class Character(Object):
                         self.img = self.img_copy
         else:
             self.img = self.img_copy
+        self.update_rect((self.x, self.y))
         # 화면 밖으로 나간 미사일 삭제
         for missile in list(self.missiles_fired):
             missile.update(game)

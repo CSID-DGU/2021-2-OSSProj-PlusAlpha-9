@@ -59,7 +59,12 @@ class Default(enum.Enum):
             "speed":20,
             "volume":0.1,
             "speed_inc":1
-            }
+            },
+        "max_stats":{
+            "power":500,
+            "fire_rate":0.3,
+            "mobility":25
+        }
     }
     item = {
         "duration":10.0,
