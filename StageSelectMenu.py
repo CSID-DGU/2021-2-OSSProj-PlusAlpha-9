@@ -76,6 +76,7 @@ class StageSelectMenu:
         
 
     def check_stage_unlock(self,chapter,stage):
+        self.stage_data = StageDataManager.loadStageData()
         if Stage(self.stage_data["chapter"][chapter][stage]).is_unlocked == 1 :
             return True
         return False
@@ -87,18 +88,15 @@ class StageSelectMenu:
         stagelocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         stagelocked_theme.title_font_color = (255, 255, 255)
         self.menu = pygame_menu.Menu(chapter+'-'+stage, self.size[0], self.size[1],
-                            theme=stagelocked_theme) # *0.7, *0.8
-        # menu.add.label(":(",font_size=250)
+                            theme=stagelocked_theme)
         self.menu.add.image("./Image/StageLocked_v1.jpg", scale=(1, 1))
         self.menu.add.label("")
         self.menu.add.button('back', self.back_from_locked)
-        #self.menu.mainloop(self.screen)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def back_from_locked(self):
         self.menu.disable()
         StageSelectMenu(self.screen).show()
-        # self.show()
 
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
@@ -118,4 +116,3 @@ class StageSelectMenu:
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
             self.menu._current._widgets_surface = make_surface(0,0)
-            # print(self.menu._current._widgets_surface)

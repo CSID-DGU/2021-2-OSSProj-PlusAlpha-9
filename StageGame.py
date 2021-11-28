@@ -288,7 +288,7 @@ class StageGame:
     #클리어 화면
     def showStageClearScreen(self):
         #다음 스테이지 해제
-        StageDataManager.unlockNextStage(self.stage)
+        # StageDataManager.unlockNextStage(self.stage)
         #화면 표시
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
