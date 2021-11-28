@@ -67,7 +67,8 @@ class StageSelectMenu:
         selected_stage = self.stageSelector.get_value()[0][0]
         #스테이지 언락되었는지 확인하고, 언락되었으면 캐릭터 선택 메뉴에 스테이지 넘겨주고 실행
         if (self.check_stage_unlock(selected_chapter,selected_stage)):
-            self.menu._open(CharacterSelectMenu(self.screen,Stage(self.stage_data["chapter"][selected_chapter][selected_stage])))
+            # self.menu._open(CharacterSelectMenu(self.screen,Stage(self.stage_data["chapter"][selected_chapter][selected_stage])))
+            CharacterSelectMenu(self.screen,Stage(self.stage_data["chapter"][selected_chapter][selected_stage])).show()
         else:
             self.showStageLockedScreen(selected_chapter, selected_stage)
             print(selected_chapter)
