@@ -299,6 +299,7 @@ class InfiniteGame:
             else:
                 self.menu.clear()
                 rank.add_data('current','easy',name,self.score)
+                self.menu.add.image("./Image/Award.jpg", scale=(2, 2))
                 self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=20)
                 self.menu.add.vertical_margin(20)
                 self.menu.add.button('to Menu', self.to_menu)
@@ -313,6 +314,7 @@ class InfiniteGame:
             else:
                 self.menu.clear()
                 rank.add_data('current','hard',name,self.score)
+                self.menu.add.image("./Image/Award.jpg", scale=(2, 2))
                 self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=20)
                 self.menu.add.vertical_margin(20)
                 self.menu.add.button('to Menu', self.to_menu)
