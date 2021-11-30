@@ -35,7 +35,8 @@ class About:
     def show(self):
         self.menu.clear()
         self.menu.add.vertical_margin(40)
-        self.frame_v = self.menu.add.frame_v(500, 700, margin=(10, 0), max_height=400)
+        self.frame_v = self.menu.add.frame_v(600, 2000, margin=(10, 0), max_height=400)
+        # self.frame_v._relax=True
 
         self.frame_v.pack(self.menu.add.button("   - AUTHORS -   ", selection_effect=None), ALIGN_CENTER)
         for label in Default.about.value["authors"]:
@@ -50,6 +51,55 @@ class About:
                 item = self.frame_v.pack(self.menu.add.button(key, self.open_link, value, font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
                 self.sources.append(item)
             self.frame_v.pack(self.menu.add.vertical_margin(20))
+
+        self.frame_v.pack(self.menu.add.label("""MIT License
+
+Copyright (c) 2021 CSID DGU
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.""",font_size=13),ALIGN_CENTER)
+
+        self.frame_v.pack(self.menu.add.label("""MIT License
+
+Copyright (c) 2018 TimurKhayrullin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.""",font_size=13),ALIGN_CENTER)
+
+        self.frame_v.pack(self.menu.add.vertical_margin(30))
+
+        self.frame_v.pack(self.menu.add.label("< "+"OUR CODE"+" >", selectable=False, font_size=22), ALIGN_CENTER)
+        self.frame_v.pack(self.menu.add.button("CSID-DGU/2021-2-OSSProj-PlusAlpha-9", self.open_link, "https://github.com/CSID-DGU/2021-2-OSSProj-PlusAlpha-9", font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
         
         self.menu.add.button('         back         ', self.to_menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
