@@ -35,19 +35,22 @@ class About:
     def show(self):
         self.menu.clear()
         self.menu.add.vertical_margin(40)
-        self.frame_v = self.menu.add.frame_v(500, 500, margin=(10, 0), max_height=400)
+        self.frame_v = self.menu.add.frame_v(500, 700, margin=(10, 0), max_height=400)
 
         self.frame_v.pack(self.menu.add.button("   - AUTHORS -   ", selection_effect=None), ALIGN_CENTER)
         for label in Default.about.value["authors"]:
             item = self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
             self.authors.append(item)
-        self.frame_v.pack(self.menu.add.button("   - OPEN SOURCE -   ", selection_effect=None), ALIGN_CENTER)
-        title = self.frame_v.pack(self.menu.add.label("   < IMAGES >   ", selectable=False, font_size=22), ALIGN_CENTER)
-        self.sources.append(title)
-        for key, value in Default.about.value["open_source"]["images"].items():
-            item = self.frame_v.pack(self.menu.add.button(key, self.open_link, value, font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
-            self.sources.append(item)
         self.frame_v.pack(self.menu.add.vertical_margin(20))
+        self.frame_v.pack(self.menu.add.button("   - OPEN SOURCE -   ", selection_effect=None), ALIGN_CENTER)
+        for title, val in Default.about.value["open_source"].items():
+            label = self.frame_v.pack(self.menu.add.label("< "+title+" >", selectable=False, font_size=22), ALIGN_CENTER)
+            self.sources.append(label)
+            for key, value in val.items():
+                item = self.frame_v.pack(self.menu.add.button(key, self.open_link, value, font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
+                self.sources.append(item)
+            self.frame_v.pack(self.menu.add.vertical_margin(20))
+        
         self.menu.add.button('         back         ', self.to_menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 

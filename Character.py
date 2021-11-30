@@ -14,8 +14,10 @@ class Character(Object):
         self.missile_img = missile_img
         self.missile_size = missile_size
         self.missile_sfx_path = missile_sfx
+        self.bomb_sfx = pygame.mixer.Sound(Default.effect.value["bomb"]["sound"])
+        self.bomb_sfx.set_volume(Default.sound.value["sfx"]["volume"])
         self.missile_sfx =  pygame.mixer.Sound(missile_sfx)
-        self.missile_sfx.set_volume(Default.character.value["missile"]["volume"])
+        self.missile_sfx.set_volume(Default.sound.value["sfx"]["volume"])
         self.missile_power = missile_power
         self.org_fire_interval = fire_interval
         self.fire_interval = fire_interval
@@ -141,6 +143,7 @@ class Character(Object):
 
     def use_bomb(self, game):
         self.last_bomb = time.time()
+        self.bomb_sfx.play()
         explosion = Explosion(game.animation.animations["bomb_effect"])
         player_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
         explosion.set_XY((player_location["x"] - explosion.sx/2, player_location["y"]- explosion.sy/2))
