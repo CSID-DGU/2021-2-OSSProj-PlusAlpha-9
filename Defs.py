@@ -12,6 +12,25 @@ class Images(enum.Enum):
     enemy_cactus = "./Image/Catus.png"
     missile_missile2 = "./Image/MISSILE_2.png"
     weapon_target_missile = "./Image/Weapon/spaceMissiles_012.png"
+
+    info_infi_1 = "./Image/Info_infi_1.png"
+    info_infi_2 = "./Image/Info_infi_2.png"
+    info_infi_3 = "./Image/Info_infi_3.png"
+    info_infi_4 = "./Image/Info_infi_4.png"
+    info_infi_5 = "./Image/Info_infi_5.png"
+    info_stage_1 = "./Image/Info_stage_1.png"
+    info_stage_2 = "./Image/Info_stage_2.png"
+    info_stage_3 = "./Image/Info_stage_3.png"
+    info_stage_4 = "./Image/Info_stage_4.png"
+    info_stage_5 = "./Image/Info_stage_5.png"
+    info_stage_6 = "./Image/Info_stage_6.png"
+    info_items = "./Image/Info_items.png"
+    info_controls = "./Image/Info_controls.jpg"
+
+class Scales(enum.Enum):
+    default = (1, 1)
+    small = (.6, .6)
+    tiny = (.3, .3)
     
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.wav"
@@ -38,6 +57,7 @@ class Color(enum.Enum):
     TRANSPARENT = (255,255,255,128)
     GRAY = (220,220,220)
     BLACK = (0,0,0)
+
 
 class Default(enum.Enum):
     game = {
