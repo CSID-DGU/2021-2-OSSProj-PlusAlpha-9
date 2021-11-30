@@ -6,6 +6,7 @@ import pygame_menu
 from os import system
 from Character import *
 from Defs import *
+from HelpMenu import HelpMenu
 from StageDataManager import *
 from CharacterDataManager import *
 from Rank import Rank
@@ -58,10 +59,10 @@ def back():
 def help():
     menu.clear()
 
-def show_help():
-    menu.clear()
-    menu.add.button('Back',back)
-    menu.add.image(image_path='./Image/howtoplay.png', angle=Display.angle, scale=Display.help_scale)
+# def show_help():
+#     menu.clear()
+#     menu.add.button('Back',back)
+#     menu.add.image(image_path='./Image/howtoplay.png', angle=Display.angle, scale=Display.help_scale)
 
 def show_info_menu():
     About(screen).show()
@@ -74,6 +75,9 @@ def show_stage_select_menu():
 
 def show_rank():
     LeaderBoardMenu(screen).rank()
+
+def show_help():
+    HelpMenu(screen).show()
 
 #메인 메뉴 구성
 menu.add.button('Select mode', show_mode)
