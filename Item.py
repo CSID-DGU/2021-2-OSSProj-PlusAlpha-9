@@ -115,9 +115,12 @@ class PowerUp(Item):
 class SpeedUp(Item):
     def __init__(self, animation):
         super().__init__(animation.frames, animation.frames_trans, "speedup")
+        self.sfx = pygame.mixer.Sound(Default.item.value["speedup"]["sound"])
+        self.sfx.set_volume(Default.sound.value["sfx"]["volume"])
         
     def use(self, game):
         if self.is_collidable == True:
+            self.sfx.play()
             self.used = time.time()
             self.org_velocity = game.character.velocity
             self.org_fire_interval = game.character.fire_interval

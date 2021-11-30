@@ -52,6 +52,7 @@ class Color(enum.Enum):
     RED = (200,60,50)
     BLUE = (0,60,200)
     GREEN = (50,200,50)
+    LIGHT_GREEN = (150,255,150)
     YELLOW = (255,255,0)
     WHITE = (255,255,255)
     TRANSPARENT = (255,255,255,128)
@@ -106,7 +107,8 @@ class Default(enum.Enum):
                 "./Image/Items/SpeedUp/frame-4.png", 
                 "./Image/Items/SpeedUp/frame-5.png",
                 "./Image/Items/SpeedUp/frame-1.png"
-            ]
+            ],
+            "sound": "./Sound/Item/speedup.wav"
         },
         "powerup":{
             "spawn_rate": 0.004,
@@ -232,7 +234,8 @@ class Default(enum.Enum):
             },
             "SOUNDS":{
                 "MATRIXXX_ CC0 1.0": "https://freesound.org/people/MATRIXXX_/sounds/441373/",
-                "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/"
+                "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/",
+                "jalastram CC BY 3.0": "https://freesound.org/people/jalastram/sounds/317769/"
             }
         }
     }
