@@ -97,6 +97,7 @@ class Default(enum.Enum):
             "x":50, 
             "y":50
         },
+        "sound": "./Sound/Item/speedup.wav",
         "velocity":5,
         "speedup":{
             "spawn_rate": 0.004,
@@ -107,8 +108,7 @@ class Default(enum.Enum):
                 "./Image/Items/SpeedUp/frame-4.png", 
                 "./Image/Items/SpeedUp/frame-5.png",
                 "./Image/Items/SpeedUp/frame-1.png"
-            ],
-            "sound": "./Sound/Item/speedup.wav"
+            ]
         },
         "powerup":{
             "spawn_rate": 0.004,
