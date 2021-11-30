@@ -1,12 +1,14 @@
 
+from sys import argv
 import pygame
 import pygame_menu
-from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
+from pygame_menu.locals import ALIGN_CENTER
 from pygame_menu.widgets.core.widget import Widget
 from Rank import *
 from LeaderBoardScrollMenu import *
 from pygame_menu.utils import make_surface
 from Defs import *
+import webbrowser
 
 class About:
     def __init__(self,screen):
@@ -14,13 +16,17 @@ class About:
         self.screen = screen
 
         self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.about.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        self.mytheme = pygame_menu.themes.THEME_SOLARIZED.copy()
-        self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
+        self.mytheme = pygame_menu.themes.THEME_DEFAULT.copy()
+        self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         self.mytheme.title_font_color = Color.WHITE.value
-        self.mytheme.background_color = self.menu_image
+        self.authors = []
+        self.sources = []
+        self.author_is_hidden = False
+        self.source_is_hidden = False
+        #self.mytheme.background_color = self.menu_image
         
-        self.menu = pygame_menu.Menu('', self.size[0], self.size[1],
+        self.menu = pygame_menu.Menu('About', self.size[0], self.size[1],
                             theme=self.mytheme)
 
     def to_menu(self):
@@ -28,16 +34,24 @@ class About:
 
     def show(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
-        self.frame_v = self.menu.add.frame_v(400, 350, margin=(10, 0))
-        self.frame_v.pack(self.menu.add.label("   - AUTHORS -   ", selectable=False), ALIGN_CENTER)
+        self.menu.add.vertical_margin(40)
+        self.frame_v = self.menu.add.frame_v(500, 700, margin=(10, 0), max_height=400)
+
+        self.frame_v.pack(self.menu.add.button("   - AUTHORS -   ", selection_effect=None), ALIGN_CENTER)
         for label in Default.about.value["authors"]:
-            self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
-        self.frame_v.pack(self.menu.add.label("   - SPRITES -   ", selectable=False), ALIGN_CENTER)
-        for label in Default.about.value["sprites"]:
-            self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
+            item = self.frame_v.pack(self.menu.add.label(label, selectable=False, font_size=20), ALIGN_CENTER)
+            self.authors.append(item)
         self.frame_v.pack(self.menu.add.vertical_margin(20))
-        self.frame_v.pack(self.menu.add.button('         back         ', self.to_menu), ALIGN_CENTER)
+        self.frame_v.pack(self.menu.add.button("   - OPEN SOURCE -   ", selection_effect=None), ALIGN_CENTER)
+        for title, val in Default.about.value["open_source"].items():
+            label = self.frame_v.pack(self.menu.add.label("< "+title+" >", selectable=False, font_size=22), ALIGN_CENTER)
+            self.sources.append(label)
+            for key, value in val.items():
+                item = self.frame_v.pack(self.menu.add.button(key, self.open_link, value, font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
+                self.sources.append(item)
+            self.frame_v.pack(self.menu.add.vertical_margin(20))
+        
+        self.menu.add.button('         back         ', self.to_menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def check_resize(self):
@@ -56,3 +70,6 @@ class About:
             self.menu._current._widgets_surface = make_surface(0,0)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
+
+    def open_link(self, url):
+        webbrowser.open(url, new=0, autoraise=True)

@@ -66,6 +66,11 @@ class Default(enum.Enum):
             "y":0
             }
     }
+    sound = {
+        "sfx":{
+            "volume":0.2
+        }
+    }
     font = "./Font/DXHanlgrumStd-Regular.otf"
     character = {
         "size": {
@@ -77,7 +82,6 @@ class Default(enum.Enum):
             "min":1,
             "max":4,
             "speed":20,
-            "volume":0.1,
             "speed_inc":1
             },
         "max_stats":{
@@ -176,7 +180,8 @@ class Default(enum.Enum):
                 "./Image/Effects/Bomb/frame-13.png", 
                 "./Image/Effects/Bomb/frame-14.png", 
                 "./Image/Effects/Bomb/frame-15.png"
-            ]
+            ],
+            "sound": "./Sound/Weapon/explosion.wav"
         },
         "boom":{
             "duration": 4.0,
@@ -217,9 +222,19 @@ class Default(enum.Enum):
             "Heesu Ju", 
             "Seyeong Lee",
         ],
-        "sprites": [
-            "MillionthVector"
-        ]
+        "open_source": {
+            "IMAGES":{
+                "MillionthVector CC BY 4.0": "http://millionthvector.blogspot.com/p/free-sprites.html",
+                "You're Perfect Studio CC0 1.0":"https://opengameart.org/content/space-shoter-crosshairs",
+                "bevouliin.com CC0 1.0":"https://opengameart.org/content/shining-coin-shining-health-shining-power-up-sprite-sheets",
+                "Felis Chaus CC0 1.0":"https://opengameart.org/content/fire-explosion",
+                "9KeyStudio CC0 1.0":"https://opengameart.org/content/pixel-art-explosion-animation"
+            },
+            "SOUNDS":{
+                "MATRIXXX_ CC0 1.0": "https://freesound.org/people/MATRIXXX_/sounds/441373/",
+                "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/"
+            }
+        }
     }
 
 class Utils():
