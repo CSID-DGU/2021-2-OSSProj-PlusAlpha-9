@@ -197,9 +197,15 @@ class Default(enum.Enum):
             "Heesu Ju", 
             "Seyeong Lee",
         ],
-        "sprites": [
-            "MillionthVector"
-        ]
+        "open_source": {
+            "images":{
+                "MillionthVector CC BY 4.0": "http://millionthvector.blogspot.com/p/free-sprites.html",
+                "You're Perfect Studio CC0 1.0":"https://opengameart.org/content/space-shoter-crosshairs",
+                "bevouliin.com CC0 1.0":"https://opengameart.org/content/shining-coin-shining-health-shining-power-up-sprite-sheets",
+                "Felis Chaus CC0 1.0":"https://opengameart.org/content/fire-explosion",
+                "9KeyStudio CC0 1.0":"https://opengameart.org/content/pixel-art-explosion-animation"
+            }
+        }
     }
 
 class Utils():
