@@ -36,7 +36,7 @@ class Item(Object):
             self.x_inv = True
         elif self.y >= self.boundary[1] - self.sy:
             self.y_inv = True
-        
+        self.update_rect((self.x, self.y))
         self.inc += Default.animation.value["speed"]
         self.inc = Utils.clamp(self.inc, 0.0, self.frame_count-1)
         if self.inc >= self.frame_count-1:

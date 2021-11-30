@@ -54,7 +54,7 @@
             "missile_sfx": "./Sound/weapon-sound8.wav",
             "missile_power": 450,
             "fire_interval": 0.6,
-            "is_unlocked": true
+            "is_unlocked": false
         },
         {
             "name": "F5S4",

@@ -12,6 +12,7 @@ class Object:
         self.size = size
         self.sx = size["x"]
         self.sy = size["y"]
+        self.rect = pygame.Rect(0, 0, self.sx, self.sy)
         self.velocity = velocity
         self.frames = frames
         self.frames_trans = frames_trans
@@ -48,10 +49,15 @@ class Object:
         else:
             self.img = self.frames[self.current_frame]
         self.sx, self.sy = self.img.get_size()
+        self.rect.size = (self.sx, self.sy)
 
     def set_XY(self,loc):
         self.x = loc[0]
         self.y = loc[1]
+        self.update_rect(loc)
+
+    def update_rect(self, loc):
+        self.rect.topleft = loc
 
     # 피사체의 그림 조정
     def change_size(self):
@@ -64,6 +70,7 @@ class Object:
         self.img_trans = self.img.copy()
         self.img_trans.fill(Color.TRANSPARENT.value, None, pygame.BLEND_RGBA_MULT)
         self.sx, self.sy = self.img.get_size()
+        self.rect.size = (self.sx, self.sy)
         if self.is_transparent:
             self.img = self.img_trans
         else:
@@ -84,6 +91,9 @@ class Object:
             return True
         else:
             return False
+
+    def rect_collide(self, rect):
+        return self.rect.colliderect(rect)
 
     #크기 조정 함수
     def on_resize(self, game):

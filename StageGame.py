@@ -202,7 +202,7 @@ class StageGame:
                 bullet.show(self.screen)
 
             for item in list(self.item_list):
-                if(self.check_crash(self.character,item)):
+                if item.rect_collide(self.character.rect):
                     item.use(self)
 
 
