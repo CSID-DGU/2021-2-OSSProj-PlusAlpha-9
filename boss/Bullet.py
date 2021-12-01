@@ -1,8 +1,10 @@
+from math import *
+
 import pygame
-from Object import Object
+from object.Object import Object
 from pygame.math import Vector2
 
-from math import *
+
 class Bullet(Object):
     def __init__(self, img_path, size, velocity, fire_loc, target_loc):
         super().__init__(img_path, size, velocity)

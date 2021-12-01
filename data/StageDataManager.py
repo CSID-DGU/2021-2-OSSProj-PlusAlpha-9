@@ -1,18 +1,21 @@
 import json
-from Stage import Stage
 from collections import OrderedDict
+
+from data.Stage import Stage
+
+
 class StageDataManager:
 
     @staticmethod
     def loadStageData():
-        with open('stagedata.json') as f:
+        with open('./data/stagedata.json') as f:
             stageData = json.load(f,object_pairs_hook=OrderedDict)
         return stageData
 
     
     @staticmethod
     def unlockNextStage(stage):
-        with open('stagedata.json', 'r') as f:
+        with open('./data/stagedata.json', 'r') as f:
             json_data = json.load(f,object_pairs_hook=OrderedDict)
 
         try:

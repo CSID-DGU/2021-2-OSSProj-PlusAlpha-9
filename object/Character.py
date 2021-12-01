@@ -1,9 +1,12 @@
-import pygame
 import time
-from Object import Object 
-from Missile import *
-from Defs import *
-from Effect import *
+
+import pygame
+from data.Defs import *
+
+from object.Effect import *
+from object.Missile import *
+from object.Object import Object
+
 
 class Character(Object):
     def __init__(self, name, img_path, velocity, missile_img, missile_size, 

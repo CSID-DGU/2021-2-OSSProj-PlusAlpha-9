@@ -21,13 +21,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.'''
 
 import random
-import pygame
 import time
 from math import *
 from sys import *
-from Bullet import Bullet
-from Defs import *
-from Gun import Gun
+
+import pygame
+from data.Defs import *
+
+from boss.Bullet import Bullet
+from boss.Gun import Gun
+
 
 class Boss():
 

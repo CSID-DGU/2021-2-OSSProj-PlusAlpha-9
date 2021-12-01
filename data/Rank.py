@@ -1,7 +1,9 @@
+from datetime import datetime
+
 import pygame
 import pygame_menu
 import pymysql
-from datetime import datetime
+
 
 class Rank():
     def __init__(self):

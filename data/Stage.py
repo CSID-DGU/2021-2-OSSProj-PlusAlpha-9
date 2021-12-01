@@ -1,4 +1,4 @@
-from Defs import Images
+from data.Defs import Images
 
 class Stage:
     def __init__(self, stageInfo):
