@@ -234,7 +234,8 @@ class Default(enum.Enum):
             },
             "SOUNDS":{
                 "MATRIXXX_ CC0 1.0": "https://freesound.org/people/MATRIXXX_/sounds/441373/",
-                "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/"
+                "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/",
+                "Royalty Free Music from Bensound":"www.bensound.com"
             },
             "Base Code":{
                 "CSID-DGU/2021-1-OSSPC-MUHIRYO-4":"https://github.com/CSID-DGU/2021-1-OSSPC-MUHIRYO-4.git",

@@ -35,7 +35,7 @@ class About:
     def show(self):
         self.menu.clear()
         self.menu.add.vertical_margin(40)
-        self.frame_v = self.menu.add.frame_v(600, 2000, margin=(10, 0), max_height=400)
+        self.frame_v = self.menu.add.frame_v(600, 2100, margin=(10, 0), max_height=400)
         # self.frame_v._relax=True
 
         self.frame_v.pack(self.menu.add.button("   - AUTHORS -   ", selection_effect=None), ALIGN_CENTER)
