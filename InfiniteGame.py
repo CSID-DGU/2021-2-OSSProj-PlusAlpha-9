@@ -50,16 +50,14 @@ class InfiniteGame:
         self.life = 3
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
-        self.mob_image = "./Image/Catus.png"
+        self.mob_image = "./Image/F5S3N.png"
         self.background_image = "./Image/Space_modified_v1.jpg"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.SB = 0
         self.dy = 2
         self.mob_velocity = 2
 
-        # 4-1. 보스 스테이지를 위한 변수 초기화
-        # self.isBossStage = stage.isBossStage
-        # self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
+        
         self.enemyBullets =[]
 
         # 5. 캐릭터 초기화
@@ -164,25 +162,6 @@ class InfiniteGame:
 
             for effect in self.effect_list:
                 effect.move(self)
-
-            #보스 이동
-            #보스 업데이트
-
-            # if(self.isBossStage):
-            #     self.boss.draw(self.screen)
-            #     self.boss.update(self.enemyBullets,self.character,self.size)
-            #     self.boss.check(self.character,self)
-
-            #     # 보스와 플레이어 충돌 감지
-            #     if(self.check_crash(self.boss,self.character)):
-            #         self.life -= 1
-
-            #     #보스의 총알과 플레이어 충돌 감지
-            #     for bullet in self.enemyBullets:
-            #         if(bullet.check_crash(self.character)):
-            #             self.life -=1
-            #             self.enemyBullets.remove(bullet)
-
         
             #적 투사체 이동
             for bullet in self.enemyBullets:
@@ -360,14 +339,20 @@ class InfiniteGame:
         @staticmethod
         def update_difficulty(game):
             play_time = (time.time() - game.start_time) #게임 진행 시간
-            game.mob_gen_rate = play_time//10/100 + 0.015 #10초마다 mob_gen_rate 0.01 증가(기본 0.015)
-            game.dy = play_time//10 + 2 #10초마다 dy(배경 이동 속도) 1 증가 (기본 2)
-            game.mob_velocity = play_time//5 + 2 #5초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
+            if(game.mob_gen_rate < 0.215): #최대값 제한
+                game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
+            if(game.dy<20):#최대값 제한
+                game.dy = play_time//5*2 + 2 #5초마다 dy(배경 이동 속도) 2 증가 (기본 2)
+            if(game.mob_velocity < 3):#최대값 제한
+                game.mob_velocity = play_time//10*1 + 2 #10초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
 
     class HardMode(Mode): #하드 모드
         @staticmethod
         def update_difficulty(game):
             play_time = (time.time() - game.start_time) #게임 진행 시간
-            game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
-            game.dy = play_time//10*3 + 2 #10초마다 dy(배경 이동 속도) 3 증가 (기본 2)
-            game.mob_velocity = play_time//5*2 + 2 #5초마다 mob_velocity(몹 이동 속도) 2 증가 (기본 2)
+            if(game.mob_gen_rate < 0.315):#최대값 제한
+                game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
+            if(game.dy<20):#최대값 제한
+                game.dy = play_time//5*2 + 2 #5초마다 dy(배경 이동 속도) 2 증가 (기본 2)
+            if(game.mob_velocity < 6):#최대값 제한
+                game.mob_velocity = play_time//10*2 + 2 #10초마다 mob_velocity(몹 이동 속도) 2 증가 (기본 2)
