@@ -35,18 +35,7 @@ class Scales(enum.Enum):
 class Sounds(enum.Enum):
     bgm_desert = "./Sound/ariant.wav"
     bgm_rien = "./Sound/Rien.wav"
-    sfx_weapon1 = "./Sound/weapon-sound4.wav"
-    sfx_weapon2 = "./Sound/weapon-sound8.wav"
-    sfx_weapon3 = "./Sound/weapon-sound9.wav"
-    sfx_weapon4 = "./Sound/weapon-sound16.wav"
     sfx_gameover = "./Sound/gameover.wav"
-    sfx_monster1 = "./Sound/monster-sound7.wav"
-    sfx_penguin = "./Sound/penguin.wav"
-    sfx_present1 = "./Sound/present1.wav"
-    sfx_present2 = "./Sound/present2.wav"
-    sfx_present3 = "./Sound/present3.wav"
-    sfx_present4 = "./Sound/present4.wav"
-    sfx_hit = "./Sound/puck.wav"
 
 class Color(enum.Enum):
     RED = (200,60,50)
@@ -198,7 +187,8 @@ class Default(enum.Enum):
                 "./Image/Effects/Boom/frame-4.png", 
                 "./Image/Effects/Boom/frame-5.png", 
                 "./Image/Effects/Boom/frame-6.png", 
-            ]
+            ],
+            "sound": "./Sound/destroyed.wav"
         },
         "crosshair":{
             "image": "./Image/Effects/Crosshair.png",
@@ -237,9 +227,10 @@ class Default(enum.Enum):
             "SOUNDS":{
                 "MATRIXXX_ CC0 1.0": "https://freesound.org/people/MATRIXXX_/sounds/441373/",
                 "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/",
-                "jalastram CC BY 3.0": "https://freesound.org/people/jalastram/sounds/317769/"
+                "jalastram CC BY 3.0": "https://freesound.org/people/jalastram/sounds/317769/",
+                "befig CC BY 3.0": "https://freesound.org/people/befig/sounds/455530/"
             },
-            "Base Code":{
+            "BASE CODE":{
                 "CSID-DGU/2021-1-OSSPC-MUHIRYO-4":"https://github.com/CSID-DGU/2021-1-OSSPC-MUHIRYO-4.git",
                 "TimurKhayrullin/Ultimate-Antivirus":"https://github.com/TimurKhayrullin/Ultimate-Antivirus"
             }
