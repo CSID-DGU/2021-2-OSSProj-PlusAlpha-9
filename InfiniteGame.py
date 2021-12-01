@@ -52,7 +52,7 @@ class InfiniteGame:
         self.mob_gen_rate = 0.01
         self.mob_image = "./Image/Catus.png"
         self.background_image = "./Image/Space_modified_v1.jpg"
-        self.background_music = "./Sound/bgm/bensound-evolution.mp3"
+        self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.SB = 0
         self.dy = 2
         self.mob_velocity = 2
