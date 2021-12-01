@@ -311,6 +311,12 @@ class StageGame:
                             self.menu.add.image("./Image/ChapterClear_Ice.jpg", scale=(1,1))
                         elif(character.name == 'Tank'):
                             self.menu.add.image("./Image/ChapterClear_Space.jpg", scale=(1,1))
+                    else:
+                        self.menu.add.label(f"{self.stage.chapter}",font_size=51, font_color=Color.BLACK.value)
+                        self.menu.add.image("./Image/ClearedChapter.jpg", scale=(1,1))
+                        self.menu.add.label("Already been rewarded", font_size=20)
+                        self.menu.add.label("")
+
 
         else:
             self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51, font_color=Color.BLACK.value)
