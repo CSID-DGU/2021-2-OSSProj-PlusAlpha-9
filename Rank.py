@@ -165,36 +165,5 @@ class Rank():
             self.update_data()
 
 
-# 데이터 삽입 기능 테스트 완료
-# r = Rank()
-# r.add_data('current','easy','test1',300)
-
-# 데이터 삭제 기능 테스트 완료
-# r = Rank()
-# r.clear_data('current', 'easy')
-
-# ID 중복 체크 기능 테스트 완료
-# r = Rank()
-# print(r.check_ID('easy','User1'))
-
-# 데이터 업데이트 (랭킹 갱신) 테스트 완료
-# r = Rank()
-# r.update_data()
-
-# 가장 최신 데이터의 날짜 데이터 불러오기 테스트 완료
-# r = Rank()
-# print(r.load_current_latest_data('easy'))
-# print(r.load_current_latest_data('easy')[5:7])
-# if('2021-10-11'[5:7]<datetime.now().strftime('%m')): print('yes')
-# else: print('no')
-# print(datetime.now().strftime('%m'))
-# print(r.load_current_latest_data('hard'))
-# if('2021-11-11' < '2022-10-12'): print('yes')
-# else: print('no')
-# print('2021-11-15'[0:4])
-
-# ID 로 순위 검색 테스트 완료
-# r = Rank()
-# print(r.search_data('current', 'easy', 'user10'))
 
 

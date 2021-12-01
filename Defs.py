@@ -32,10 +32,6 @@ class Scales(enum.Enum):
     small = (.6, .6)
     tiny = (.3, .3)
     
-class Sounds(enum.Enum):
-    bgm_desert = "./Sound/ariant.wav"
-    bgm_rien = "./Sound/Rien.wav"
-    sfx_gameover = "./Sound/gameover.wav"
 
 class Color(enum.Enum):
     RED = (200,60,50)
