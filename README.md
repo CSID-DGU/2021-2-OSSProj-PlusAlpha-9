@@ -19,7 +19,7 @@ Base Code
 ## Team
 팀장 : 동국대학교 경영학부 [정집민](https://github.com/jibminJung)
 
-팀원 : 동국대학교 영어 [주희수](https://github.com/heesuju)
+팀원 : 동국대학교 영어통번역학과 [주희수](https://github.com/heesuju)
 
 팀원 : 동국대학교 산업시스템공학과 [이세영](https://github.com/0112leesy)
 
