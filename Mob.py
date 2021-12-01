@@ -1,6 +1,7 @@
 import pygame
 from Object import Object 
 from pygame.math import Vector2
+import random
 from Effect import Boom
 import math
 from Defs import *
@@ -21,8 +22,8 @@ class Mob(Object):
 
         self.x += self.direction.y
         self.y += self.direction.x
-        self.rad+=0.08*self.velocity #속도에 적절한 값을 곱하여, 각도 변경
-        self.direction.from_polar((self.velocity*4,math.sin(self.rad)*90)) #속도에 비례한 길이를 갖고, 방향 sin함수를 따르는 벡터를 다음 방향으로 지정
+        self.rad+=0.04*self.velocity #속도에 적절한 값을 곱하여, 각도 변경
+        self.direction.from_polar((self.velocity*3,math.cos(self.rad)*70)) #속도에 비례한 길이를 갖고, 방향 sin함수를 따르는 벡터를 다음 방향으로 지정
 
         if self.y >= boundary[1] - self.sy:
             game.mobList.remove(self)
