@@ -124,6 +124,7 @@ class StageGame:
 
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
+                    self.check_resize()
                     self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기

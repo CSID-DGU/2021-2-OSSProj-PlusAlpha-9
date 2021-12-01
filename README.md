@@ -6,6 +6,7 @@ Shooting Game based on pygame
 ![Generic badge](https://img.shields.io/badge/python-3-blue.svg)
 ![Generic badge](https://img.shields.io/badge/pygame-2.0.2-blue.svg)
 ![Generic badge](https://img.shields.io/badge/pygame_menu-4.2.0-blue.svg)
+![Generic badge](https://img.shields.io/badge/pymysql-1.0.2-blue.svg)
 
 ![Generic badge](https://img.shields.io/badge/license-MIT-green.svg)
 ![Generic badge](https://img.shields.io/badge/OS-windows,mac_os,ubuntu-blue.svg)
@@ -19,7 +20,7 @@ Base Code
 ## Team
 팀장 : 동국대학교 경영학부 [정집민](https://github.com/jibminJung)
 
-팀원 : 동국대학교 영어영문학부 [주희수](https://github.com/heesuju)
+팀원 : 동국대학교 영어통번역학과 [주희수](https://github.com/heesuju)
 
 팀원 : 동국대학교 산업시스템공학과 [이세영](https://github.com/0112leesy)
 
@@ -75,13 +76,18 @@ sudo pip3 install pygame==2.0.2
 sudo pip3 install pygame_menu==4.2.0
 ```
 
-#### 4. download/clone this project and go to the directory
+#### 4. install pymysql 1.0.2
+```
+sudo pip3 install pymysql==1.0.2
+```
+
+#### 5. download/clone this project and go to the directory
 ```
 git clone https://github.com/CSID-DGU/2021-2-OSSProj-PlusAlpha-9.git
 cd 2021-2-OSSProj-PlusAlpha-9
 ```
 
-#### 5. run Main.py
+#### 6. run Main.py
 ```
 python3 Main.py
 ```

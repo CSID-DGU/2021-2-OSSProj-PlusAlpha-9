@@ -35,6 +35,10 @@ class InfiniteGame:
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
         
+        mytheme = pygame_menu.themes.THEME_ORANGE.copy()
+        self.menu = pygame_menu.Menu('Select Stage...', self.size[0], self.size[1],
+                            theme=mytheme)
+
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
         self.mode = mode
@@ -116,6 +120,7 @@ class InfiniteGame:
 
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
+                    self.check_resize()
                     self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기
@@ -322,7 +327,6 @@ class InfiniteGame:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
-        
 
     #재시도 버튼 클릭 시 실행
     def retry(self):
