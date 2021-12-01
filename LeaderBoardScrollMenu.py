@@ -20,12 +20,11 @@ class LeaderBoardScrollMenu:
             rank = Rank()
 
             if(mode == 'easy'):
-                easy_scroll_image = pygame_menu.baseimage.BaseImage(image_path='./Image/RankPage_scroll_easy_v1.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
                 easy_scroll_theme = pygame_menu.themes.THEME_DEFAULT.copy()
                 easy_scroll_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
                 easy_scroll_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
                 easy_scroll_theme.title_font_color = Color.WHITE.value
-                # easy_scroll_theme.background_color = easy_scroll_image
+
                 self.menu = pygame_menu.Menu('', self.size[0], self.size[1],
                                     theme=easy_scroll_theme)
                 self.menu.clear()
@@ -47,12 +46,10 @@ class LeaderBoardScrollMenu:
                         self.menu.add.label(r,selectable=False, font_size=20)
 
             elif(mode == 'hard'):
-                hard_scroll_image = pygame_menu.baseimage.BaseImage(image_path='./Image/RankPage_scroll_hard_v1.jpg',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
                 hard_scroll_theme = pygame_menu.themes.THEME_DEFAULT.copy()
                 hard_scroll_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
                 hard_scroll_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
                 hard_scroll_theme.title_font_color = Color.WHITE.value
-                # hard_scroll_theme.background_color = hard_scroll_image
                 self.menu = pygame_menu.Menu('', self.size[0], self.size[1],
                                     theme=hard_scroll_theme)
                 self.menu.clear()
@@ -74,7 +71,6 @@ class LeaderBoardScrollMenu:
                         self.menu.add.label(r,selectable=False, font_size=20)
 
             self.menu.add.button('back', self.to_menu)
-            #self.menu.mainloop(self.screen)
             self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def check_resize(self):

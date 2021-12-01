@@ -42,14 +42,14 @@ class Rank():
         data = curs.fetchall()
         if(len(data) > 0): return str(data[0]['date'])
         else:
-            if mode == 'easy':
-                sql = 'select * from past_easy_score order by date desc'
-            elif mode == 'hard':
-                sql = 'select * from past_hard_score order by date desc'
-            curs.execute(sql)
-            data = curs.fetchall()
-            curs.close()
-            return str(data[0]['date'])
+            # if mode == 'easy':
+            #     sql = 'select * from past_easy_score order by date desc'
+            # elif mode == 'hard':
+            #     sql = 'select * from past_hard_score order by date desc'
+            # curs.execute(sql)
+            # data = curs.fetchall()
+            # curs.close()
+            return str('no_current_data')
          
         # return datetime.now().strftime('%Y-%m-%d')
         # latest_data_date = str(data[0]['date'])
@@ -155,9 +155,10 @@ class Rank():
     def check_update(self):
         # 가장 최근에 기록된 랭킹의 날짜 데이터 받아오기
         current_latest_data_date = self.load_current_latest_data('easy')
-        # 예외처리 ?
-        # if(current_latest_data_date < self.load_current_latest_data('hard')): current_latest_data_date = self.load_current_latest_data('hard')
-
+        if(current_latest_data_date == 'no_current_data'):
+            current_latest_data_date = self.load_current_latest_data('hard')
+            if(current_latest_data_date == 'no_current_data'):
+                return
         if(current_latest_data_date[0:4] < datetime.now().strftime('%Y')): # Year 비교
             self.update_data()
         elif(current_latest_data_date[5:7] < datetime.now().strftime('%m')): # month 비교
@@ -195,4 +196,5 @@ class Rank():
 # ID 로 순위 검색 테스트 완료
 # r = Rank()
 # print(r.search_data('current', 'easy', 'user10'))
+
 

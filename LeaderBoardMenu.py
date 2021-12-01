@@ -29,7 +29,6 @@ class LeaderBoardMenu:
 
     def rank(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - RANKING -   ", selectable=False)
         self.menu.add.button('     current ranking     ', self.current_rank)
         self.menu.add.button('     past ranking     ', self.past_rank)
@@ -39,7 +38,6 @@ class LeaderBoardMenu:
 
     def current_rank(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - Current Rank -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
@@ -48,7 +46,6 @@ class LeaderBoardMenu:
 
     def past_rank(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - Past Rank -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.get_past_easy_rank_from_scroll)
         self.menu.add.button('     hard mode     ', self.get_past_hard_rank_from_scroll)
@@ -77,11 +74,10 @@ class LeaderBoardMenu:
 
     def get_current_easy_rank_page(self, tens):
         self.menu.clear()
-        # self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Easy Rank--",selectable=False,font_size=30)
         if(len(easy_data) == 0):
             self.menu.add.vertical_margin(100)
-            self.menu.add.label('No Ranking Information.')
+            self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
             self.menu.add.vertical_margin(100)
         else:
             self.menu.add.vertical_margin(40)
@@ -99,7 +95,8 @@ class LeaderBoardMenu:
             if(tens == 0):
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
+                if(tens != len(easy_data)//10):
+                    prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
             elif(tens == len(easy_data)//10):
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
@@ -122,11 +119,10 @@ class LeaderBoardMenu:
 
     def get_current_hard_rank_page(self, tens):
         self.menu.clear()
-        # self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Hard Rank--",selectable=False,font_size=30)
         if(len(hard_data) == 0):
             self.menu.add.vertical_margin(100)
-            self.menu.add.label('No Ranking Information.')
+            self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
             self.menu.add.vertical_margin(100)
         else:
             self.menu.add.vertical_margin(40)
@@ -143,7 +139,8 @@ class LeaderBoardMenu:
             if(tens == 0):
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
+                if(tens != len(easy_data)//10):
+                    prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
             elif(tens == len(hard_data)//10):
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
@@ -153,7 +150,6 @@ class LeaderBoardMenu:
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
         self.menu.add.button('back', self.current_rank)
-        #self.menu.mainloop(self.screen)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def get_next_hard_rank_page(self):
@@ -166,12 +162,11 @@ class LeaderBoardMenu:
 
     def show_current_rank_search(self):
         self.menu.clear()
-        # self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Rank Search--",selectable=False,font_size=30)
         self.menu.add.vertical_margin(50)
         self.search_frame = self.menu.add.frame_v(600, 250, align=ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.label('search your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
-        self.text_input = self.search_frame.pack(self.menu.add.text_input('ID :', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
+        self.text_input = self.search_frame.pack(self.menu.add.text_input('ID :', maxchar=10, input_underline='_', font_size=20),align=ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.vertical_margin(20))
         difficulty = [('easy', (0)), ('hard', (0))]
         self.selector = self.search_frame.pack(self.menu.add.selector(

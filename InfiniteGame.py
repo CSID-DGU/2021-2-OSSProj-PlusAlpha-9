@@ -280,7 +280,7 @@ class InfiniteGame:
         self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=25),align=ALIGN_CENTER)
-        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
+        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=10, input_underline='_', font_size=20),align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.vertical_margin(20))
         self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = 20), align=ALIGN_CENTER)
         self.register_frame.pack(self.menu.add.button('Retry', self.retry, font_size = 20), align=ALIGN_CENTER)

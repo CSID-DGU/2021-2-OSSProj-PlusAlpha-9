@@ -82,7 +82,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 450,
             "fire_interval": 0.6,
-            "is_unlocked": false
+            "is_unlocked": true
         },
         {
             "name": "F5S4",
