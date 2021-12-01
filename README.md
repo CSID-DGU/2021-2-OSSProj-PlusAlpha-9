@@ -6,6 +6,7 @@ Shooting Game based on pygame
 ![Generic badge](https://img.shields.io/badge/python-3-blue.svg)
 ![Generic badge](https://img.shields.io/badge/pygame-2.0.2-blue.svg)
 ![Generic badge](https://img.shields.io/badge/pygame_menu-4.2.0-blue.svg)
+![Generic badge](https://img.shields.io/badge/pymysql-1.0.2-blue.svg)
 
 ![Generic badge](https://img.shields.io/badge/license-MIT-green.svg)
 ![Generic badge](https://img.shields.io/badge/OS-windows,mac_os,ubuntu-blue.svg)
