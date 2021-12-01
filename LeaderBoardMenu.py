@@ -29,7 +29,6 @@ class LeaderBoardMenu:
 
     def rank(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - RANKING -   ", selectable=False)
         self.menu.add.button('     current ranking     ', self.current_rank)
         self.menu.add.button('     past ranking     ', self.past_rank)
@@ -39,7 +38,6 @@ class LeaderBoardMenu:
 
     def current_rank(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - Current Rank -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
@@ -48,7 +46,6 @@ class LeaderBoardMenu:
 
     def past_rank(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(80)
         self.menu.add.label("   - Past Rank -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.get_past_easy_rank_from_scroll)
         self.menu.add.button('     hard mode     ', self.get_past_hard_rank_from_scroll)
@@ -77,29 +74,35 @@ class LeaderBoardMenu:
 
     def get_current_easy_rank_page(self, tens):
         self.menu.clear()
-        # self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Easy Rank--",selectable=False,font_size=30)
         if(len(easy_data) == 0):
             self.menu.add.vertical_margin(100)
-            self.menu.add.label('No Ranking Information.')
+            self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
             self.menu.add.vertical_margin(100)
         else:
             self.menu.add.vertical_margin(40)
-            id_score_bar = "{:^7s}   {:^25s}   {:^5s}        {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-            self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+            # id_score_bar = "{:^7s}   {:^25s}   {:^5s}        {:^10s}".format('Rank', 'ID', 'Score', 'Date')
+            # self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+            table = self.menu.add.table(table_id='my_table', font_size=20)
+            table.default_cell_padding = 10
+            table.default_row_background_color = Color.GRAY.value
+            table.add_row(['Rank', 'ID', 'Score', 'Date'],
+                            cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD, cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             for i in range(10):
                 if(tens*10+i == len(easy_data)): break
                 name = str(easy_data[tens*10+i]['ID'])
                 score = '{0:>05s}'.format(str(easy_data[tens*10+i]['score']))
                 date = str(easy_data[tens*10+i]['date'])
                 # r = "{:^15s}{:^30s}{:^20s}{:^20s}".format(str(tens*10+i+1), name, score, date)
-                r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
-                self.menu.add.label(r,selectable=False, font_size=20)
+                # r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
+                # self.menu.add.label(r,selectable=False, font_size=20)
+                table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             prev_next_frame = self.menu.add.frame_h(300, 60)
             if(tens == 0):
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
+                if(tens != len(easy_data)//10):
+                    prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
             elif(tens == len(easy_data)//10):
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
@@ -122,28 +125,34 @@ class LeaderBoardMenu:
 
     def get_current_hard_rank_page(self, tens):
         self.menu.clear()
-        # self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Hard Rank--",selectable=False,font_size=30)
         if(len(hard_data) == 0):
             self.menu.add.vertical_margin(100)
-            self.menu.add.label('No Ranking Information.')
+            self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
             self.menu.add.vertical_margin(100)
         else:
             self.menu.add.vertical_margin(40)
-            id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-            self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+            table = self.menu.add.table(table_id='my_table', font_size=20)
+            table.default_cell_padding = 10
+            table.default_row_background_color = Color.GRAY.value
+            table.add_row(['Rank', 'ID', 'Score', 'Date'],
+                            cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD, cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
+            # id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
+            # self.menu.add.label(id_score_bar,selectable=False, font_size=20)
             for i in range(10):
                 if(tens*10+i == len(hard_data)): break
                 name = str(hard_data[tens*10+i]['ID'])
                 score = '{0:>05s}'.format(str(hard_data[tens*10+i]['score']))
                 date = str(hard_data[tens*10+i]['date'])
-                r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
-                self.menu.add.label(r,selectable=False, font_size=20)
+                # r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
+                # self.menu.add.label(r,selectable=False, font_size=20)
+                table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             prev_next_frame = self.menu.add.frame_h(300, 60)
             if(tens == 0):
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
+                if(tens != len(easy_data)//10):
+                    prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
             elif(tens == len(hard_data)//10):
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
@@ -153,7 +162,6 @@ class LeaderBoardMenu:
                 prev_next_frame.pack(self.menu.add._horizontal_margin(200),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
         self.menu.add.button('back', self.current_rank)
-        #self.menu.mainloop(self.screen)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def get_next_hard_rank_page(self):
@@ -166,7 +174,6 @@ class LeaderBoardMenu:
 
     def show_current_rank_search(self):
         self.menu.clear()
-        # self.menu.add.vertical_margin(100)
         self.menu.add.label("--Current Rank Search--",selectable=False,font_size=30)
         self.menu.add.vertical_margin(50)
         self.search_frame = self.menu.add.frame_v(600, 250, align=ALIGN_CENTER)

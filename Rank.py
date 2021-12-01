@@ -40,20 +40,10 @@ class Rank():
             sql = 'select * from current_hard_score order by date desc'
         curs.execute(sql)
         data = curs.fetchall()
-        if(len(data) > 0): return str(data[0]['date'])
-        else:
-            if mode == 'easy':
-                sql = 'select * from past_easy_score order by date desc'
-            elif mode == 'hard':
-                sql = 'select * from past_hard_score order by date desc'
-            curs.execute(sql)
-            data = curs.fetchall()
-            curs.close()
+        if(len(data) > 0):
             return str(data[0]['date'])
-         
-        # return datetime.now().strftime('%Y-%m-%d')
-        # latest_data_date = str(data[0]['date'])
-        # return latest_data_date
+        else:
+            return str('no_current_data')
 
     def search_data(self, term, mode, ID):                                  
         if term == 'current':
@@ -146,22 +136,32 @@ class Rank():
 
     def update_data(self):      # 랭킹 등록 시 date의 월 값이 달라질 때 update_data 호출 하면 될 듯
         self.clear_data('past', 'easy')
+        print('cleared')
         self.move_data('easy')
         self.clear_data('past', 'hard')
         self.move_data('hard')
         self.clear_data('current', 'easy')
         self.clear_data('current', 'hard')
+        print('updated')
 
     def check_update(self):
         # 가장 최근에 기록된 랭킹의 날짜 데이터 받아오기
-        current_latest_data_date = self.load_current_latest_data('easy')
-        # 예외처리 ?
-        # if(current_latest_data_date < self.load_current_latest_data('hard')): current_latest_data_date = self.load_current_latest_data('hard')
+        date_easy = self.load_current_latest_data('easy')
+        date_hard = self.load_current_latest_data('hard')
+        if(date_easy == 'no_current_data' and date_hard == 'no_current_data'):
+            return
+        else:
+            if(date_easy == 'no_current_data'): date = date_hard
+            elif(date_hard == 'no_current_data'): date = date_easy
+            else: date = date_easy
 
-        if(current_latest_data_date[0:4] < datetime.now().strftime('%Y')): # Year 비교
-            self.update_data()
-        elif(current_latest_data_date[5:7] < datetime.now().strftime('%m')): # month 비교
-            self.update_data()
+            if(date[0:4] < datetime.now().strftime('%Y')): # Year 비교
+                self.update_data()
+            elif(date[5:7] < datetime.now().strftime('%m')): # month 비교
+                self.update_data()
+            else: return
+
+            
 
 
 
