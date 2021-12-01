@@ -81,16 +81,22 @@ class LeaderBoardMenu:
             self.menu.add.vertical_margin(100)
         else:
             self.menu.add.vertical_margin(40)
-            id_score_bar = "{:^7s}   {:^25s}   {:^5s}        {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-            self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+            # id_score_bar = "{:^7s}   {:^25s}   {:^5s}        {:^10s}".format('Rank', 'ID', 'Score', 'Date')
+            # self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+            table = self.menu.add.table(table_id='my_table', font_size=20)
+            table.default_cell_padding = 10
+            table.default_row_background_color = Color.GRAY.value
+            table.add_row(['Rank', 'ID', 'Score', 'Date'],
+                            cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD, cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             for i in range(10):
                 if(tens*10+i == len(easy_data)): break
                 name = str(easy_data[tens*10+i]['ID'])
                 score = '{0:>05s}'.format(str(easy_data[tens*10+i]['score']))
                 date = str(easy_data[tens*10+i]['date'])
                 # r = "{:^15s}{:^30s}{:^20s}{:^20s}".format(str(tens*10+i+1), name, score, date)
-                r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
-                self.menu.add.label(r,selectable=False, font_size=20)
+                # r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
+                # self.menu.add.label(r,selectable=False, font_size=20)
+                table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             prev_next_frame = self.menu.add.frame_h(300, 60)
             if(tens == 0):
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
@@ -126,15 +132,21 @@ class LeaderBoardMenu:
             self.menu.add.vertical_margin(100)
         else:
             self.menu.add.vertical_margin(40)
-            id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-            self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+            table = self.menu.add.table(table_id='my_table', font_size=20)
+            table.default_cell_padding = 10
+            table.default_row_background_color = Color.GRAY.value
+            table.add_row(['Rank', 'ID', 'Score', 'Date'],
+                            cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD, cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
+            # id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
+            # self.menu.add.label(id_score_bar,selectable=False, font_size=20)
             for i in range(10):
                 if(tens*10+i == len(hard_data)): break
                 name = str(hard_data[tens*10+i]['ID'])
                 score = '{0:>05s}'.format(str(hard_data[tens*10+i]['score']))
                 date = str(hard_data[tens*10+i]['date'])
-                r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
-                self.menu.add.label(r,selectable=False, font_size=20)
+                # r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(tens*10+i+1), name, score, date)
+                # self.menu.add.label(r,selectable=False, font_size=20)
+                table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             prev_next_frame = self.menu.add.frame_h(300, 60)
             if(tens == 0):
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
@@ -166,7 +178,7 @@ class LeaderBoardMenu:
         self.menu.add.vertical_margin(50)
         self.search_frame = self.menu.add.frame_v(600, 250, align=ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.label('search your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
-        self.text_input = self.search_frame.pack(self.menu.add.text_input('ID :', maxchar=10, input_underline='_', font_size=20),align=ALIGN_CENTER)
+        self.text_input = self.search_frame.pack(self.menu.add.text_input('ID :', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.vertical_margin(20))
         difficulty = [('easy', (0)), ('hard', (0))]
         self.selector = self.search_frame.pack(self.menu.add.selector(

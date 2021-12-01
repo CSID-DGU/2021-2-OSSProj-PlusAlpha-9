@@ -30,20 +30,24 @@ class LeaderBoardScrollMenu:
                 self.menu.clear()
                 past_easy_data = rank.load_data('past','easy')
                 self.menu.add.label("--Past Easy Rank--",selectable=False,font_size=30)
+
+                table = self.menu.add.table(table_id='my_table', font_size=20)
+                table.default_cell_padding = 10
+                table.default_row_background_color = Color.GRAY.value
+                
                 if(len(past_easy_data) == 0):
                     self.menu.add.vertical_margin(100)
                     self.menu.add.label('No Ranking Information.')
                     self.menu.add.vertical_margin(100)
                 else:
-                    id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-                    self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+                    table.add_row(['Rank', 'ID', 'Score', 'Date'],
+                            cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD, cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
                     for i in range(100):
                         if (i == len(past_easy_data)): break
                         name = str(past_easy_data[i]['ID'])
                         score = '{0:>05s}'.format(str(past_easy_data[i]['score']))
                         date = str(past_easy_data[i]['date'])
-                        r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(i+1), name, score, date)
-                        self.menu.add.label(r,selectable=False, font_size=20)
+                        table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
 
             elif(mode == 'hard'):
                 hard_scroll_theme = pygame_menu.themes.THEME_DEFAULT.copy()
@@ -55,20 +59,24 @@ class LeaderBoardScrollMenu:
                 self.menu.clear()
                 past_hard_data = rank.load_data('past','hard')
                 self.menu.add.label("--Past Hard Rank--",selectable=False,font_size=30)
+
+                table = self.menu.add.table(table_id='my_table_2', font_size=20)
+                table.default_cell_padding = 10
+                table.default_row_background_color = Color.GRAY.value
+                
                 if(len(past_hard_data) == 0):
                     self.menu.add.vertical_margin(100)
                     self.menu.add.label('No Ranking Information.')
                     self.menu.add.vertical_margin(100)
                 else:
-                    id_score_bar = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format('Rank', 'ID', 'Score', 'Date')
-                    self.menu.add.label(id_score_bar,selectable=False, font_size=20)
+                    table.add_row(['Rank', 'ID', 'Score', 'Date'],
+                            cell_font=pygame_menu.font.FONT_OPEN_SANS_BOLD, cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
                     for i in range(100):
                         if (i == len(past_hard_data)): break
                         name = str(past_hard_data[i]['ID'])
                         score = '{0:>05s}'.format(str(past_hard_data[i]['score']))
                         date = str(past_hard_data[i]['date'])
-                        r = "{:^7s}   {:^25s}   {:^5s}       {:^10s}".format(str(i+1), name, score, date)
-                        self.menu.add.label(r,selectable=False, font_size=20)
+                        table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
 
             self.menu.add.button('back', self.to_menu)
             self.menu.mainloop(self.screen,bgfun = self.check_resize)

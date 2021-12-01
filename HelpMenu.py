@@ -43,7 +43,7 @@ class HelpMenu:
         self.menu.add.vertical_margin(10)
         self.menu.add.image(Images.info_infi_1.value, scale=Scales.small.value)
         self.menu.add.button('     next     ', self.infinite_game_2, selection_color=Color.BLACK.value)
-        self.menu.add.button('         back         ', self.to_menu, selection_color=Color.BLACK.value)
+        self.menu.add.button('         back         ', self.show, selection_color=Color.BLACK.value)
 
     def infinite_game_2(self):
         self.menu.clear()
@@ -83,7 +83,7 @@ class HelpMenu:
         self.menu.add.vertical_margin(10)
         self.menu.add.image(Images.info_stage_1.value, scale=Scales.small.value)
         self.menu.add.button('     next     ', self.stage_game_2, selection_color=Color.BLACK.value)
-        self.menu.add.button('         back         ', self.to_menu, selection_color=Color.BLACK.value)
+        self.menu.add.button('         back         ', self.show, selection_color=Color.BLACK.value)
 
     def stage_game_2(self):
         self.menu.clear()
