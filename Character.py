@@ -99,8 +99,7 @@ class Character(Object):
                     self.is_collidable = True
                     if(self.is_transparent):
                         self.img = self.img_copy
-        else:
-            self.img = self.img_copy
+                        self.is_transparent = False
         self.update_rect((self.x, self.y))
         # 화면 밖으로 나간 미사일 삭제
         for missile in list(self.missiles_fired):

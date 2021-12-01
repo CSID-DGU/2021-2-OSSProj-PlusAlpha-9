@@ -3,6 +3,7 @@ from Object import Object
 from pygame.math import Vector2
 from Effect import Boom
 import math
+from Defs import *
 
 class Mob(Object):
     def __init__(self, img_path, size, velocity, missile):
@@ -11,6 +12,8 @@ class Mob(Object):
         self.is_targeted = False
         self.direction = Vector2(1,1)
         self.rad = 1
+        self.kill_sfx = pygame.mixer.Sound(Default.effect.value["boom"]["sound"])
+        self.kill_sfx.set_volume(Default.sound.value["sfx"]["volume"])
 
     def move(self, boundary, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]): #update when screen resized
@@ -25,6 +28,7 @@ class Mob(Object):
             game.mobList.remove(self)
 
     def destroy(self, game):
+        self.kill_sfx.play()
         boom = Boom(game.animation.animations["destroy_effect"])
         mob_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
         boom.set_XY((mob_location["x"] - boom.sx/2, mob_location["y"]- boom.sy/2))

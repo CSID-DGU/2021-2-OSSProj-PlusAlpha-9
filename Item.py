@@ -17,6 +17,9 @@ class Item(Object):
         self.inc = 0.0
         self.inc_delay = 0.0
 
+        self.sfx = pygame.mixer.Sound(Default.item.value["sound"])
+        self.sfx.set_volume(Default.sound.value["sfx"]["volume"])
+
     def move(self, game): 
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game)
@@ -73,6 +76,7 @@ class Bomb(Item):
 
     def use(self, game):
         if self.is_collidable == True:
+            self.sfx.play()
             game.character.bomb_count+=1
             self.is_collidable = False
             game.item_list.remove(self)
@@ -83,6 +87,7 @@ class Coin(Item):
 
     def use(self, game):
         if self.is_collidable == True:
+            self.sfx.play()
             game.score += 50
             self.is_collidable = False
             game.item_list.remove(self)
@@ -93,6 +98,7 @@ class Health(Item):
 
     def use(self, game):
         if self.is_collidable == True:
+            self.sfx.play()
             game.life += 1
             self.is_collidable = False
             game.item_list.remove(self)
@@ -103,6 +109,7 @@ class PowerUp(Item):
 
     def use(self, game):
         if self.is_collidable == True:
+            self.sfx.play()
             fire_count = game.character.fire_count + 1
             n_min = Default.character.value["missile"]["min"]
             n_max = Default.character.value["missile"]["max"]
@@ -118,6 +125,7 @@ class SpeedUp(Item):
         
     def use(self, game):
         if self.is_collidable == True:
+            self.sfx.play()
             self.used = time.time()
             self.org_velocity = game.character.velocity
             self.org_fire_interval = game.character.fire_interval
