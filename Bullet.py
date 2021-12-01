@@ -26,6 +26,7 @@ class Bullet(Object):
     def move(self,boundary,game):
         self.x += self.dx
         self.y += self.dy
+        self.update_rect((self.x, self.y))
         if self.y >= boundary[1] - self.sy or self.x>=boundary[0]-self.sx or self.x<0 or self.y< 0:
             game.enemyBullets.remove(self)
 

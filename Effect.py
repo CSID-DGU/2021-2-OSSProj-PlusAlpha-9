@@ -19,6 +19,7 @@ class Effect(Object):
         self.inc = Utils.clamp(self.inc, 0.0, self.frame_count-1)
         self.current_frame = int(self.inc)
         self.img = self.frames[int(self.inc)]
+        self.update_rect((self.x, self.y))
 
 class Explosion(Effect):
     def __init__(self, animation):
@@ -34,6 +35,12 @@ class Explosion(Effect):
                 if self.check_crash(enemy):
                     enemy.destroy(game)
                     game.score += 10
+            if hasattr(game, "stage"):
+                if game.stage.is_boss_stage:
+                    for bullet in game.enemyBullets:
+                        if self.rect_collide(bullet.rect):
+                            if bullet in game.enemyBullets:
+                                game.enemyBullets.remove(bullet)
 
 class Boom(Effect):
     def __init__(self, animation):
