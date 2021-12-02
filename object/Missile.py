@@ -7,22 +7,39 @@ from object.Object import Object
 
 
 class Missile(Object):
+    # 캐릭터 발사체 객체
+
+    # Attributes:
+    # power : 공격력 (int)
     def __init__(self, img_path, size, power):
         self.boundary = pygame.display.get_surface().get_size()
         super().__init__(img_path, size, Default.character.value["missile"]["speed"])
         self.power = power
 
+    # 미사일 이동 
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game)
         self.y -= self.velocity
 
 class TargetedMissile(Missile):
+    # 적의 위치로 추적하는 유도탄 객체
+
+    # Attributes
+    # game : 현재 실행 중인 게임 모드
+    # vel : 적이 있는 방향 * 속도 (vector2)
+    # position : 현재 미사일 위치 (vector2)
+    # target : 추적하고 있는 객체 
+    # locked_on : 추적 여부 (bool)
+    # crosshair : 적 조준 시 표시되는 오브젝트 (crosshar)
+    # direction : 적의 방향 (vector2)
+    # velocity : 미사일의 이동 속도 (int)
+    # img : 미사일 이미지 (surface)
     def __init__(self, position, game, power):
         super().__init__(Images.weapon_target_missile.value, {"x":15, "y":25}, power)
         self.game = game
         self.vel = Vector2(0,0)
-        self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)  # The position of the bullet.
+        self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)
         self.target = self.find_target(game)
         self.locked_on = True
         self.crosshair = Crosshair(self.target)
@@ -38,6 +55,8 @@ class TargetedMissile(Missile):
                 self.img = pygame.transform.rotozoom(self.img, -angle - 90.0, 1)
                 self.vel = direction.normalize() * self.velocity
 
+    # 화면에 있는 적들 중에서 가장 근접한 타깃 탐색
+    # 보스가 있으면 일반 몹 대신 보스만 조준
     def find_target(self, game):
         if hasattr(game, "stage"): 
             if game.stage.is_boss_stage:
@@ -73,6 +92,7 @@ class TargetedMissile(Missile):
                 else:
                     self.target_type = "NULL"
 
+    # 적을 향해 미사일 이동
     def update(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game)
@@ -97,12 +117,16 @@ class TargetedMissile(Missile):
         self.x = self.position[0] 
         self.y = self.position[1]
 
-
 class Crosshair(Object):
+    # 유도탄 발사 시 생성되는 객체
+    # 적 파괴 시 같이 화면에서 사라짐
+
+    # target : 추적 중인 객체
     def __init__(self, target):
         super().__init__(Default.effect.value["crosshair"]["image"], Default.effect.value["crosshair"]["size"], Default.effect.value["crosshair"]["velocity"])
         self.target = target
     
+    # 추적 중인 객체의 위치로 이동
     def move(self, game):
         if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]):
             self.on_resize(game)

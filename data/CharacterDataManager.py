@@ -4,7 +4,10 @@ import os
 from object.Character import Character
 
 
+# 캐릭터 데이터 json 파일 읽기/쓰기 클래스
 class CharacterDataManager:
+    # 캐릭터 데이터 json 파일 업데이트
+    # default=Character.json_dumpt_obj로 설정함으로 필요한 속성값만 포함시켜 serialize
     def save(characters):
         char_dict = {"Characters":characters}
         json_str = json.dumps(char_dict,indent=4,default=Character.json_dump_obj)
@@ -12,6 +15,7 @@ class CharacterDataManager:
         json_file.write(json_str)
         json_file.close()
 
+    # json 파일 읽어와 캐릭터 클래스 객체로 deserialize
     def load():
         if(os.path.isfile("./data/characterdata.json")):
             try:
