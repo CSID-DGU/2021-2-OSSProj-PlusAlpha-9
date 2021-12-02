@@ -2,6 +2,7 @@ import enum
 import math
 from sys import version
 
+
 class Images(enum.Enum):
     start = "./Image/StartImage.png"
     how_to_play = "./Image/howtoplay.png"

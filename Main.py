@@ -1,19 +1,22 @@
-import pygame
-import pymysql
 from collections import OrderedDict
 from datetime import datetime
-import pygame_menu 
 from os import system
-from Character import *
-from Defs import *
-from HelpMenu import HelpMenu
-from StageDataManager import *
-from CharacterDataManager import *
-from Rank import Rank
-from StageSelectMenu import *
-from LeaderBoardMenu import *
-from About import *
-from DifficultySelectMenu import *
+
+import pygame
+import pygame_menu
+import pymysql
+
+from data.CharacterDataManager import *
+from data.Defs import *
+from data.Rank import Rank
+from data.StageDataManager import *
+from menu.About import *
+from menu.DifficultySelectMenu import *
+from menu.HelpMenu import HelpMenu
+from menu.LeaderBoardMenu import *
+from menu.StageSelectMenu import *
+from object.Character import *
+
 
 class Display:
     w_init = 1/2

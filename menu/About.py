@@ -1,14 +1,17 @@
 
+import webbrowser
 from sys import argv
+
 import pygame
 import pygame_menu
+from data.Defs import *
+from data.Rank import *
 from pygame_menu.locals import ALIGN_CENTER
-from pygame_menu.widgets.core.widget import Widget
-from Rank import *
-from LeaderBoardScrollMenu import *
 from pygame_menu.utils import make_surface
-from Defs import *
-import webbrowser
+from pygame_menu.widgets.core.widget import Widget
+
+from menu.LeaderBoardScrollMenu import *
+
 
 class About:
     def __init__(self,screen):

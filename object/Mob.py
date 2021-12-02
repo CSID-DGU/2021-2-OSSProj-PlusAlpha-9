@@ -1,10 +1,13 @@
-import pygame
-from Object import Object 
-from pygame.math import Vector2
-import random
-from Effect import Boom
 import math
-from Defs import *
+import random
+
+import pygame
+from data.Defs import *
+from pygame.math import Vector2
+
+from object.Effect import Boom
+from object.Object import Object
+
 
 class Mob(Object):
     def __init__(self, img_path, size, velocity, missile):

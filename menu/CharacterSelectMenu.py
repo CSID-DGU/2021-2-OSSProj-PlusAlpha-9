@@ -2,16 +2,16 @@
 
 import pygame
 import pygame_menu
+from data.CharacterDataManager import *
+from data.Defs import *
+from data.Stage import Stage
+from data.StageDataManager import *
+from game.InfiniteGame import *
+from game.StageGame import StageGame
 from pygame_menu.baseimage import IMAGE_MODE_FILL, IMAGE_MODE_SIMPLE
 from pygame_menu.locals import ALIGN_LEFT, ALIGN_RIGHT
-
-from Defs import *
-from StageGame import StageGame
-from Stage import Stage
-from StageDataManager import *
-from CharacterDataManager import *
-from InfiniteGame import *
 from pygame_menu.utils import make_surface
+
 
 class CharacterSelectMenu(pygame_menu.menu.Menu):
     image_widget: 'pygame_menu.widgets.Image'

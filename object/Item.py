@@ -1,10 +1,13 @@
-import pygame
-from Object import Object
-from Character import Character
-from Defs import *
-from Effect import Effect
-import time
 import random
+import time
+
+import pygame
+from data.Defs import *
+
+from object.Character import Character
+from object.Effect import Effect
+from object.Object import Object
+
 
 class Item(Object):
     def __init__(self, frames, frames_trans, anim_id):

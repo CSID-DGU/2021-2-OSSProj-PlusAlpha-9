@@ -2,11 +2,10 @@
 
 import pygame
 import pygame_menu
-
-
-from InfiniteGame import *
-from CharacterSelectMenu import *
+from game.InfiniteGame import *
 from pygame_menu.utils import make_surface
+
+from menu.CharacterSelectMenu import *
 
 
 class DifficultySelectMenu:
