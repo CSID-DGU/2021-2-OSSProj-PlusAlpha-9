@@ -23,5 +23,5 @@ class StageDataManager:
         except:
             pass
             
-        with open('stagedata.json', 'w', encoding='utf-8') as make_file:
+        with open('./data/stagedata.json', 'w', encoding='utf-8') as make_file:
             json.dump(json_data, make_file, indent="\t")
