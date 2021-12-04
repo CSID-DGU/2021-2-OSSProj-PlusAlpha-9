@@ -18,7 +18,8 @@ class StageDataManager:
         with open('./data/stagedata.json', 'r') as f:
             json_data = json.load(f,object_pairs_hook=OrderedDict)
 
-        try:
+        try: #unlock next stage of passed stage from parameter
+            #make next stage's "is_unlocked" field 1
             json_data["chapter"][stage.chapter][str(list(json_data["chapter"][stage.chapter].keys()).index(f"{stage.stage}")+2)][6] = 1
         except:
             pass

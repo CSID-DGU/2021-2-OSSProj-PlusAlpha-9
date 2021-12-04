@@ -1,6 +1,6 @@
 from data.Defs import Images
 
-class Stage:
+class Stage: #data model of stage data, saved in stagedata.json
     def __init__(self, stageInfo):
         self.chapter = stageInfo[0]
         self.stage = stageInfo[1]
