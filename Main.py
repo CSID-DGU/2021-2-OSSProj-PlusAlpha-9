@@ -59,13 +59,7 @@ def back():
     menu.add.button('Rank',show_rank)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
-<<<<<<< HEAD
 # 저자 및 라이선스 정보 확인 화면 보여주기
-=======
-def help():
-    menu.clear()
-
->>>>>>> 88e24bacc90b53c73c2fe4199b42783a80886a35
 def show_info_menu():
     About(screen).show()
 
