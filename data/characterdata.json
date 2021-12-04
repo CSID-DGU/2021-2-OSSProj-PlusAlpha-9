@@ -1,0 +1,116 @@
+{
+    "Characters": [
+        {
+            "name": "Meerkat",
+            "img_path": "./Image/Characters/Players/Meerkat.png",
+            "velocity": 12,
+            "missile_img": "./Image/Weapon/worm.png",
+            "missile_size": {
+                "x": 50,
+                "y": 50
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 400,
+            "fire_interval": 0.9,
+            "is_unlocked": true
+        },
+        {
+            "name": "SnowMan",
+            "img_path": "./Image/Characters/Players/SnowMan.png",
+            "velocity": 15,
+            "missile_img": "./Image/Weapon/carrot.png",
+            "missile_size": {
+                "x": 40,
+                "y": 40
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 200,
+            "fire_interval": 0.6,
+            "is_unlocked": true
+        },
+        {
+            "name": "Battleship",
+            "img_path": "./Image/Characters/Players/Battleship.png",
+            "velocity": 10,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 50,
+                "y": 70
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 350,
+            "fire_interval": 0.8,
+            "is_unlocked": true
+        },
+        {
+            "name": "Speedship",
+            "img_path": "./Image/Characters/Players/Speedship.png",
+            "velocity": 15,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 50,
+                "y": 70
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 300,
+            "fire_interval": 1.3,
+            "is_unlocked": true
+        },
+        {
+            "name": "Car",
+            "img_path": "./Image/Characters/Players/Car.png",
+            "velocity": 20,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 50,
+                "y": 70
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 350,
+            "fire_interval": 2.0,
+            "is_unlocked": true
+        },
+        {
+            "name": "F5S1",
+            "img_path": "./Image/Characters/Players/F5S1.png",
+            "velocity": 20,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 90,
+                "y": 70
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 450,
+            "fire_interval": 0.6,
+            "is_unlocked": false
+        },
+        {
+            "name": "F5S4",
+            "img_path": "./Image/Characters/Players/F5S4.png",
+            "velocity": 25,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 90,
+                "y": 70
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 480,
+            "fire_interval": 0.4,
+            "is_unlocked": false
+        },
+        {
+            "name": "Tank",
+            "img_path": "./Image/Characters/Players/Tank.png",
+            "velocity": 6,
+            "missile_img": "./Image/MISSILE_2.png",
+            "missile_size": {
+                "x": 100,
+                "y": 120
+            },
+            "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
+            "missile_power": 500,
+            "fire_interval": 0.3,
+            "is_unlocked": false
+        }
+    ]
+}
