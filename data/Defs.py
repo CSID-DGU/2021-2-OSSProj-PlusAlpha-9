@@ -91,6 +91,34 @@ class Default(enum.Enum):
         }
     }
     font = "./Font/DXHanlgrumStd-Regular.otf"
+    boss = {
+        "size": {
+            "x":250, 
+            "y":250
+        },
+        "velocity": [
+            6,
+            8,
+            12
+        ],
+        "gun_size": 10,
+        "bullet_size": {
+            "x":20, 
+            "y":20
+        },
+        "health": 12000,
+        "firing_speed": [
+            25, 
+            20, 
+            15
+        ],
+        "grace_timers": [
+            120,
+            90, 
+            65
+        ],
+        "grace_time": 30
+    }
     character = {
         "size": {
             "x":100, 
