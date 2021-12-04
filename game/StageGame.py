@@ -290,6 +290,7 @@ class StageGame:
 
     def toMenu(self,menu):
         menu.disable()
+        pygame.mixer.music.stop()
 
     # 클리어 화면
     def showStageClearScreen(self):
