@@ -37,13 +37,12 @@ class InfiniteGame:
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
         
-        mytheme = pygame_menu.themes.THEME_ORANGE.copy()
-        self.menu = pygame_menu.Menu('Select Stage...', self.size[0], self.size[1],
-                            theme=mytheme)
 
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
-        self.mode = mode
+        self.mode = mode #Game mode = hard/easy
+        self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
+                            theme=pygame_menu.themes.THEME_DEFAULT)
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.animation = AnimationManager()
@@ -117,9 +116,6 @@ class InfiniteGame:
                     else:
                         width = int(height * (10/13))
                     
-                    w_ratio = width/self.size[0]
-                    h_ratio = height/self.size[1]
-
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
                     self.check_resize()
@@ -128,7 +124,7 @@ class InfiniteGame:
             #몹을 확률적으로 발생시키기
             if(random.random()<self.mob_gen_rate):
                 newMob = Mob(self.mob_image,{"x":50, "y":50},self.mob_velocity,0)
-                newMob.set_XY((random.randrange(0,self.size[0]),0))
+                newMob.set_XY((random.randrange(0,self.size[0]),0)) #set mob location randomly
                 self.mobList.append(newMob)
             
             if random.random() < Default.item.value["powerup"]["spawn_rate"]:
