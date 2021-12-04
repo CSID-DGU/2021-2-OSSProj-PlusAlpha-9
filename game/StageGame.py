@@ -339,7 +339,7 @@ class StageGame:
         gameover_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
                             theme=gameover_theme)
-        self.menu.add.image(Images.gameover, scale=Scales.default.value)
+        self.menu.add.image(Images.gameover.value, scale=Scales.default.value)
         self.menu.add.label("")
         self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
