@@ -7,7 +7,7 @@ from pygame_menu.utils import make_surface
 
 from menu.CharacterSelectMenu import *
 
-
+# 난이도 선택 메뉴
 class DifficultySelectMenu:
 
     def __init__(self,screen):
@@ -47,9 +47,8 @@ class DifficultySelectMenu:
         
         
     
-    #menu mainloop에서 매번 체크 실행
+    # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
-        # self.menu._build_widget_surface()
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
             ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
