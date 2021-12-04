@@ -42,14 +42,12 @@ class DifficultySelectMenu:
 
     def to_character_select_menu(self): #캐릭터 메뉴 시작 함수
         selected_mode = self.mode_selector.get_value()[0][1]
-        # self.menu._open(CharacterSelectMenu(self.screen,selected_mode))
         CharacterSelectMenu(self.screen,selected_mode).show()
         
         
     
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
-        # self.menu._build_widget_surface()
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
             ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산

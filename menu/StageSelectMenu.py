@@ -26,6 +26,7 @@ class StageSelectMenu:
         
         self.stage_data = StageDataManager.loadStageData()
 
+        #initialize variables to save seleted chapter and stage.
         self.selectedChapter = [list(self.stage_data["chapter"].keys())[0]]
         self.selectedStage = ["1"]
 
@@ -76,7 +77,7 @@ class StageSelectMenu:
             print("stage locked")
         
 
-    def check_stage_unlock(self,chapter,stage):
+    def check_stage_unlock(self,chapter,stage): #check if the stage is unlocked when start button clicked
         self.stage_data = StageDataManager.loadStageData()
         if Stage(self.stage_data["chapter"][chapter][stage]).is_unlocked == 1 :
             return True

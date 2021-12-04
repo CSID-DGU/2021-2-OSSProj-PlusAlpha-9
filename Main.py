@@ -62,11 +62,6 @@ def back():
 def help():
     menu.clear()
 
-# def show_help():
-#     menu.clear()
-#     menu.add.button('Back',back)
-#     menu.add.image(image_path='./Image/howtoplay.png', angle=Display.angle, scale=Display.help_scale)
-
 def show_info_menu():
     About(screen).show()
 
@@ -105,9 +100,6 @@ if __name__ == '__main__':
                 pygame.quit()
                 break
             if event.type == pygame.VIDEORESIZE:
-                # Update the surface (min size : 300,500)
-                # surface = pygame.display.set_mode((max(event.w,300), max(event.h,500)),
-                #                                   pygame.RESIZABLE)
                 pass
 
         if (size != screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
