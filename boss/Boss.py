@@ -37,29 +37,34 @@ class Boss():
     
     def __init__(self, screen,image_path_list,bullet_image_path):
         #image and position
+        self.boundary = pygame.display.get_surface().get_size()
+        self.org_boundary = [Default.game.value["size"]["x"],Default.game.value["size"]["y"]]
         self.image_path_list = image_path_list
         self.load_images(image_path_list)
         self.x = screen[0]*0.5
         self.y = 0
-        self.sx, self.sy = (screen[0]*0.25,screen[1]*0.3)
-        self.change_img_size(self.sx,self.sy)
+        self.size = Default.boss.value["size"]
+        self.org_gun_size = Default.boss.value["gun_size"]
+        self.gun_size = self.org_gun_size
+        self.sx, self.sy = (self.size["x"], self.size["y"])
+        self.change_img_size()
         self.img = self.orig_imgs[0]
         self.bullet_image_path = bullet_image_path
 
         #boss properties init
         self.phase = 0
-        self.max_health = 12000
+        self.max_health = Default.boss.value["health"]
         self.health = self.max_health
-        self.velocity = [6,8,12]
-        self.bullet_size = {"x":20,"y":20}
+        self.velocity = Default.boss.value["velocity"]
+        self.bullet_size = Default.boss.value["bullet_size"]
         ##timers for attack balancing
         self.pause_timer = 120
         #firing time is reset if firing speed is reached
-        self.firing_speed = [25, 20, 15]
+        self.firing_speed = Default.boss.value["firing_speed"]
         self.firing_time = 0
         #grace time is reset if grace time is reached
-        self.grace_timers = [120, 90, 65]
-        self.grace_time = 30
+        self.grace_timers = Default.boss.value["grace_timers"]
+        self.grace_time = Default.boss.value["grace_time"]
         #attacks init
         self.attacks = [False, False, False, False]
         self.directions = 0
@@ -84,10 +89,15 @@ class Boss():
         self.last_bombed = 0.0
         self.hit_interval = 1.0
 
-    def change_img_size(self,sx,sy):
+    def change_img_size(self):
+        x_scale = self.boundary[0]/self.org_boundary[0]
+        y_scale = self.boundary[1]/self.org_boundary[1]
+        x = int(self.size["x"]*x_scale)
+        y = int(self.size["y"]*y_scale)
+        self.gun_size = int(self.org_gun_size*x_scale)
         for i in range(len(self.orig_imgs)):
-            self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(int(sx),int(sy)))
-
+            self.orig_imgs[i] = pygame.transform.scale(self.orig_imgs[i],(x,y)) # 그림의 크기를 조정한다.
+            self.sx, self.sy = self.orig_imgs[i].get_size()
       
     def move(self,boundary):
         #범위 내에서 이동하고, 총 위치도 이동
@@ -193,7 +203,7 @@ class Boss():
 
         # 총 그리기
         for gun in self.gun_pos:
-            pygame.draw.circle(screen, (255,0,0), (int(gun.x),int(gun.y)), 10)
+            pygame.draw.circle(screen, (255,0,0), (int(gun.x),int(gun.y)), self.gun_size)
 
         #체력 표시
         font = pygame.font.Font(Default.font.value, int(self.sy * 0.08)) #폰트설정 (폰트,크기)
@@ -270,18 +280,19 @@ class Boss():
         self.gun_pos = random_pos
 
     #크기 조정 함수
-    def on_resize(self, w_ratio, h_ratio):
-        self.x *= w_ratio
-        self.y *= h_ratio
-        self.sx *= w_ratio
-        self.sy *= h_ratio
+    def on_resize(self, game):
+        old_boundary = self.boundary
+        self.boundary = game.size
         self.load_images(self.image_path_list)
-        self.change_img_size(self.sx,self.sy)
+        self.change_img_size()
+        self.reposition(old_boundary)
         for gun in self.gun_pos:
-            gun.x *= w_ratio
-            gun.y *= h_ratio
-        self.bullet_size["x"] *= w_ratio
-        self.bullet_size["y"] *= h_ratio
-
+            gun.on_resize(game)
     def get_pos(self):
         return (self.x + (self.sx/2), self.y + (self.sy/2))
+
+    def reposition(self, old_boundary):
+        x_scale = self.x/old_boundary[0]
+        y_scale = self.y/old_boundary[1]
+        self.x = int(self.boundary[0] * x_scale)
+        self.y = int(self.boundary[1] * y_scale)

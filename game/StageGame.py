@@ -121,12 +121,12 @@ class StageGame:
                     w_ratio = width/self.size[0]
                     h_ratio = height/self.size[1]
 
-                    if(self.is_boss_stage): #보스 스테이지라면 보스 리사이징
-                        self.boss.on_resize(w_ratio,h_ratio)
-
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
                     self.check_resize()
+
+                    if(self.is_boss_stage): #보스 스테이지라면 보스 리사이징
+                        self.boss.on_resize(self)
                     self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기
