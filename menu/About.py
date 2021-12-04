@@ -13,6 +13,7 @@ from pygame_menu.widgets.core.widget import Widget
 from menu.LeaderBoardScrollMenu import *
 
 
+# 저자 및 라이선스 정보 확인 화면  
 class About:
     def __init__(self,screen):
         self.size = screen.get_size()
@@ -35,6 +36,7 @@ class About:
     def to_menu(self):
         self.menu.disable()
 
+    # 화면 표시
     def show(self):
         self.menu.clear()
         self.menu.add.vertical_margin(40)
@@ -46,6 +48,7 @@ class About:
             self.authors.append(item)
         self.frame_v.pack(self.menu.add.vertical_margin(20))
         self.frame_v.pack(self.menu.add.button("   - OPEN SOURCE -   ", selection_effect=None), ALIGN_CENTER)
+        # Defs 파일의 Default 클래스의 about 키값에 해당되는 모든 스트링 값을 가져와 화면에 출력
         for title, val in Default.about.value["open_source"].items():
             label = self.frame_v.pack(self.menu.add.label("< "+title+" >", selectable=False, font_size=22), ALIGN_CENTER)
             self.sources.append(label)
@@ -106,6 +109,7 @@ SOFTWARE.""",font_size=13),ALIGN_CENTER)
         self.menu.add.button('         back         ', self.to_menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
+    # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
@@ -123,5 +127,6 @@ SOFTWARE.""",font_size=13),ALIGN_CENTER)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
 
+    # 항목 클릭 시 키값에 해당하는 링크를 기본 웹 브라우저에서 연다
     def open_link(self, url):
         webbrowser.open(url, new=0, autoraise=True)

@@ -38,7 +38,6 @@ class Color(enum.Enum):
     RED = (200,60,50)
     BLUE = (0,60,200)
     GREEN = (50,200,50)
-    LIGHT_GREEN = (150,255,150)
     YELLOW = (255,255,0)
     WHITE = (255,255,255)
     TRANSPARENT = (255,255,255,128)

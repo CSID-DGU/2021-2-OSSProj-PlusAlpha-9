@@ -13,6 +13,7 @@ from pygame_menu.locals import ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.utils import make_surface
 
 
+# 캐릭터 선택 메뉴
 class CharacterSelectMenu(pygame_menu.menu.Menu):
     image_widget: 'pygame_menu.widgets.Image'
     item_description_widget: 'pygame_menu.widgets.Label'
@@ -32,7 +33,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         #선택된 스테이지
         self.attr =attr
 
-        #캐릭터 데이터를 json에서 불러온다.
+        #캐릭터 데이터를 json에서 불러온다
         self.character_data = CharacterDataManager.load()
 
         self.show()
@@ -64,8 +65,8 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
         self.item_description_widget = self.add.label(title = "Unlocked" if self.character_data[0].is_unlocked == True else "Locked")
-
         self.frame_v = self.add.frame_v(350, 160, margin=(10, 0))
+        # 각 캐릭터의 능력치 표시
         self.power = self.frame_v.pack(self.add.progress_bar(
             title="Power",
             default=int((self.character_data[0].missile_power/Default.character.value["max_stats"]["power"])*100),
@@ -84,7 +85,6 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             progress_text_enabled = False,
             box_progress_color = Color.GREEN.value
         ), ALIGN_RIGHT)
-
 
         self.add.button("PLAY",self.start_game)
         # self.add.button("BACK",pygame_menu.events.BACK)
@@ -111,18 +111,13 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             self.showCharactereLockedScreen(self.character_data[selected_idx].name)
 
     def showCharactereLockedScreen(self, character):
-        # self.disable()
         characterlocked_theme = pygame_menu.themes.THEME_DARK.copy()
         characterlocked_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         characterlocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         characterlocked_theme.title_font_color = (255, 255, 255)
-        # self.menu = pygame_menu.Menu('Character Locked!', self.size[0], self.size[1],
-        #                     theme=characterlocked_theme) # *0.7, *0.8
         self.size = self.screen.get_size()
         super().__init__('Character Locked!', self.size[0], self.size[1],
                             theme=characterlocked_theme)
-        # menu.add.label(":(",font_size=250)
-        # self.menu.add.image("./Image/StageLocked_v1.jpg", scale=(1, 1))
         if(character == 'F5S1'):
             self.add.image("./Image/CharacterLocked_F5S1.jpg", scale=(1, 1))
         elif(character == 'F5S4'):
@@ -132,21 +127,11 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
 
         self.add.label("")
         self.add.button('back', self.back_from_locked)
-        #self.menu.mainloop(self.screen)
         self.mainloop(self.screen,bgfun = self.check_resize)
 
     def back_from_locked(self):
-        # self.disable()
-        # self.enable()
         self.disable()
-        # CharacterSelectMenu(self.screen, self.attr)
         self.__init__(self.screen, self.attr)
-        # print(self._enabled)
-        # self._open(CharacterSelectMenu(self.screen, self.attr))
-        # self._open(self.show())
-        #._open(CharacterSelectMenu(self.screen, self.attr))
-        # self.mainloop(self.screen,bgfun = self.check_resize)
-        # self.show()
 
     #menu mainloop에서 매번 체크 실행
     def check_resize(self):
@@ -167,9 +152,11 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             self._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.get_size()}')
 
+    # 캐릭터 변경 시 실행
     def on_selector_change(self, selected, value: int) -> None:
         self.update_from_selection(value)
 
+    # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
         self.current = selected_value
         self.image_widget.set_image(self.character_imgs[selected_value])
