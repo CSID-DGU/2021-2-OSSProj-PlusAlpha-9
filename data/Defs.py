@@ -14,6 +14,21 @@ class Images(enum.Enum):
     missile_missile2 = "./Image/MISSILE_2.png"
     weapon_target_missile = "./Image/Weapon/spaceMissiles_012.png"
 
+    icon_caution = "./Image/Caution.jpg"
+    icon_award = "./Image/Award.jpg"
+
+    stage_clear = "./Image/Stageclear_v1.jpg"
+    chapter_clear_oasis = "./Image/ChapterClear_Oasis.jpg"
+    chapter_clear_ice = "./Image/ChapterClear_Ice.jpg"
+    chapter_clear_space = "./Image/ChapterClear_Space.jpg"
+    chapter_cleared = "./Image/ClearedChapter.jpg"
+    gameover = "./Image/Gameover_v2.jpg"
+
+    F5S1_locked = "./Image/CharacterLocked_F5S1.jpg"
+    F5S4_locked = "./Image/CharacterLocked_F5S4.jpg"
+    Tank_locked = "./Image/CharacterLocked_Tank.jpg"
+    stage_locked = "./Image/StageLocked_v1.jpg"
+
     info_infi_1 = "./Image/Info_infi_1.png"
     info_infi_2 = "./Image/Info_infi_2.png"
     info_infi_3 = "./Image/Info_infi_3.png"
@@ -29,6 +44,7 @@ class Images(enum.Enum):
     info_controls = "./Image/Info_controls.jpg"
 
 class Scales(enum.Enum):
+    large = (2, 2)
     default = (1, 1)
     small = (.6, .6)
     tiny = (.3, .3)
@@ -43,6 +59,23 @@ class Color(enum.Enum):
     TRANSPARENT = (255,255,255,128)
     GRAY = (220,220,220)
     BLACK = (0,0,0)
+
+class Menus(enum.Enum):
+    margin_10 = 10
+    margin_20 = 20
+    margin_40 = 40
+    margin_50 = 50
+    margin_100 = 100
+    margin_200 = 200
+    ranking_search_result_margin = (0,20)
+
+    fontsize_50 = 50
+    fontsize_30 = 30
+    fontsize_25 = 25
+    fontsize_default = 20
+
+    ID_maxchar = 20
+    table_padding = 10
 
 
 class Default(enum.Enum):

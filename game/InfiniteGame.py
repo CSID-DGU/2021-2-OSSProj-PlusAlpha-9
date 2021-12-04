@@ -251,64 +251,67 @@ class InfiniteGame:
         else:
             return False
 
-
+    # 뒤로가기 버튼에 적용되는 함수
     def to_menu(self):
+        
         self.menu.disable()
         pygame.mixer.music.stop()
 
+    # 랭킹 등록 화면
     def show_ranking_register_screen(self):
         self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
                             theme=pygame_menu.themes.THEME_DEFAULT)
-        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=20),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=25),align=ALIGN_CENTER)
-        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=20, input_underline='_', font_size=20),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.vertical_margin(20))
-        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = 20), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('Retry', self.retry, font_size = 20), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = 20), align=ALIGN_CENTER)
-        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value)
+        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)   # 가로 500, 세로 300의 프레임 생성
+        self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=Menus.fontsize_25.value),align=ALIGN_CENTER)
+        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=Menus.ID_maxchar.value, input_underline='_', font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.vertical_margin(Menus.margin_20.value))
+        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('Retry', self.retry, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
+        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
+        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value) # 가로 500, 세로 100의 프레임 생성
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         
     def register_ranking(self):
-        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value)
+        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value) # 가로 500, 세로 100의 프레임 생성
         name = self.text_input.get_value()
         rank = Rank()
         if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
-            if(name == ''):
-                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
-            elif(rank.check_ID('easy', name) == 0):
-                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
-            else:
-                self.menu.clear()
+            if(name == ''): # ID를 입력하지 않은 경우
+                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
+                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
+            elif(rank.check_ID('easy', name) == 0): # ID가 중복되는 경우
+                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
+                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
+            else: # 랭킹 등록이 완료된 경우
+                self.menu.clear() 
                 rank.add_data('current','easy',name,self.score)
-                self.menu.add.image("./Image/Award.jpg", scale=(2, 2))
-                self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=20)
-                self.menu.add.vertical_margin(20)
+                self.menu.add.image(Images.icon_award.value, scale=Scales.large.value)
+                self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=Menus.fontsize_default.value)
+                self.menu.add.vertical_margin(Menus.margin_20.value)
                 self.menu.add.button('to Menu', self.to_menu)
 
-        else: # 그 외 ( 하드모드인 경우)
-            if(name == ''):
-                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=20), align=ALIGN_CENTER)
-            elif(rank.check_ID('hard', name) == 0):
-                self.result_frame.pack(self.menu.add.image("./Image/Caution.jpg", scale=(1, 1)), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=20), align=ALIGN_CENTER)
-            else:
+        else: # 하드모드인 경우
+            if(name == ''): # ID를 입력하지 않은 경우
+                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
+                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
+            elif(rank.check_ID('hard', name) == 0): # ID가 중복되는 경우
+                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
+                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
+            else: # 랭킹 등록이 완료된 경우
                 self.menu.clear()
                 rank.add_data('current','hard',name,self.score)
-                self.menu.add.image("./Image/Award.jpg", scale=(2, 2))
-                self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=20)
-                self.menu.add.vertical_margin(20)
+                self.menu.add.image(Images.icon_award.value, scale=Scales.large.value)
+                self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=Menus.fontsize_default.value)
+                self.menu.add.vertical_margin(Menus.margin_20.value)
                 self.menu.add.button('to Menu', self.to_menu)
 
-
+    # 랭킹 등록 결과 화면
     def show_register_result(self):
         self.menu.remove_widget(self.result_frame)
         self.register_ranking()
 
+    # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈

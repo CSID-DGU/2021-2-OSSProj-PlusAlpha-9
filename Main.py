@@ -17,7 +17,6 @@ from menu.LeaderBoardMenu import *
 from menu.StageSelectMenu import *
 from object.Character import *
 
-
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -35,15 +34,15 @@ screen = pygame.display.set_mode(size,pygame.RESIZABLE)
 ww, wh= pygame.display.get_surface().get_size()
 Default.game.value["size"]["x"] = size[0]
 Default.game.value["size"]["y"] = size[1]
-menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.start.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
 mytheme = pygame_menu.themes.THEME_ORANGE.copy()
 mytheme.background_color = menu_image 
 
-#메인메뉴
 menu = pygame_menu.Menu('PLUS ALPHA', ww,wh,theme=mytheme)
 
-background = pygame.image.load("./Image/StartImage.png")
+background = pygame.image.load(Images.start.value)
 
+# 모드 선택 메뉴
 def show_mode():
     menu.clear()
     menu.add.button('Infinite Game',show_difficulty_select_menu)
@@ -51,6 +50,7 @@ def show_mode():
     menu.add.button('Back', back)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
+# 메인 메뉴로 돌아가기
 def back():
     menu.clear()
     menu.add.button('Select mode', show_mode)
@@ -59,32 +59,39 @@ def back():
     menu.add.button('Rank',show_rank)
     menu.add.button('Quit', pygame_menu.events.EXIT)
 
+<<<<<<< HEAD
+# 저자 및 라이선스 정보 확인 화면 보여주기
+=======
 def help():
     menu.clear()
 
+>>>>>>> 88e24bacc90b53c73c2fe4199b42783a80886a35
 def show_info_menu():
     About(screen).show()
 
+# 난이도 선택 화면 보여주기
 def show_difficulty_select_menu():
     DifficultySelectMenu(screen).show()
-    
+
+# 스테이지 선택 화면 보여주기
 def show_stage_select_menu():
     StageSelectMenu(screen).show()
 
+# 리더보드 화면 보여주기
 def show_rank():
     LeaderBoardMenu(screen).rank()
 
+# 도움말 화면 보여주기
 def show_help():
     HelpMenu(screen).show()
 
-#메인 메뉴 구성
+# 메인 메뉴
 menu.add.button('Select mode', show_mode)
 menu.add.button('Help',show_help)
 menu.add.button('About',show_info_menu)
 menu.add.button('Rank',show_rank)
 menu.add.button('Quit',pygame_menu.events.EXIT)
 menu.enable()
-
 
 
 if __name__ == '__main__':
@@ -118,7 +125,7 @@ if __name__ == '__main__':
             print(f'New menu size: {menu.get_size()}')
              
 
-        # Draw the menu
+        # 화면에 메뉴 그리기
         screen.fill((25, 0, 50))
 
         menu.update(events)

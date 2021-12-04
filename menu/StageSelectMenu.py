@@ -9,7 +9,7 @@ from pygame_menu.utils import make_surface
 
 from menu.CharacterSelectMenu import *
 
-
+# 스테이지 선택 메뉴
 class StageSelectMenu:
 
     def __init__(self,screen):
@@ -83,24 +83,26 @@ class StageSelectMenu:
             return True
         return False
 
+    # 잠긴 스테이지 선택 시 보여지는 화면
     def showStageLockedScreen(self, chapter, stage):
         self.menu.disable()
         stagelocked_theme = pygame_menu.themes.THEME_DARK.copy()
         stagelocked_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stagelocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-        stagelocked_theme.title_font_color = (255, 255, 255)
-        self.menu = pygame_menu.Menu(chapter+'-'+stage, self.size[0], self.size[1],
+        stagelocked_theme.title_font_color = Color.WHITE.value
+        self.menu = pygame_menu.Menu(chapter+'-'+stage, self.size[0], self.size[1], # 챕터 및 스테이지 번호가 상단 바에 나타남
                             theme=stagelocked_theme)
-        self.menu.add.image("./Image/StageLocked_v1.jpg", scale=(1, 1))
+        self.menu.add.image(Images.stage_locked.value, scale=Scales.default.value)
         self.menu.add.label("")
         self.menu.add.button('back', self.back_from_locked)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
+    # 스테이지 잠긴 화면에서 돌아오기
     def back_from_locked(self):
         self.menu.disable()
         StageSelectMenu(self.screen).show()
 
-    #menu mainloop에서 매번 체크 실행
+    # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈

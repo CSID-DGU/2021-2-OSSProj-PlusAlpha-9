@@ -291,58 +291,59 @@ class StageGame:
     def toMenu(self,menu):
         menu.disable()
 
-    #클리어 화면
+    # 클리어 화면
     def showStageClearScreen(self):
-        #화면 표시
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         stageclear_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Congratulation!!', self.size[0], self.size[1],
                             theme=stageclear_theme)
+        # 해당 스테이지가 보상이 있는 보스 스테이지인지 확인하는 과정                    
         if self.stage.unlock_char != "":
             for character in self.character_data:
                 if character.name == self.stage.unlock_char:
                     if character.is_unlocked == False:
+                        # 보상 지급
                         character.is_unlocked = True
                         CharacterDataManager.save(self.character_data)
                         print(type(self.character_data), type(character))
                         print(character.name)
                         if(character.name == 'F5S1'):
-                            self.menu.add.image("./Image/ChapterClear_Oasis.jpg", scale=(1,1))
+                            self.menu.add.image(Images.chapter_clear_oasis.value, scale=Scales.default.value)
                         elif(character.name == 'F5S4'):
-                            self.menu.add.image("./Image/ChapterClear_Ice.jpg", scale=(1,1))
+                            self.menu.add.image(Images.chapter_clear_ice, scale=Scales.default.value)
                         elif(character.name == 'Tank'):
-                            self.menu.add.image("./Image/ChapterClear_Space.jpg", scale=(1,1))
-                    else:
-                        self.menu.add.label(f"{self.stage.chapter}",font_size=51, font_color=Color.BLACK.value)
-                        self.menu.add.image("./Image/ClearedChapter.jpg", scale=(1,1))
-                        self.menu.add.label("Already been rewarded", font_size=20)
+                            self.menu.add.image(Images.chapter_clear_space, scale=Scales.default.value)
+                    else:   # 이미 보상을 받은 경우
+                        self.menu.add.label(f"{self.stage.chapter}",font_size=Menus.fontsize_50, font_color=Color.BLACK.value)
+                        self.menu.add.image(Images.chapter_cleared, scale=Scales.default.value)
+                        self.menu.add.label("Already been rewarded", font_size=Menus.fontsize_default)
                         self.menu.add.label("")
 
 
-        else:
-            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=51, font_color=Color.BLACK.value)
-            self.menu.add.image("./Image/Stageclear_v1.jpg", scale=(1,1))
+        else: # 일반 스테이지인 경우
+            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=Menus.fontsize_50.value, font_color=Color.BLACK.value)
+            self.menu.add.image(Images.stage_clear.value, scale=Scales.default.value)
             self.menu.add.label("")
         
         self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
-    #실패 화면
+    # 실패 화면
     def showGameOverScreen(self):
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         gameover_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Failed!!', self.size[0], self.size[1],
-                            theme=gameover_theme) # *0.7, *0.8
-        self.menu.add.image("./Image/Gameover_v2.jpg", scale=(1, 1))
+                            theme=gameover_theme)
+        self.menu.add.image(Images.gameover, scale=Scales.default.value)
         self.menu.add.label("")
         self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
-
+    # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈

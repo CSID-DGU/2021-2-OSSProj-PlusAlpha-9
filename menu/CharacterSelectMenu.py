@@ -110,20 +110,21 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
             print(self.character_data[selected_idx].name)
             self.showCharactereLockedScreen(self.character_data[selected_idx].name)
 
+    # 잠긴 캐릭터 선택 시 보여지는 화면
     def showCharactereLockedScreen(self, character):
         characterlocked_theme = pygame_menu.themes.THEME_DARK.copy()
         characterlocked_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         characterlocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-        characterlocked_theme.title_font_color = (255, 255, 255)
+        characterlocked_theme.title_font_color = Color.WHITE.value
         self.size = self.screen.get_size()
         super().__init__('Character Locked!', self.size[0], self.size[1],
                             theme=characterlocked_theme)
         if(character == 'F5S1'):
-            self.add.image("./Image/CharacterLocked_F5S1.jpg", scale=(1, 1))
+            self.add.image(Images.F5S1_locked.value, scale=Scales.default.value)
         elif(character == 'F5S4'):
-            self.add.image("./Image/CharacterLocked_F5S4.jpg", scale=(1, 1))
+            self.add.image(Images.F5S4_locked.value, scale=Scales.default.value)
         elif(character == 'Tank'):
-            self.add.image("./Image/CharacterLocked_Tank.jpg", scale=(1, 1))
+            self.add.image(Images.Tank_locked.value, scale=Scales.default.value)
 
         self.add.label("")
         self.add.button('back', self.back_from_locked)
@@ -133,7 +134,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         self.disable()
         self.__init__(self.screen, self.attr)
 
-    #menu mainloop에서 매번 체크 실행
+    # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
