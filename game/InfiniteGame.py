@@ -73,7 +73,7 @@ class InfiniteGame:
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(0.1)
         background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
