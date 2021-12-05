@@ -313,9 +313,9 @@ class StageGame:
                         if(character.name == 'F5S1'):
                             self.menu.add.image(Images.chapter_clear_oasis.value, scale=Scales.default.value)
                         elif(character.name == 'F5S4'):
-                            self.menu.add.image(Images.chapter_clear_ice, scale=Scales.default.value)
+                            self.menu.add.image(Images.chapter_clear_ice.value, scale=Scales.default.value)
                         elif(character.name == 'Tank'):
-                            self.menu.add.image(Images.chapter_clear_space, scale=Scales.default.value)
+                            self.menu.add.image(Images.chapter_clear_space.value, scale=Scales.default.value)
                     else:   # 이미 보상을 받은 경우
                         self.menu.add.label(f"{self.stage.chapter}",font_size=Menus.fontsize_50, font_color=Color.BLACK.value)
                         self.menu.add.image(Images.chapter_cleared, scale=Scales.default.value)
